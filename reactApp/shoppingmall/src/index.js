@@ -1,8 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import AddressApiController from './components/controllers/AddressApiController';
 import SearchBarController from './components/controllers/SearchBarController';
 import './index.css';
 import reportWebVitals from './reportWebVitals';
+
 
 
 ReactDOM.render(
