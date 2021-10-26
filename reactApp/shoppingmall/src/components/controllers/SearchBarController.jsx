@@ -3,8 +3,8 @@ import axios from 'axios';
 let a=0;
 function SearchBarAuto(props) {
   if(props===null) return null;
-  
-  console.log(a=a+1);
+  a++;
+  console.log(a);
   return (<option value={props.value}>{a}</option>)    
   // return (<li>{props.value}</li>)
 }
@@ -18,7 +18,7 @@ function SearchBarUncontroller(props) {
     let data=[];
     if (keyword!="") {// 입력값이 있을때만.!
       
-    
+    // data.@@@. 변경점
     props.data.citys.forEach(element => {
       let string = element.city.toLowerCase(); // 대소문자 상관없게 처리
       let string2 = element.city.toUpperCase();
