@@ -13,7 +13,6 @@ public class ProductsServiceImpl implements ProductsService {
 	private ProductsDAO dao;
 	@Override
 	public String selectImage() {
-		// TODO Auto-generated method stub
 		return dao.selectImageString();
 	}
 

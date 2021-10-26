@@ -15,7 +15,6 @@ public class ProductsDAOImpl implements ProductsDAO {
 	
 	@Override
 	public String selectImageString() {
-		// TODO Auto-generated method stub
 		return sqlSession.selectOne(Namespace+".selectImage");
 	}
 

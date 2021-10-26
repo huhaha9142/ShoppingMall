@@ -19,8 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.spring.dao.MemberDAO;
-import com.spring.dao.ProductsDAO;
+
 import com.spring.dto.MemberVO;
 import com.spring.service.MemberService;
 import com.spring.service.ProductsServiceImpl;
