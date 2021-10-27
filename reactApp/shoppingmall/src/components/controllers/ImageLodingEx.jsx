@@ -19,7 +19,7 @@ function ImageLodingEx() {
            
             const response = await axios({
                     method:'GET',
-                    url:`http://localhost:8080/sample/get`,
+                    url:`http://192.168.0.45:8080/sample/get`,
                     responseType:'blob',
             });
             const url = URL.createObjectURL(response.data);
@@ -35,7 +35,7 @@ function ImageLodingEx() {
         fetchUsers();
       }, []);
     if (!image) return null;
-    return( <img src={image}/>
+    return( <><a href="http://192.168.0.45:8080/sample/get"> <img src={image}/></a></>
 )
 }
 
