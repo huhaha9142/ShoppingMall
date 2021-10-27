@@ -14,8 +14,8 @@ local.properties
 .settings/
 .loadpath
 .recommenders
-.classpath
-.png
+*.classpath
+*.png
 
 # External tool builders
 .externalToolBuilders/
