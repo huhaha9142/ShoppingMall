@@ -62,7 +62,7 @@ function SearchBarController() {
             // loading 상태를 true 로 바꿉니다.
             setLoading(true);
             const response = await axios.get(
-                ''//데이터 없음..
+                'http://localhost:8080/myportal/mysql'//없음!
             );
             setUsers(response.data); // 데이터는 response.data 안에 들어있습니다.
             console.log("axios",response.data);
