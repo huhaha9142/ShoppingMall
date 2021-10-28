@@ -27,7 +27,7 @@ function ImageLodingEx() {
             // 참고
             const response = await axios({
                     method:'GET',
-                    url:`http://192.168.0.45:8080/sample/get`,
+                    url:`http://pvpvpvpvp.gonetis.com:8080/sample/get`,
                     responseType:'blob',
             });
             const url = URL.createObjectURL(response.data);
@@ -43,7 +43,7 @@ function ImageLodingEx() {
         fetchUsers();
       }, []);
     if (!image) return null;
-    return( <><a href="http://192.168.0.45:8080/sample/get"> <img src={image}/></a></>
+    return( <><a href="http://pvpvpvpvp.gonetis.com:8080/sample/get"> <img src={image}/></a></>
 )
 }
 

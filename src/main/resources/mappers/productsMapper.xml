@@ -14,9 +14,22 @@
         
         이렇게 해야 한다.
     -->
-    
-    <select id="selectImage" resultType="String">
-        SELECT imagesmall FROM products
+    <select id="selctList" resultType="String">
+    	 SELECT 
+    		product,
+    		image_lazy as imageLazy
+         FROM products
+    </select>
+    <select id="selectimage" resultType="String">
+        SELECT size,
+        		color,
+        		kind,
+   				quantity,
+   				price,
+   				content,
+   				product,
+   				product_number as productNumber
+         FROM products
     </select>
     
 </mapper>
