@@ -16,7 +16,7 @@
     -->
     
     <select id="selectImage" resultType="String">
-        SELECT image FROM products
+        SELECT imagesmall FROM products
     </select>
     
 </mapper>

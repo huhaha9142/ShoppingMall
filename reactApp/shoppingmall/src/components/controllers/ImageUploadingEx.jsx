@@ -9,13 +9,14 @@ function ImageUploadingEx()
         setImage(event.target.files[0]);
         setViewImage(URL.createObjectURL(event.target.files[0]));
     }
-    const sendImage = async () =>{
+    const sendImage = async () =>{ //데이터를 비동기로 보내는 함수
         const formdata = new FormData();
-        formdata.append('files',image);
+        formdata.append('files',image); // 파일(img)는 FormData() 사용해 선언 후 데이터를 넣어야 전송가능.!
         try{
+            //비동기 통신 POST
             const send = await axios({
                 method:'POST',
-                url:`http://192.168.0.45:8080/sample/send`,
+                url:`http://pvpvpvpvp.gonetis.com:8080/sample/send`,
                 data:formdata,
             });
         }

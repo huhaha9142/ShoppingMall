@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Locale;
 
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.mysql.cj.xdevapi.JsonString;
 import com.spring.dto.MemberVO;
 import com.spring.service.MemberService;
 import com.spring.service.ProductsServiceImpl;
@@ -74,5 +76,26 @@ public class HomeController {
     	if(fileData==null)
     	return "N";
     	return "S";
-	} 
+	}
+    @CrossOrigin(origins = "*", allowedHeaders = "*")  
+    @RequestMapping(value = "/loginform", method = RequestMethod.POST)
+    public String login(@RequestParam("id") String id,
+    		@RequestParam("password") String password,
+    		@RequestParam("email") String email) {
+    	String id1 = id+" "+password+" "+email;
+    	System.out.println(id1);
+    	return id1;
+    }
+    
+    @CrossOrigin(origins = "*", allowedHeaders = "*")  
+    @RequestMapping(value = "/loginform1", method = RequestMethod.POST)
+    public String login2(HttpServletRequest request) {
+    	System.out.println(request.toString());
+    	System.out.println(request.getAttributeNames());
+    	String id1 = request.getParameter("");
+//    	System.out.println(id1);
+    	return id1;
+    }
+    
+    
 }
