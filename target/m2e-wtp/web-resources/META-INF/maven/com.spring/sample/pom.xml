@@ -108,7 +108,13 @@
 			<artifactId>jstl</artifactId>
 			<version>1.2</version>
 		</dependency>
-	
+		
+		<!-- 이미지 입출 의존성  -->
+		<dependency>
+		    <groupId>commons-io</groupId>
+		    <artifactId>commons-io</artifactId>
+		    <version>2.8.0</version>
+		</dependency>
 		<!-- Test -->
 		<dependency>
 			<groupId>junit</groupId>
@@ -132,7 +138,7 @@
             <version>3.4.1</version>
         </dependency>
  
- 
+ 		
         <!-- MyBatis-Spring -->
         <!-- https://mvnrepository.com/artifact/org.mybatis/mybatis-spring -->
         <dependency>
@@ -140,7 +146,7 @@
             <artifactId>mybatis-spring</artifactId>
             <version>1.3.0</version>
         </dependency>
- 
+ 		
         <!-- Spring-jdbc -->
         <!-- https://mvnrepository.com/artifact/org.springframework/spring-jdbc -->
         <dependency>
@@ -164,6 +170,13 @@
             <artifactId>log4jdbc-log4j2-jdbc4</artifactId>
             <version>1.16</version>
         </dependency> 
+        <!-- Commons Fileupload -->
+		<!-- https://mvnrepository.com/artifact/commons-fileupload/commons-fileupload -->
+		<dependency>
+		    <groupId>commons-fileupload</groupId>
+		    <artifactId>commons-fileupload</artifactId>
+		    <version>1.4</version>
+		</dependency>
 	</dependencies>
     <build>
         <plugins>

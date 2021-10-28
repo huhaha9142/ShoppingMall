@@ -16,7 +16,7 @@
     -->
     
     <select id="selectMember" resultType="memberVO">
-        SELECT ID, PW ,NAME FROM TEST
+        SELECT * FROM users
     </select>
     
 </mapper>

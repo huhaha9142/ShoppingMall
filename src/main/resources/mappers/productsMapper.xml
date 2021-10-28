@@ -3,7 +3,7 @@
   PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
  
-<mapper namespace="com.example.mapper.memberMapper">
+<mapper namespace="com.example.mapper.products">
  
     <!-- 
         mybatis-config.xml의 typeAlias에 등록해두지 않았다면 
@@ -15,8 +15,8 @@
         이렇게 해야 한다.
     -->
     
-    <select id="selectMember" resultType="memberVO">
-        SELECT * FROM users
+    <select id="selectImage" resultType="String">
+        SELECT imagesmall FROM products
     </select>
     
 </mapper>
