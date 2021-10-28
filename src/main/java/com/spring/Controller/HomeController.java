@@ -61,8 +61,8 @@ public class HomeController {
     		  produces = MediaType.IMAGE_JPEG_VALUE
     		)
     		public @ResponseBody byte[] getImageWithMediaType() throws IOException {
-    			String url = servicePro.selectImage();
-    		    InputStream in = getClass().getResourceAsStream(url);
+//    			String url = servicePro.selectImage();
+    		    InputStream in = getClass().getResourceAsStream("/com/image/product001.png");
     		    return IOUtils.toByteArray(in);
     		}
     @CrossOrigin(origins = "*", allowedHeaders = "*")  
