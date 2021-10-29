@@ -15,11 +15,14 @@ import reportWebVitals from './reportWebVitals';
 
 ReactDOM.render(
   <React.StrictMode>
-    <SearchBarController/>
-    <AddressApiController/>
-    <ImageLodingEx/>
-    <ImageUploadingEx/>
+    {/* <SearchBarController/> */}
+    {/* <AddressApiController/> */}
+    
+    
     <ImageLodingwithdataEx/>
+    <ImageLodingEx/>
+    {/* <ImageUploadingEx/> */}
+   
   </React.StrictMode>,
   document.getElementById('root')
 );

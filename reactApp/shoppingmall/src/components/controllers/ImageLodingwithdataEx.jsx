@@ -19,8 +19,7 @@ function ImageLodingwithdataEx() {
             setLoading(true);
            
             // 비동기 통신 GET 응답은 response.data 에 저장됩니다.
-            // 이미지는 바이너리 형태로 들어오기 때문에
-            // responseType을 blob 형태로 받고나서
+            // JSON 내부에 byte[] + String 형식으로 들어옵니다.
             // <img src= 태그에 사용하기 위해서
             // 참고
             const response = await axios({
@@ -28,11 +27,14 @@ function ImageLodingwithdataEx() {
                     url:`http://pvpvpvpvp.gonetis.com:8080/sample/products`,
                     // responseType:'blob',
             });
-            console.log(response.data.product);
+            // 제품 이름 
+            // console.log("size byte[]",response);
+            // 이미지 byte[]
             // console.log(response.data.image);
             setProduct(response.data.product);
+            // 이미지를 base64 형식으로 디코딩
             const url = "data:image/png;base64,"+response.data.image;
-            console.log(url);
+            // console.log(url);
             setImage(url);
             // 데이터는 response.data 안에 들어있습니다.
           } catch (e) {
