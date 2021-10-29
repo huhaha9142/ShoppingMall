@@ -56,11 +56,13 @@ public class HomeController {
         return "home";
     }
     @CrossOrigin(origins = "*", allowedHeaders = "*")  
-    @GetMapping(
-    		  value = "/get",
-    		  produces = MediaType.IMAGE_JPEG_VALUE
+    @RequestMapping(
+    		  value = "/get"
+    		  ,method = RequestMethod.GET
+//    		  ,produces = MediaType.IMAGE_JPEG_VALUE
     		)
-    		public @ResponseBody byte[] getImageWithMediaType() throws IOException {
+    @ResponseBody 
+    		public byte[] getImageWithMediaType() throws IOException {
 //    			String url = servicePro.selectImage();
     		    InputStream in = getClass().getResourceAsStream("/com/image/product001.png");
     		    return IOUtils.toByteArray(in);

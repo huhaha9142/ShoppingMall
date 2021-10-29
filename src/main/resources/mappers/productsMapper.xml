@@ -14,13 +14,13 @@
         
         이렇게 해야 한다.
     -->
-    <select id="selctList" resultType="String">
+    <select id="selectList" resultType="productVO">
     	 SELECT 
     		product,
     		image_lazy as imageLazy
          FROM products
     </select>
-    <select id="selectimage" resultType="String">
+    <select id="selectimage" resultType="productVO">
         SELECT size,
         		color,
         		kind,

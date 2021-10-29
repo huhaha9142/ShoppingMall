@@ -6,6 +6,7 @@
  
         <typeAliases>
             <typeAlias type="com.spring.dto.MemberVO" alias="memberVO"/>
+            <typeAlias type="com.spring.dto.ProductVO" alias="productVO"/>
         </typeAliases>
 
         
