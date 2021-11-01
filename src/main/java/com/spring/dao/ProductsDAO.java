@@ -7,4 +7,5 @@ import com.spring.dto.ProductVO;
 public interface ProductsDAO {
 	public String selectImageString();
 	public List<ProductVO> selectList();
+	public ProductVO selectCheckInsert(ProductVO vo);
 }

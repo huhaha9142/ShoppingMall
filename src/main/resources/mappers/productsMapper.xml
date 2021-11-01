@@ -20,16 +20,19 @@
     		image_lazy as imageLazy
          FROM products
     </select>
-    <select id="selectimage" resultType="productVO">
+    <select id="selectCheckInsert"  parameterType="productVO" resultType="productVO">
         SELECT size,
         		color,
         		kind,
    				quantity,
    				price,
-   				content,
-   				product,
-   				product_number as productNumber
+   				product
          FROM products
+         WHERE size =#{size} AND
+         		color=#{color} AND
+         		kind=#{kind} AND
+         		price=#{price} AND
+         		product=#{product}
     </select>
     
 </mapper>

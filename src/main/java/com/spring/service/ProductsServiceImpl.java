@@ -23,5 +23,20 @@ public class ProductsServiceImpl implements ProductsService {
 		// TODO Auto-generated method stub
 		return dao.selectList();
 	}
+	@Override
+	public boolean selectCheckInsert(ProductVO vo) {
+		// TODO Auto-generated method stub
+		System.out.println("service"+vo.toString());
+		ProductVO vod = dao.selectCheckInsert(vo);
+		int i=0;
+		try
+		{
+			i=vod.toString().length();
+		}catch (Exception e) {
+			// TODO: handle exception
+			
+		}
+		return 1==i;
+	}
 
 }

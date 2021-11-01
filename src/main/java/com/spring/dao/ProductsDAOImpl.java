@@ -28,4 +28,11 @@ public class ProductsDAOImpl implements ProductsDAO {
 		return sqlSession.selectList(Namespace+".selectList");
 	}
 
+	@Override
+	public ProductVO selectCheckInsert(ProductVO vo) {
+		// TODO Auto-generated method stub
+		System.out.println("DAO"+vo.toString());
+		return sqlSession.selectOne(Namespace+".selectCheckInsert", vo);
+	}
+
 }
