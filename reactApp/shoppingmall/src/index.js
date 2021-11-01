@@ -20,7 +20,7 @@ ReactDOM.render(
     
     
     <ImageLodingwithdataEx/>
-    <ImageLodingEx/>
+    {/* <ImageLodingEx/> */}cd
     {/* <ImageUploadingEx/> */}
    
   </React.StrictMode>,
