@@ -11,6 +11,7 @@ function ImageUploadingEx()
     }
     const sendImage = async () =>{ //데이터를 비동기로 보내는 함수
         const formdata = new FormData();
+        formdata.append('files',image);
         formdata.append('files',image); // 파일(img)는 FormData() 사용해 선언 후 데이터를 넣어야 전송가능.!
         try{
             //비동기 통신 POST

@@ -37,7 +37,7 @@ function ImageLodingwithdataEx(){
     return( <>
      <ul>
       {products.products.map(product => (
-        <li>{product.product}  {product.image}
+        <li key={[product.index]}>{product.product}  {product.image}
           <a href={product.image}>
             <img src={product.image}/>
           </a>
