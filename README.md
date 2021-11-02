@@ -19,7 +19,7 @@ http://pvpvpvpvp.gonetis.com:8080/sample/products
 >>형식(항목)은 다음과 같습니다(**각 항목의 데이터는 반드시 존재해야함**)
 >>>size(int)<br>color(String)<br>kind(String)<br>quantity(int)<br>content(Strinh)<br>imageSmall(file)<br>imageLazy(file)<br>productImage(file)<br>product(String)<br>price(int)<br>위의 항목중  size,color,kind,product가 기존의 등록된 데이터와 같다면 **UPDATE** 됩니다.(기본 **INSERT**)
 
->>imageSmall은 모델사진,제품사진,제품사진,...,순으로 0번 인덱스는 제품 페이지 메인 이미지입니다.<br>imageLazy는 imageSmall의 고해상도 버전입니다.(null이여도됨)<br>productimage는 제품의 전면 후면 사진입니다.
+>>imageSmall은 모델사진,제품사진,제품사진,...,순으로 0번 인덱스는 제품 페이지 메인 이미지입니다.<br>imageLazy는 imageSmall의 고해상도 버전입니다.(null이여도됨)<br>productimage는 제품의 전면 후면 사진입니다.(전,후 순서로 2장만)
 
 >이미지의 모든 포멧은 .png 로 저장됩니다.
 
