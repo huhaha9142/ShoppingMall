@@ -17,16 +17,12 @@
     <select id="selectList" resultType="productVO">
     	 SELECT 
     		product,
-    		image_lazy as imageLazy
+    		image_small as imageSmall
          FROM products
     </select>
     <select id="selectCheckInsert"  parameterType="productVO" resultType="productVO">
-        SELECT size,
-        		color,
-        		kind,
-   				quantity,
-   				price,
-   				product
+        SELECT 
+        	product_number AS productNumber
          FROM products
          WHERE size =#{size} AND
          		color=#{color} AND
@@ -34,5 +30,52 @@
          		price=#{price} AND
          		product=#{product}
     </select>
+    <select id="selectProduct" parameterType="productVO" resultType="productVO">
+    	SELECT
+    		size,
+    		color,
+    		kind,
+    		quantity,
+    		price,
+    		content,
+    		image_small AS imageSmall,
+    		image_lazy AS imageLazy,
+    		product_image AS productImage,
+    		product,
+    		product_number AS productNumber,
+    		regdate AS regDate
+    	FROM products
+    	WHERE product=#{product}
+    </select>
+    <update id="updateProduct"  parameterType="productVO">
+    	UPDATE products 
+    	SET size = #{size},
+    		 color = #{color},
+    		 quantity = #{quantity},
+    		 price = #{price},
+			 content = #{content},
+			 image_small = #{imageSmall},
+			 image_lazy = #{imageLazy},
+			 product_image = #{productImage},
+			 product = #{product},
+			 regdate = #{regDate}
+    	WHERE (product_number = #{productNumber})
+    </update>
+    <insert id="insertProduct" parameterType="productVO">
+    	INSERT INTO products
+			VALUE (#{size},
+					#{color},
+					#{kind},
+					#{quantity},
+					#{price},
+					#{content},
+					#{imageSmall},
+					#{imageLazy},
+					#{productImage},
+					#{product},
+					#{productNumber},
+					#{regDate}
+				)			
+    </insert>
     
 </mapper>

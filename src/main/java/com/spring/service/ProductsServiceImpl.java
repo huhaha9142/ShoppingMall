@@ -24,19 +24,29 @@ public class ProductsServiceImpl implements ProductsService {
 		return dao.selectList();
 	}
 	@Override
-	public boolean selectCheckInsert(ProductVO vo) {
+	public Long selectCheckInsert(ProductVO vo) {
 		// TODO Auto-generated method stub
 		System.out.println("service"+vo.toString());
 		ProductVO vod = dao.selectCheckInsert(vo);
-		int i=0;
-		try
-		{
-			i=vod.toString().length();
-		}catch (Exception e) {
-			// TODO: handle exception
-			
-		}
-		return 1==i;
+		if(vod!=null)
+			return vod.getProductNumber();
+		return (long) 0;
+	}
+	@Override
+	public boolean updateProduct(ProductVO vo) {
+		// TODO Auto-generated method stub
+		
+		return 1==dao.updateProduct(vo);
+	}
+	@Override
+	public boolean insertProduct(ProductVO vo) {
+		// TODO Auto-generated method stub
+		return 1==dao.insertProduct(vo);
+	}
+	@Override
+	public ProductVO selectProduct(ProductVO vo) {
+		// TODO Auto-generated method stub
+		return dao.selectProduct(vo);
 	}
 
 }

@@ -6,7 +6,14 @@ public class ProductVO {
 	private Long size;
 	private String color;
 	private String kind;
-	private Long quqntity;
+	private Long quantity;
+	public Long getQuantity() {
+		return quantity;
+	}
+
+	public void setQuantity(Long quantity) {
+		this.quantity = quantity;
+	}
 	private Long price;
 	private String content;
 	private String imageSmall;
@@ -28,7 +35,28 @@ public class ProductVO {
 		this.price=price;
 		this.product=product;
 	}
+	public ProductVO(Long size,String color,String kind,Long quantity,Long price,String content,
+					String imageSmall,String imageLazy,String productImage,String product,
+					Long productNumber,Date regDate)
+	{
+		this(size, color, kind, price, product);
+		this.quantity=quantity;
+		this.content=content;
+		this.imageSmall=imageSmall;
+		this.imageLazy=imageLazy;
+		this.productImage=productImage;
+		this.productNumber=productNumber;
+		this.regDate= regDate;
+	}
 	
+	public ProductVO(Long size, String color, String kind, Long quantity, Long price, String content,
+			String product, Long productNumber) {
+		this(size, color, kind, price, product);
+		this.quantity= quantity;
+		this.content = content;
+		this.productNumber = productNumber;
+	}
+
 	public Long getSize() {
 		return size;
 	}
@@ -37,7 +65,7 @@ public class ProductVO {
 	}
 	@Override
 	public String toString() {
-		return "ProductVO [size=" + size + ", color=" + color + ", kind=" + kind + ", quqntity=" + quqntity + ", price="
+		return "ProductVO [size=" + size + ", color=" + color + ", kind=" + kind + ", quqntity=" + quantity + ", price="
 				+ price + ", content=" + content + ", imageSmall=" + imageSmall + ", imageLazy=" + imageLazy
 				+ ", productImage=" + productImage + ", product=" + product + ", productNumber=" + productNumber
 				+ ", regDate=" + regDate + "]";
@@ -53,12 +81,6 @@ public class ProductVO {
 	}
 	public void setKind(String kind) {
 		this.kind = kind;
-	}
-	public Long getQuqntity() {
-		return quqntity;
-	}
-	public void setQuqntity(Long quqntity) {
-		this.quqntity = quqntity;
 	}
 	public Long getPrice() {
 		return price;

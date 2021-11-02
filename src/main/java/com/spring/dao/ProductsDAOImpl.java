@@ -35,4 +35,23 @@ public class ProductsDAOImpl implements ProductsDAO {
 		return sqlSession.selectOne(Namespace+".selectCheckInsert", vo);
 	}
 
+	@Override
+	public int updateProduct(ProductVO vo) {
+		// TODO Auto-generated method stub
+		
+		return sqlSession.update(Namespace+".updateProduct", vo);
+	}
+
+	@Override
+	public int insertProduct(ProductVO vo) {
+		// TODO Auto-generated method stub
+		return sqlSession.insert(Namespace+".insertProduct", vo);
+	}
+
+	@Override
+	public ProductVO selectProduct(ProductVO vo) {
+		// TODO Auto-generated method stub
+		return sqlSession.selectOne(Namespace+".selectProduct", vo);
+	}
+
 }

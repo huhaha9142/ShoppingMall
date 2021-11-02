@@ -3,6 +3,7 @@ package com.spring.Controller;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
@@ -69,15 +70,21 @@ public class HomeController {
     		}
     @CrossOrigin(origins = "*", allowedHeaders = "*")  
     @RequestMapping(value = "/send", method = RequestMethod.POST)
-    public String imageLoding(@RequestParam("files") MultipartFile files) throws IOException {
-    	byte[] fileData = files.getBytes();
-    	System.out.println(fileData);
-    	FileOutputStream fos = new FileOutputStream(SAVE_PATH+"test"+".png");
-    	fos.write(fileData);
+    public String imageLoding(@RequestParam("files") List<MultipartFile> files) throws IOException {
+    	FileOutputStream fos = null;
+    	System.out.println(files.size());
+    	String imageSmall = "";
+    	for(int i=0;i<files.size();i++)
+    	{
+			byte[] fileData = files.get(i).getBytes();
+			System.out.println(fileData);
+			fos = new FileOutputStream(SAVE_PATH+"test"+fileData.toString()+".png");
+			imageSmall+="com/image/test"+fileData.toString()+",";
+			fos.write(fileData);
+    	}
     	fos.close();
-    	if(fileData==null)
+    	System.out.println(imageSmall);
     	return "N";
-    	return "S";
 	}
     @CrossOrigin(origins = "*", allowedHeaders = "*")  
     @RequestMapping(value = "/loginform", method = RequestMethod.POST)
