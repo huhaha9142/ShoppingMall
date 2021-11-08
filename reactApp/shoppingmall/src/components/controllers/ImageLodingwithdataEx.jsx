@@ -41,6 +41,12 @@ function ImageLodingwithdataEx(){
           <a href={product.image}>
             <img src={product.image}/>
           </a>
+          {product.colors.color.map(color => (
+            <div style={{backgroundColor:`${color}`,
+                  width:'100px',height:'30px'
+                  }}>{color}
+            </div>
+          ))}
         </li>
         
       ))}

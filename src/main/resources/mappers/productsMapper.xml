@@ -2,10 +2,8 @@
 <!DOCTYPE mapper
   PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
- 
-<mapper namespace="com.example.mapper.products">
- 
-    <!-- 
+ <mapper namespace="com.example.mapper.products">
+     <!-- 
         mybatis-config.xml의 typeAlias에 등록해두지 않았다면 
         
         <select id="selectMember" resultType="com.example.dto.MemberVO" >
@@ -17,6 +15,9 @@
     <select id="selectList" resultType="productVO">
     	 SELECT 
     		product,
+    		color,
+    		size,
+    		price,
     		image_small as imageSmall
          FROM products
     </select>
@@ -63,6 +64,8 @@
     </update>
     <insert id="insertProduct" parameterType="productVO">
     	INSERT INTO products
+    	(size,color,kind,quantity,price,content,image_small,
+    	image_lazy,product_image,product,regdate)
 			VALUE (#{size},
 					#{color},
 					#{kind},
@@ -73,9 +76,7 @@
 					#{imageLazy},
 					#{productImage},
 					#{product},
-					#{productNumber},
 					#{regDate}
 				)			
     </insert>
-    
-</mapper>
+ </mapper>

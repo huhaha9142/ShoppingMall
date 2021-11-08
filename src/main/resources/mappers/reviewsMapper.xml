@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  <mapper namespace="com.example.mapper.reviewMapper">
+  
+	<select id ="selectListReview" resultType="reviewVO">
+		SELECT
+			content,
+			title,
+			indate AS inDate,
+			image,
+			hit,
+			users_usernumber AS usersNumber,
+			products_productnumber AS productsNumber,
+			reviews_number AS reviewsNumber
+		FROM reviews
+	</select>
+	<insert id="insertReview" parameterType="reviewVO" >
+		INSERT INTO reviews
+		(content,title,image,hit,users_usernumber,products_productnumber,indate)
+			VALUE (#{content},
+					#{title},
+					#{image},
+					#{hit},
+					#{usersNumber},
+					#{productsNumber},
+					#{inDate}
+				)
+	</insert>
+</mapper>

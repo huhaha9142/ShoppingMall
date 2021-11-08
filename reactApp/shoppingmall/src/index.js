@@ -15,7 +15,7 @@ import reportWebVitals from './reportWebVitals';
 
 ReactDOM.render(
   <React.StrictMode>
-    {/* <SearchBarController/> */}
+    <SearchBarController/>
     {/* <AddressApiController/> */}
     
     

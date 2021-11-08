@@ -3,15 +3,15 @@ package com.spring.dto;
 import java.util.Date;
 
 public class ProductVO {
-	private Long size;
+	private String size;
 	private String color;
 	private String kind;
-	private Long quantity;
-	public Long getQuantity() {
+	private String quantity;
+	public String getQuantity() {
 		return quantity;
 	}
 
-	public void setQuantity(Long quantity) {
+	public void setQuantity(String quantity) {
 		this.quantity = quantity;
 	}
 	private Long price;
@@ -27,7 +27,7 @@ public class ProductVO {
 		
 	}
 	
-	public ProductVO(Long size, String color,String kind, Long price,String product)
+	public ProductVO(String size, String color,String kind, Long price,String product)
 	{
 		this.size =size;
 		this.color=color;
@@ -35,7 +35,7 @@ public class ProductVO {
 		this.price=price;
 		this.product=product;
 	}
-	public ProductVO(Long size,String color,String kind,Long quantity,Long price,String content,
+	public ProductVO(String size,String color,String kind,String quantity,Long price,String content,
 					String imageSmall,String imageLazy,String productImage,String product,
 					Long productNumber,Date regDate)
 	{
@@ -49,7 +49,7 @@ public class ProductVO {
 		this.regDate= regDate;
 	}
 	
-	public ProductVO(Long size, String color, String kind, Long quantity, Long price, String content,
+	public ProductVO(String size, String color, String kind, String quantity, Long price, String content,
 			String product, Long productNumber) {
 		this(size, color, kind, price, product);
 		this.quantity= quantity;
@@ -57,10 +57,10 @@ public class ProductVO {
 		this.productNumber = productNumber;
 	}
 
-	public Long getSize() {
+	public String getSize() {
 		return size;
 	}
-	public void setSize(Long size) {
+	public void setSize(String size) {
 		this.size = size;
 	}
 	@Override
