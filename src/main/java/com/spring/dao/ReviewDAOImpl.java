@@ -25,5 +25,15 @@ public class ReviewDAOImpl implements ReviewDAO {
 		// TODO Auto-generated method stub
 		return sqlSession.insert(Namespace+".insertReview",vo);
 	}
+	@Override
+	public int updateReview(ReviewVO vo) {
+		// TODO Auto-generated method stub
+		return sqlSession.update(Namespace+".updateReview", vo);
+	}
+	@Override
+	public int deleteReview(ReviewVO vo) {
+		// TODO Auto-generated method stub
+		return sqlSession.delete(Namespace+".deleteReview", vo);
+	}
 
 }

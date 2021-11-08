@@ -74,6 +74,7 @@ public class ReviewsController {
     	return jsonObject;
     }
 	// 리뷰 작성
+	// 유저 검증 추가 필요
 	@CrossOrigin(origins = "*", allowedHeaders = "*")  
     @RequestMapping(
   		  value = "/reviews",method = RequestMethod.POST
@@ -97,6 +98,51 @@ public class ReviewsController {
 		String result = (insert==true)?"insert":"fail";
 		json.put("result",result);
 		return json;
+    }
+	// 리뷰 수정
+	// 유저 검증 추가 필요
+	@CrossOrigin(origins = "*", allowedHeaders = "*")  
+    @RequestMapping(
+  		  value = "/reviews/{reviewsNumber}",method = RequestMethod.POST
+  		  )
+    @ResponseBody
+    public JSONObject reviewUpdate(
+    		@PathVariable("reviewsNumber") String reviewsNumber,
+    		@RequestParam("content") String content,
+    		@RequestParam("title") String title,
+    		@RequestParam("image") List<MultipartFile> imageReview	
+    	) throws IOException
+    {
+		JSONObject json = new JSONObject();
+		ReviewVO vo = new ReviewVO();
+		vo.setContent(content);
+		vo.setTitle(title);
+		vo.setImage(ProductsController.fileSave(imageReview, SAVE_PATH));
+		vo.setReviewsNumber(Long.valueOf(reviewsNumber));
+		boolean update = reService.updateReview(vo);
+		String result = (update==true)?"update":"fail";
+		json.put("result",result);
+		return json;
+	
+    }
+	// 리뷰 삭제
+	// 유저 검증 추가 필요
+	@CrossOrigin(origins = "*", allowedHeaders = "*")  
+    @RequestMapping(
+  		  value = "/reviews/{reviewsNumber}",method = RequestMethod.DELETE
+  		  )
+    @ResponseBody
+    public JSONObject reviewUpdate(
+    		@PathVariable("reviewsNumber") String reviewsNumber)
+    {
+		JSONObject json = new JSONObject();
+		ReviewVO vo = new ReviewVO();
+		vo.setReviewsNumber(Long.valueOf(reviewsNumber));
+		boolean delete = reService.deleteReview(vo);
+		String result = (delete==true)?"delete":"fail";
+		json.put("result",result);
+		return json;
+		
     }
 	
 	//reviewNumber로 하나의 리뷰 불러오기

@@ -28,4 +28,18 @@
 					#{inDate}
 				)
 	</insert>
+	<update id="updateReview" parameterType="reviewVO">
+		UPDATE reviews
+			SET content = #{content},
+				title = #{title},
+				image = #{image}
+		WHERE (reviews_number = #{reviewsNumber})
+			
+			
+	</update>
+	<delete id="deleteReview" parameterType="reviewVO">
+		DELETE 
+		FROM reviews
+		WHERE (reviews_number = #{reviewsNumber})
+	</delete>
 </mapper>

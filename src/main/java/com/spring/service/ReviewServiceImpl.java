@@ -24,5 +24,15 @@ public class ReviewServiceImpl implements ReviewService {
 		// TODO Auto-generated method stub
 		return 1==dao.insertReview(vo);
 	}
+	@Override
+	public boolean updateReview(ReviewVO vo) {
+		// TODO Auto-generated method stub
+		return 1==dao.updateReview(vo);
+	}
+	@Override
+	public boolean deleteReview(ReviewVO vo) {
+		// TODO Auto-generated method stub
+		return 1==dao.deleteReview(vo);
+	}
 
 }
