@@ -18,6 +18,7 @@
     		color,
     		size,
     		price,
+    		kind,
     		image_small as imageSmall
          FROM products
     </select>

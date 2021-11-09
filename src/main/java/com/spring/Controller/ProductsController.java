@@ -48,40 +48,57 @@ public class ProductsController {
     @CrossOrigin(origins = "*", allowedHeaders = "*")
     @RequestMapping(value="/products",method = RequestMethod.GET)
     @ResponseBody
-    public JSONObject productsList() throws IOException {
+    public JSONObject productsList(
+    		@RequestParam(value="kind",required=false) String kindP,
+    		@RequestParam(value="color",required=false) String colorP,
+    		@RequestParam(value="size",required=false) String sizeP,
+    		@RequestParam(value="price",required=false) String priceP
+    		) throws IOException {
     	JSONObject jsonObject = new JSONObject();
     	
     	JSONArray jsonArarry = new JSONArray();
     	List<ProductVO> sql = proService.selectList();
+    	System.out.println("kind:"+kindP);
+    	System.out.println("color:"+colorP);
+    	System.out.println("size:"+sizeP);
+    	System.out.println("price:"+priceP);
     	
     	for(int i=0;i<sql.size();i++)
     	{
-			JSONObject list = new JSONObject();
-			JSONObject colorJ = new JSONObject();
-			JSONArray jsoncolors = new JSONArray();
-			//다중으로 저장된 이미지를 꺼내기 위해서 , split
-			String[] image = sql.get(i).getImageSmall().split(",");    
-			//데이터를 읽기 쉽게 인덱스 추가
-			list.put("index", i);
-			// 색의 경우는 #000000#fffffff 이런형식으로 저장 되어있기 때문에 구별을 위해 # split후 # 을 더해서 저장
-			String colors[] = sql.get(i).getColor().split("#");
-			// colors의 size만큼 반복
-			for(String color:colors)
-			{
-				if(color!="") //0번 인덱스의 빈배열을 빼기위함 
-					jsoncolors.add("#"+color);
-			}
-			colorJ.put("color",jsoncolors);
-			list.put("size", sql.get(i).getSize());
-			list.put("price", sql.get(i).getPrice());
-			list.put("colors", colorJ);
-			list.put("product", sql.get(i).getProduct());
-			//이미지 API를 완성시키기 위해 URL_PATH 추가
-			list.put("image", URL_PATH+image[0]);
-			//완성된 리스트를 추가
-			jsonArarry.add(list);
-	    	jsonObject.put("products", jsonArarry);
+    		if((kindP==null||kindP.equals(sql.get(i).getKind())))
+    		{
+    			System.out.println(sql.get(i).getKind());
+				JSONObject list = new JSONObject();
+				JSONObject colorJ = new JSONObject();
+				JSONArray jsoncolors = new JSONArray();
+				//다중으로 저장된 이미지를 꺼내기 위해서 , split
+				String[] image = sql.get(i).getImageSmall().split(",");    
+				//데이터를 읽기 쉽게 인덱스 추가
+				list.put("index", i);
+				// 색의 경우는 #000000#fffffff 이런형식으로 저장 되어있기 때문에 구별을 위해 # split후 # 을 더해서 저장
+				String colors[] = sql.get(i).getColor().split("#");
+				// colors의 size만큼 반복
+				for(String color:colors)
+				{
+					if(color!="") { //0번 인덱스의 빈배열을 빼기위함 
+						jsoncolors.add("#"+color);
+					
+					}
+				}
+				colorJ.put("color",jsoncolors);
+				list.put("kind", sql.get(i).getKind());
+				list.put("size", sql.get(i).getSize());
+				list.put("price", sql.get(i).getPrice());
+				list.put("colors", colorJ);
+				list.put("product", sql.get(i).getProduct());
+				//이미지 API를 완성시키기 위해 URL_PATH 추가
+				list.put("image", URL_PATH+image[0]);
+				//완성된 리스트를 추가
+				jsonArarry.add(list);
+		    	jsonObject.put("products", jsonArarry);
+    		}
     	}
+    	
     	return jsonObject;
     }
     
@@ -137,6 +154,9 @@ public class ProductsController {
     	
     }
     // 파일을 저장해주는 함수 
+    // 받은 파일을 SAVE_PATH위치에 임의의 이름으로 저장하고
+    // 저장된 이름을 리턴한다.
+    // TODO: 중복이 아예 일어날 수 없게 설계되거나 중복시 다시 시도 할 수 있게 짜야함(재귀)
     public static String fileSave(List<MultipartFile> files ,String SAVE_PATH) throws IOException
     {
     	FileOutputStream fos = null;
@@ -252,9 +272,9 @@ public class ProductsController {
     @ResponseBody 
 	public byte[] getImageWithMediaType(@PathVariable("img") String img) throws IOException {
     	String url = "/com/image/"+img+".png";
-    	System.out.println(url);
+//    	System.out.println(url);
 	    InputStream in = getClass().getResourceAsStream(url);
-	    System.out.println(img+".png");
+//	    System.out.println(img+".png");
 	    return IOUtils.toByteArray(in);
 	}
     // 목적 : 크롤링한 데이터(.txt)를 데이터 베이스에 저장
