@@ -6,15 +6,22 @@
   
 	<select id ="selectListReview" resultType="reviewVO">
 		SELECT
-			content,
-			title,
-			indate AS inDate,
-			image,
-			hit,
-			users_usernumber AS usersNumber,
-			products_productnumber AS productsNumber,
-			reviews_number AS reviewsNumber
-		FROM reviews
+			re.content,
+			re.title,
+			re.indate AS inDate,
+			re.image,
+			re.hit,
+			re.users_usernumber AS usersNumber,
+			re.products_productnumber AS productsNumber,
+			re.reviews_number AS reviewsNumber,
+			us.id,
+			us.name,
+			pr.product
+		FROM reviews re 
+			INNER JOIN users us 
+			INNER JOIN products pr
+		ON re.users_usernumber = us.user_number 
+			AND re.products_productnumber = pr.product_number
 	</select>
 	<insert id="insertReview" parameterType="reviewVO" >
 		INSERT INTO reviews
@@ -33,13 +40,17 @@
 			SET content = #{content},
 				title = #{title},
 				image = #{image}
-		WHERE (reviews_number = #{reviewsNumber})
-			
-			
+		WHERE (reviews_number = #{reviewsNumber})	
 	</update>
 	<delete id="deleteReview" parameterType="reviewVO">
 		DELETE 
 		FROM reviews
 		WHERE (reviews_number = #{reviewsNumber})
 	</delete>
+	<select id="selectImage" parameterType="reviewVO" resultType="String">
+		SELECT
+			image
+		FROM reviews
+		WHERE (reviews_number = #{reviewsNumber})
+	</select>
 </mapper>

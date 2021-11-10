@@ -1,13 +1,15 @@
 package com.spring.Controller;
 
 import java.io.BufferedReader;
-import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
+
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -27,6 +29,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.spring.dto.ProductVO;
+import com.spring.function.FunctionSpring;
 import com.spring.service.ProductsServiceImpl;
 
 @Controller
@@ -39,12 +42,12 @@ public class ProductsController {
 
     @Inject
     private ProductsServiceImpl proService;
-    //json ¹è¿­¿¡ ÀÌ¹ÌÁöbyte[] ³ÖÀ¸¸é µ¥ÀÌÅÍ°¡ 25%Á¤µµ »½Æ¢±âµÊ..
-    //½ÉÁö¾î µðÄÚµùµµ ½Ã°£ÀÌ ¾à°£ÀÌ³ª¸¶ ¼Ò¿äµÊ
+    //json ï¿½è¿­ï¿½ï¿½ ï¿½Ì¹ï¿½ï¿½ï¿½byte[] ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Í°ï¿½ 25%ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Æ¢ï¿½ï¿½ï¿½..
+    //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Úµï¿½ï¿½ï¿½ ï¿½Ã°ï¿½ï¿½ï¿½ ï¿½à°£ï¿½Ì³ï¿½ï¿½ï¿½ ï¿½Ò¿ï¿½ï¿½
     
     
-    //¸ñÀû : ¸ðµç Á¦Ç°¸®½ºÆ®¸¦ ¹ÝÈ¯
-    // Á¦Ç°¸í °¡°Ý Å©±â »çÀÌÁî »ö»ó ÀÌ¹ÌÁö
+    //ï¿½ï¿½ï¿½ï¿½ : ï¿½ï¿½ï¿½ ï¿½ï¿½Ç°ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½ï¿½È¯
+    // ï¿½ï¿½Ç°ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ Å©ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ì¹ï¿½ï¿½ï¿½
     @CrossOrigin(origins = "*", allowedHeaders = "*")
     @RequestMapping(value="/products",method = RequestMethod.GET)
     @ResponseBody
@@ -71,16 +74,16 @@ public class ProductsController {
 				JSONObject list = new JSONObject();
 				JSONObject colorJ = new JSONObject();
 				JSONArray jsoncolors = new JSONArray();
-				//´ÙÁßÀ¸·Î ÀúÀåµÈ ÀÌ¹ÌÁö¸¦ ²¨³»±â À§ÇØ¼­ , split
+				//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ì¹ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ø¼ï¿½ , split
 				String[] image = sql.get(i).getImageSmall().split(",");    
-				//µ¥ÀÌÅÍ¸¦ ÀÐ±â ½±°Ô ÀÎµ¦½º Ãß°¡
+				//ï¿½ï¿½ï¿½ï¿½ï¿½Í¸ï¿½ ï¿½Ð±ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Îµï¿½ï¿½ï¿½ ï¿½ß°ï¿½
 				list.put("index", i);
-				// »öÀÇ °æ¿ì´Â #000000#fffffff ÀÌ·±Çü½ÄÀ¸·Î ÀúÀå µÇ¾îÀÖ±â ¶§¹®¿¡ ±¸º°À» À§ÇØ # splitÈÄ # À» ´õÇØ¼­ ÀúÀå
+				// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ #000000#fffffff ï¿½Ì·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ç¾ï¿½ï¿½Ö±ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ # splitï¿½ï¿½ # ï¿½ï¿½ ï¿½ï¿½ï¿½Ø¼ï¿½ ï¿½ï¿½ï¿½ï¿½
 				String colors[] = sql.get(i).getColor().split("#");
-				// colorsÀÇ size¸¸Å­ ¹Ýº¹
+				// colorsï¿½ï¿½ sizeï¿½ï¿½Å­ ï¿½Ýºï¿½
 				for(String color:colors)
 				{
-					if(color!="") { //0¹ø ÀÎµ¦½ºÀÇ ºó¹è¿­À» »©±âÀ§ÇÔ 
+					if(color!="") { //0ï¿½ï¿½ ï¿½Îµï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½è¿­ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 
 						jsoncolors.add("#"+color);
 					
 					}
@@ -91,9 +94,10 @@ public class ProductsController {
 				list.put("price", sql.get(i).getPrice());
 				list.put("colors", colorJ);
 				list.put("product", sql.get(i).getProduct());
-				//ÀÌ¹ÌÁö API¸¦ ¿Ï¼º½ÃÅ°±â À§ÇØ URL_PATH Ãß°¡
+				list.put("productNumber", sql.get(i).getProductNumber());
+				//ï¿½Ì¹ï¿½ï¿½ï¿½ APIï¿½ï¿½ ï¿½Ï¼ï¿½ï¿½ï¿½Å°ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ URL_PATH ï¿½ß°ï¿½
 				list.put("image", URL_PATH+image[0]);
-				//¿Ï¼ºµÈ ¸®½ºÆ®¸¦ Ãß°¡
+				//ï¿½Ï¼ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½ß°ï¿½
 				jsonArarry.add(list);
 		    	jsonObject.put("products", jsonArarry);
     		}
@@ -102,8 +106,8 @@ public class ProductsController {
     	return jsonObject;
     }
     
-    //¸ñÀû : Á¦Ç°À» µî·ÏÇÑ´Ù.
-    //»çÀÌÁî, »ö»ó, Á¾·ù, ¼ö·®, ³»¿ë, ÀÌ¹ÌÁö, ÀÌ¹ÌÁö2, ÀÌ¹ÌÁö3, Á¦Ç°¸í, °¡°Ý
+    //ï¿½ï¿½ï¿½ï¿½ : ï¿½ï¿½Ç°ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ñ´ï¿½.
+    //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½, ï¿½ï¿½ï¿½ï¿½, ï¿½ï¿½ï¿½ï¿½, ï¿½ï¿½ï¿½ï¿½, ï¿½ï¿½ï¿½ï¿½, ï¿½Ì¹ï¿½ï¿½ï¿½, ï¿½Ì¹ï¿½ï¿½ï¿½2, ï¿½Ì¹ï¿½ï¿½ï¿½3, ï¿½ï¿½Ç°ï¿½ï¿½, ï¿½ï¿½ï¿½ï¿½
     @CrossOrigin(origins = "*", allowedHeaders = "*")
     @RequestMapping(value="/products",method = RequestMethod.POST)
     @ResponseBody
@@ -122,28 +126,28 @@ public class ProductsController {
     {
     	ProductVO vo = new ProductVO(size, color, kind, price, product);
     	System.out.println(vo.toString());
-    	// Æ¯Á¤ Á¶°ÇÀÌ °°´Ù¸é ±× Á¦Ç°ÀÇ Á¦Ç°¹øÈ£¸¦ ¹ÝÈ¯ÇØÁØ´Ù. ¾ø´Ù¸é 0À» ¹ÝÈ¯ÇÑ´Ù
+    	// Æ¯ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ù¸ï¿½ ï¿½ï¿½ ï¿½ï¿½Ç°ï¿½ï¿½ ï¿½ï¿½Ç°ï¿½ï¿½È£ï¿½ï¿½ ï¿½ï¿½È¯ï¿½ï¿½ï¿½Ø´ï¿½. ï¿½ï¿½ï¿½Ù¸ï¿½ 0ï¿½ï¿½ ï¿½ï¿½È¯ï¿½Ñ´ï¿½
     	Long productNumber = proService.selectCheckInsert(vo);
     	System.out.println(productNumber);
     	vo = new ProductVO(size, color, kind, quantity, price, content, product, productNumber);
     	JSONObject json = new JSONObject();
-    	if(productNumber!=0)// Áßº¹ÀÌ ÀÖ´Ù¸é ¾÷µ¥ÀÌÆ®¸¦ ½ÇÇàÇÑ´Ù
+    	if(productNumber!=0)// ï¿½ßºï¿½ï¿½ï¿½ ï¿½Ö´Ù¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ñ´ï¿½
     	{
     		vo.setRegDate(new Date());
-    		vo.setImageSmall(fileSave(imageSmall,SAVE_PATH));
-    		vo.setImageLazy(fileSave(imageLazy,SAVE_PATH));
-    		vo.setProductImage(fileSave(productImage,SAVE_PATH));
+    		vo.setImageSmall(FunctionSpring.fileSave(imageSmall,SAVE_PATH));
+    		vo.setImageLazy(FunctionSpring.fileSave(imageLazy,SAVE_PATH));
+    		vo.setProductImage(FunctionSpring.fileSave(productImage,SAVE_PATH));
     		boolean sqlUpdate = proService.updateProduct(vo);
     		json.put("result", "update");
     		return json;
     	}
-    	if(productNumber==0)//Áßº¹ÀÌ ¾ø´Ù¸é »ðÀÔÀ» ½ÇÇàÇÑ´Ù
+    	if(productNumber==0)//ï¿½ßºï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ù¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ñ´ï¿½
     	{
     		vo.setRegDate(new Date());
-    		vo.setImageSmall(fileSave(imageSmall,SAVE_PATH));
-    		vo.setImageLazy(fileSave(imageLazy,SAVE_PATH));
-    		vo.setProductImage(fileSave(productImage,SAVE_PATH));
-    		// ½ÃÄý½º ´ë½Å ·£´ý*½Ã°£À» ÀÌ¿ëÇØ¼­ ¹«ÀÛÀ§ °ªÀ» Á¦Ç°¹øÈ£·Î ÀúÀåÇÑ´Ù
+    		vo.setImageSmall(FunctionSpring.fileSave(imageSmall,SAVE_PATH));
+    		vo.setImageLazy(FunctionSpring.fileSave(imageLazy,SAVE_PATH));
+    		vo.setProductImage(FunctionSpring.fileSave(productImage,SAVE_PATH));
+    		// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½*ï¿½Ã°ï¿½ï¿½ï¿½ ï¿½Ì¿ï¿½ï¿½Ø¼ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ç°ï¿½ï¿½È£ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ñ´ï¿½
     		vo.setProductNumber((long)(Math.random()*System.currentTimeMillis())%10000000);
     		boolean sqlInsert = proService.insertProduct(vo);
     		json.put("result", "insert");
@@ -153,45 +157,19 @@ public class ProductsController {
     	return json;
     	
     }
-    // ÆÄÀÏÀ» ÀúÀåÇØÁÖ´Â ÇÔ¼ö 
-    // ¹ÞÀº ÆÄÀÏÀ» SAVE_PATHÀ§Ä¡¿¡ ÀÓÀÇÀÇ ÀÌ¸§À¸·Î ÀúÀåÇÏ°í
-    // ÀúÀåµÈ ÀÌ¸§À» ¸®ÅÏÇÑ´Ù.
-    // TODO: Áßº¹ÀÌ ¾Æ¿¹ ÀÏ¾î³¯ ¼ö ¾ø°Ô ¼³°èµÇ°Å³ª Áßº¹½Ã ´Ù½Ã ½Ãµµ ÇÒ ¼ö ÀÖ°Ô Â¥¾ßÇÔ(Àç±Í)
-    public static String fileSave(List<MultipartFile> files ,String SAVE_PATH) throws IOException
-    {
-    	FileOutputStream fos = null;
-    	System.out.println(files.size());
-    	String imageurl = "";
-    	for(int i=0;i<files.size();i++)
-    	{
-			byte[] fileData = files.get(i).getBytes();
-			int ramdomCount= (int)(Math.random()*System.currentTimeMillis()%10000000);
-			try {
-			fos = new FileOutputStream(SAVE_PATH+"test"+ramdomCount+".png");
-			imageurl+="test"+ramdomCount+",";
-			}
-			catch (Exception e) {
-				fos = new FileOutputStream(SAVE_PATH+"test1"+ramdomCount+".png");
-				imageurl+="test1"+ramdomCount+",";
-			}
-			fos.write(fileData);
-			
-    	}
-    	fos.close();
-    	return imageurl;
-    }
-    //¸ñÀû : °¢ Á¦Ç°ÀÇ ¼¼ºÎÁ¤º¸ ¹ÝÈ¯
-    // Á¦Ç° Å×ÀÌºí Æ¯Á¤ Á¦Ç°ÀÇ ¸ðµç Á¤º¸¸¦ ¹ÝÈ¯ÇÑ´Ù.
+    
+    //ï¿½ï¿½ï¿½ï¿½ : ï¿½ï¿½ ï¿½ï¿½Ç°ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È¯
+    // ï¿½ï¿½Ç° ï¿½ï¿½ï¿½Ìºï¿½ Æ¯ï¿½ï¿½ ï¿½ï¿½Ç°ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È¯ï¿½Ñ´ï¿½.
     @CrossOrigin(origins = "*", allowedHeaders = "*")  
     @RequestMapping(
-  		  value = "/products/{product}",method = RequestMethod.GET
+  		  value = "/products/{productNumber}",method = RequestMethod.GET
     		)
     @ResponseBody 
-    public JSONObject productCotent(@PathVariable("product") String product) {
+    public JSONObject productCotent(@PathVariable("productNumber") String productNumber) {
     	JSONObject jsonObject= new JSONObject();
     	
     	ProductVO vo = new ProductVO();
-    	vo.setProduct(product);
+    	vo.setProductNumber(Long.valueOf(productNumber));
     	vo = proService.selectProduct(vo);
     	
     	jsonObject.put("product", vo.getProduct());
@@ -200,12 +178,13 @@ public class ProductsController {
     	JSONObject colorJ = new JSONObject();
 		JSONArray jsoncolors = new JSONArray();
     	String colors[] = vo.getColor().split("#");
-		// colorsÀÇ size¸¸Å­ ¹Ýº¹
+		// colorsï¿½ï¿½ sizeï¿½ï¿½Å­ ï¿½Ýºï¿½
 		for(String color:colors)
 		{
-			if(color!="") //0¹ø ÀÎµ¦½ºÀÇ ºó¹è¿­À» »©±âÀ§ÇÔ 
+			if(color!="") //0ï¿½ï¿½ ï¿½Îµï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½è¿­ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 
 				jsoncolors.add("#"+color);
 		}
+		jsonObject.put("id",vo.getProductNumber());
 		colorJ.put("color",jsoncolors);
 		jsonObject.put("colors", colorJ);
     	jsonObject.put("kind", vo.getKind());
@@ -223,7 +202,7 @@ public class ProductsController {
     	jsonObject.put("image", imageArr);
     	return jsonObject;
     }
-    //»çÀÌÁî º¯È¯ ¹è¿­
+    //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È¯ ï¿½è¿­
     public static String sizes[] = {"XS","S","M","L","XL","2XL","3XL","4XL","5XL","6XL","7XL",
     								"XS(80)","S(85)","M(90)","L(95)","XL(100)","2XL(105)","3XL(110)","4XL(115)",
     								"XS(85)","S(90)","M(95)","L(100)","XL(105)","2XL(110)","3XL(115)","4XL(120)",
@@ -236,20 +215,20 @@ public class ProductsController {
     	boolean addSize = false;
     	for(String s : sizes)
     	{
-    		//½ÃÀÛÁöÁ¡
+    		//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     		if(size.contains(s+" ~"))
     		{
     			System.out.println("contains:"+s);
     			addSize=!addSize;
     		}
-    		//½ÃÀÛµÇ¾úÀ¸¸é Ãß°¡ÇÑ´Ù.!
+    		//ï¿½ï¿½ï¿½ÛµÇ¾ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ß°ï¿½ï¿½Ñ´ï¿½.!
     		if(addSize)
     		{
     			System.out.println(s);
     			Jarr.add(s);
     			
     		}
-    		//Á¾·á ÁöÁ¡
+    		//ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     		if(addSize&&size.contains("~ "+s))
     		{
     			System.out.println("contains:"+s);
@@ -263,7 +242,7 @@ public class ProductsController {
     	Jobj.put("size", Jarr);
 		return Jobj;
     }
-    // ¸ñÀû : ¹°¸®ÀúÀå¼Ò(¼­¹öÄÄ)¿¡ ÀúÀåµÈ ÀÌ¹ÌÁö¸¦ ¹ÝÈ¯
+    // ï¿½ï¿½ï¿½ï¿½ : ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½(ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½)ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ì¹ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È¯
     @CrossOrigin(origins = "*", allowedHeaders = "*")  
     @RequestMapping(
   		  value = "/com/productImage/{img}",method = RequestMethod.GET
@@ -277,16 +256,17 @@ public class ProductsController {
 //	    System.out.println(img+".png");
 	    return IOUtils.toByteArray(in);
 	}
-    // ¸ñÀû : Å©·Ñ¸µÇÑ µ¥ÀÌÅÍ(.txt)¸¦ µ¥ÀÌÅÍ º£ÀÌ½º¿¡ ÀúÀå
+    // ï¿½ï¿½ï¿½ï¿½ : Å©ï¿½Ñ¸ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½(.txt)ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ì½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     static final String rootPath = "C:\\Users\\kim\\Desktop\\project\\ShoppingMall\\files\\";
     static String source = rootPath + "books.txt";
     @RequestMapping(value = "/putDatabase")
     public void putDatabase() {
-    	// ÁÖ½ºÆ®¸² ±¸¿ª
-    	System.out.println("½ÇÇàµÊ");
+    	// ï¿½Ö½ï¿½Æ®ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+    	System.out.println("ï¿½ï¿½ï¿½ï¿½ï¿½");
     			Reader fr = null; 			
-    			// º¸Á¶ ½ºÆ®¸²
-    			BufferedReader br = null;		
+    			// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Æ®ï¿½ï¿½
+    			BufferedReader br = null;
+    			String colorall = "";
     			try {
     				fr= new FileReader(source);    				
     				br  =new BufferedReader(fr);   				
@@ -294,7 +274,8 @@ public class ProductsController {
     				ProductVO vo = new ProductVO();
     				String line="";
     				String priceD[];
-    				while((line = br.readLine())!=null) //¿©±ä ¾øÀ¸¸é null°ªÀÌ ¹ÝÈ¯
+    				
+    				while((line = br.readLine())!=null) //ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ nullï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È¯
     				{
     					i++;
     					//index 0~4
@@ -305,12 +286,13 @@ public class ProductsController {
     					priceD=data[2].split(",");   					
     					vo.setPrice(Long.valueOf(priceD[0]+priceD[1]));
     					vo.setColor(data[3]);
+    					colorall+=data[3];
     					vo.setImageSmall(data[4]);
     					vo.setKind(data[5]);
     					vo.setRegDate(new Date());
     					vo.setProductNumber((long)i);
-    					proService.insertProduct(vo);
-    					System.out.println(vo.toString());
+//    					proService.insertProduct(vo);
+//    					System.out.println(vo.toString());
     				}
     			}catch (Exception e) {
     				e.printStackTrace();
@@ -321,6 +303,16 @@ public class ProductsController {
 						
 					}
 				}
+    			String[] colorArr = colorall.split("#");
+    			Map<String,String> colorData = new HashMap<String,String>();
+    			colorData.put("","");
+    			for(String colorZ: colorArr)
+    			{
+    				for(int i=0;i<colorData.size();i++)
+    					if(!colorZ.equals(colorData.get(i)))
+    						colorData.put(colorZ.toUpperCase(),colorZ.toUpperCase());   				
+    			}
+    			System.out.println(colorData.toString()+ "ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½" + colorData.size());
     			
     }
 }

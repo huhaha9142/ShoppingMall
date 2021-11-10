@@ -9,4 +9,5 @@ public interface ReviewService {
 	public boolean insertReview(ReviewVO vo);
 	public boolean updateReview(ReviewVO vo);
 	public boolean deleteReview(ReviewVO vo);
+	public String selectImage(ReviewVO vo);
 }

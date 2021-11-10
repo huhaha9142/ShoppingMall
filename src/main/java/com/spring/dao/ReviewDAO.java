@@ -9,5 +9,5 @@ public interface ReviewDAO {
 	public int insertReview(ReviewVO vo);
 	public int updateReview(ReviewVO vo);
 	public int deleteReview(ReviewVO vo);
-	
+	public String selectImage(ReviewVO vo);
 }

@@ -16,23 +16,24 @@ public class ReviewServiceImpl implements ReviewService {
 	private ReviewDAO dao;
 	@Override
 	public List<ReviewVO> selectList() {
-		// TODO Auto-generated method stub
 		return dao.selectList();
 	}
 	@Override
 	public boolean insertReview(ReviewVO vo) {
-		// TODO Auto-generated method stub
 		return 1==dao.insertReview(vo);
 	}
 	@Override
 	public boolean updateReview(ReviewVO vo) {
-		// TODO Auto-generated method stub
 		return 1==dao.updateReview(vo);
 	}
 	@Override
 	public boolean deleteReview(ReviewVO vo) {
-		// TODO Auto-generated method stub
 		return 1==dao.deleteReview(vo);
 	}
+	@Override
+	public String selectImage(ReviewVO vo) {
+		return dao.selectImage(vo);
+	}
+
 
 }

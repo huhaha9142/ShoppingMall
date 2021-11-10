@@ -19,7 +19,8 @@
     		size,
     		price,
     		kind,
-    		image_small as imageSmall
+    		image_small AS imageSmall,
+    		product_number AS productNumber
          FROM products
     </select>
     <select id="selectCheckInsert"  parameterType="productVO" resultType="productVO">
@@ -47,7 +48,7 @@
     		product_number AS productNumber,
     		regdate AS regDate
     	FROM products
-    	WHERE product=#{product}
+    	WHERE product_number=#{productNumber}
     </select>
     <update id="updateProduct"  parameterType="productVO">
     	UPDATE products 

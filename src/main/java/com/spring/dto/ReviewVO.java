@@ -11,7 +11,41 @@ public class ReviewVO {
 	private	Long usersNumber;
 	private Long productsNumber;
 	private Long reviewsNumber;
+	private String product;
+	private String id;
+	private String name;
 	
+	@Override
+	public String toString() {
+		return "ReviewVO [content=" + content + ", title=" + title + ", image=" + image + ", inDate=" + inDate
+				+ ", hit=" + hit + ", usersNumber=" + usersNumber + ", productsNumber=" + productsNumber
+				+ ", reviewsNumber=" + reviewsNumber + ", product=" + product + ", id=" + id + ", name=" + name + "]";
+	}
+
+	public String getProduct() {
+		return product;
+	}
+
+	public void setProduct(String product) {
+		this.product = product;
+	}
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
 	public ReviewVO() {}
 	
 	public ReviewVO(String content,String title, String image, Date inDate,
@@ -47,12 +81,7 @@ public class ReviewVO {
 	
 	
 
-	@Override
-	public String toString() {
-		return "ReviewVO [content=" + content + ", title=" + title + ", image=" + image + ", inDate=" + inDate
-				+ ", hit=" + hit + ", usersNumber=" + usersNumber + ", productsNumber=" + productsNumber
-				+ ", reviewsNumber=" + reviewsNumber + "]";
-	}
+	
 	public String getContent() {
 		return content;
 	}

@@ -20,12 +20,10 @@ public class ProductsServiceImpl implements ProductsService {
 	}
 	@Override
 	public List<ProductVO> selectList() {
-		// TODO Auto-generated method stub
 		return dao.selectList();
 	}
 	@Override
 	public Long selectCheckInsert(ProductVO vo) {
-		// TODO Auto-generated method stub
 		System.out.println("service"+vo.toString());
 		ProductVO vod = dao.selectCheckInsert(vo);
 		if(vod!=null)
@@ -33,19 +31,15 @@ public class ProductsServiceImpl implements ProductsService {
 		return (long) 0;
 	}
 	@Override
-	public boolean updateProduct(ProductVO vo) {
-		// TODO Auto-generated method stub
-		
+	public boolean updateProduct(ProductVO vo) {		
 		return 1==dao.updateProduct(vo);
 	}
 	@Override
 	public boolean insertProduct(ProductVO vo) {
-		// TODO Auto-generated method stub
 		return 1==dao.insertProduct(vo);
 	}
 	@Override
 	public ProductVO selectProduct(ProductVO vo) {
-		// TODO Auto-generated method stub
 		return dao.selectProduct(vo);
 	}
 
