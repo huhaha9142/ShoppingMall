@@ -42,16 +42,16 @@ public class ProductsController {
 
     @Inject
     private ProductsServiceImpl proService;
-    //json �迭�� �̹���byte[] ������ �����Ͱ� 25%���� ��Ƣ���..
-    //������ ���ڵ��� �ð��� �ణ�̳��� �ҿ��
+    //json �迭�� �̹���byte[] ������ �����Ͱ� 25%���� ��Ƣ���?..
+    //������ ���ڵ��� �ð��� �ణ�̳��� �ҿ��?
     
     
-    //���� : ��� ��ǰ����Ʈ�� ��ȯ
+    //���� : ���? ��ǰ����Ʈ�� ��ȯ
     // ��ǰ�� ���� ũ�� ������ ���� �̹���
     @CrossOrigin(origins = "*", allowedHeaders = "*")
-    @RequestMapping(value="/products",method = RequestMethod.GET)
+    @RequestMapping(value="/products",method = RequestMethod.GET,produces = "application/json; charset=utf8")
     @ResponseBody
-    public JSONObject productsList(
+    public String productsList(
     		@RequestParam(value="kind",required=false) String kindP,
     		@RequestParam(value="color",required=false) String colorP,
     		@RequestParam(value="size",required=false) String sizeP,
@@ -74,7 +74,7 @@ public class ProductsController {
 				JSONObject list = new JSONObject();
 				JSONObject colorJ = new JSONObject();
 				JSONArray jsoncolors = new JSONArray();
-				//�������� ����� �̹����� ������ ���ؼ� , split
+				//�������� �����? �̹����� ������ ���ؼ� , split
 				String[] image = sql.get(i).getImageSmall().split(",");    
 				//�����͸� �б� ���� �ε��� �߰�
 				list.put("index", i);
@@ -83,7 +83,7 @@ public class ProductsController {
 				// colors�� size��ŭ �ݺ�
 				for(String color:colors)
 				{
-					if(color!="") { //0�� �ε����� ��迭�� �������� 
+					if(color!="") { //0�� �ε����� ���?�� �������� 
 						jsoncolors.add("#"+color);
 					
 					}
@@ -103,15 +103,15 @@ public class ProductsController {
     		}
     	}
     	
-    	return jsonObject;
+    	return jsonObject.toString();
     }
     
-    //���� : ��ǰ�� ����Ѵ�.
+    //���� : ��ǰ�� ����Ѵ�?.
     //������, ����, ����, ����, ����, �̹���, �̹���2, �̹���3, ��ǰ��, ����
     @CrossOrigin(origins = "*", allowedHeaders = "*")
-    @RequestMapping(value="/products",method = RequestMethod.POST)
+    @RequestMapping(value="/products",method = RequestMethod.POST,produces = "application/json; charset=utf8")
     @ResponseBody
-    public JSONObject productsInsertOrUpdate(
+    public String productsInsertOrUpdate(
     		@RequestParam("size") String size,
     		@RequestParam("color") String color,
     		@RequestParam("kind") String kind,
@@ -139,7 +139,7 @@ public class ProductsController {
     		vo.setProductImage(FunctionSpring.fileSave(productImage,SAVE_PATH));
     		boolean sqlUpdate = proService.updateProduct(vo);
     		json.put("result", "update");
-    		return json;
+    		return json.toString();
     	}
     	if(productNumber==0)//�ߺ��� ���ٸ� ������ �����Ѵ�
     	{
@@ -147,25 +147,25 @@ public class ProductsController {
     		vo.setImageSmall(FunctionSpring.fileSave(imageSmall,SAVE_PATH));
     		vo.setImageLazy(FunctionSpring.fileSave(imageLazy,SAVE_PATH));
     		vo.setProductImage(FunctionSpring.fileSave(productImage,SAVE_PATH));
-    		// ������ ��� ����*�ð��� �̿��ؼ� ������ ���� ��ǰ��ȣ�� �����Ѵ�
+    		// ������ ���? ����*�ð��� �̿��ؼ� ������ ���� ��ǰ��ȣ�� �����Ѵ�
     		vo.setProductNumber((long)(Math.random()*System.currentTimeMillis())%10000000);
     		boolean sqlInsert = proService.insertProduct(vo);
     		json.put("result", "insert");
-    		return json;
+    		return json.toString();
     	}
     	json.put("result", "fail");
-    	return json;
+    	return json.toString();
     	
     }
     
     //���� : �� ��ǰ�� �������� ��ȯ
-    // ��ǰ ���̺� Ư�� ��ǰ�� ��� ������ ��ȯ�Ѵ�.
+    // ��ǰ ���̺� Ư�� ��ǰ�� ���? ������ ��ȯ�Ѵ�.
     @CrossOrigin(origins = "*", allowedHeaders = "*")  
     @RequestMapping(
-  		  value = "/products/{productNumber}",method = RequestMethod.GET
+  		  value = "/products/{productNumber}",method = RequestMethod.GET,produces = "application/json; charset=utf8"
     		)
     @ResponseBody 
-    public JSONObject productCotent(@PathVariable("productNumber") String productNumber) {
+    public String productCotent(@PathVariable("productNumber") String productNumber) {
     	JSONObject jsonObject= new JSONObject();
     	
     	ProductVO vo = new ProductVO();
@@ -181,7 +181,7 @@ public class ProductsController {
 		// colors�� size��ŭ �ݺ�
 		for(String color:colors)
 		{
-			if(color!="") //0�� �ε����� ��迭�� �������� 
+			if(color!="") //0�� �ε����� ���?�� �������� 
 				jsoncolors.add("#"+color);
 		}
 		jsonObject.put("id",vo.getProductNumber());
@@ -200,7 +200,7 @@ public class ProductsController {
     		imageArr.add(i, URL_PATH+image[i]);	
     	}
     	jsonObject.put("image", imageArr);
-    	return jsonObject;
+    	return jsonObject.toString();
     }
     //������ ��ȯ �迭
     public static String sizes[] = {"XS","S","M","L","XL","2XL","3XL","4XL","5XL","6XL","7XL",
@@ -242,7 +242,7 @@ public class ProductsController {
     	Jobj.put("size", Jarr);
 		return Jobj;
     }
-    // ���� : ���������(������)�� ����� �̹����� ��ȯ
+    // ���� : ���������?(������)�� �����? �̹����� ��ȯ
     @CrossOrigin(origins = "*", allowedHeaders = "*")  
     @RequestMapping(
   		  value = "/com/productImage/{img}",method = RequestMethod.GET
@@ -262,7 +262,7 @@ public class ProductsController {
     @RequestMapping(value = "/putDatabase")
     public void putDatabase() {
     	// �ֽ�Ʈ�� ����
-    	System.out.println("�����");
+    	System.out.println("�����?");
     			Reader fr = null; 			
     			// ���� ��Ʈ��
     			BufferedReader br = null;

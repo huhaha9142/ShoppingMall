@@ -36,11 +36,11 @@ public class ReviewsController {
 	@Inject
 	private ReviewServiceImpl reService;
 	
-	//��ü ���� �ҷ�����
+	//占쏙옙체 占쏙옙占쏙옙 占쌀뤄옙占쏙옙占쏙옙
 	@CrossOrigin(origins = "*", allowedHeaders = "*")
-    @RequestMapping(value="/reviews",method = RequestMethod.GET)
+    @RequestMapping(value="/reviews",method = RequestMethod.GET,produces = "application/json; charset=utf8")
     @ResponseBody
-    public JSONObject reviewList()
+    public String reviewList()
     {
 		JSONObject jsonObject = new JSONObject();
     	JSONArray jsonArarry = new JSONArray();
@@ -58,7 +58,7 @@ public class ReviewsController {
 			list.put("indate", sql.get(i).getInDate());
 			for(String img:image)
 			{
-				if(img!="") //0�� �ε����� ��迭�� �������� 
+				if(img!="") //0占쏙옙 占싸듸옙占쏙옙占쏙옙 占쏙옙瓦�占쏙옙 占쏙옙占쏙옙占쏙옙占쏙옙 
 					jsonimg.add(URL_PATH+img);
 			}
 			imgJ.put("image", jsonimg);
@@ -72,16 +72,16 @@ public class ReviewsController {
 			jsonObject.put("reviews", jsonArarry);
     	}
     	
-    	return jsonObject;
+    	return jsonObject.toString();
     }
-	// ���� �ۼ�
-	// ���� ���� �߰� �ʿ�
+	// 占쏙옙占쏙옙 占쌜쇽옙
+	// 占쏙옙占쏙옙 占쏙옙占쏙옙 占쌩곤옙 占십울옙
 	@CrossOrigin(origins = "*", allowedHeaders = "*")  
     @RequestMapping(
-  		  value = "/reviews",method = RequestMethod.POST
+  		  value = "/reviews",method = RequestMethod.POST,produces = "application/json; charset=utf8"
   		  )
     @ResponseBody
-    public JSONObject reviewInsert(
+    public String reviewInsert(
     		@RequestParam("content") String content,
     		@RequestParam("title") String title,
     		@RequestParam("image") List<MultipartFile> imageReview,
@@ -91,7 +91,7 @@ public class ReviewsController {
 		System.out.println(content);
 		System.out.println(imageReview);
 		//content title image indate hit(0), usersNumber, productsNumber
-		//���� ������ �����̳� JWT �� �޾ƿ���, ��ǰ ��ȣ�� ������ ���� �Ķ���� �� �̿�
+		//占쏙옙占쏙옙 占쏙옙占쏙옙占쏙옙 占쏙옙占쏙옙占싱놂옙 JWT 占쏙옙 占쌨아울옙占쏙옙, 占쏙옙품 占쏙옙호占쏙옙 占쏙옙占쏙옙占쏙옙 占쏙옙占쏙옙 占식띰옙占쏙옙占� 占쏙옙 占싱울옙
 		ReviewVO vo = new ReviewVO(content, title, 
 				FunctionSpring.fileSave(imageReview,SAVE_PATH),
 				new Date(), (long)0, (long)1, productNumber);
@@ -99,17 +99,17 @@ public class ReviewsController {
 		boolean insert = reService.insertReview(vo);
 		String result = (insert==true)?"insert":"fail";
 		json.put("result",result);
-		return json;
+		return json.toString();
     }
-	// ���� ����
-	// ���� ���� �߰� �ʿ�
-	// ���� �����Ͷ� ��ü �ʿ� Ȥ�� ���н� ���� ��� �ؾߵ�
+	// 占쏙옙占쏙옙 占쏙옙占쏙옙
+	// 占쏙옙占쏙옙 占쏙옙占쏙옙 占쌩곤옙 占십울옙
+	// 占쏙옙占쏙옙 占쏙옙占쏙옙占싶띰옙 占쏙옙체 占십울옙 혹占쏙옙 占쏙옙占싻쏙옙 占쏙옙占쏙옙 占쏙옙占� 占쌔야듸옙
 	@CrossOrigin(origins = "*", allowedHeaders = "*")  
     @RequestMapping(
-  		  value = "/reviews/{reviewsNumber}",method = RequestMethod.POST
+  		  value = "/reviews/{reviewsNumber}",method = RequestMethod.POST,produces = "application/json; charset=utf8"
   		  )
     @ResponseBody
-    public JSONObject reviewUpdate(
+    public String reviewUpdate(
     		@PathVariable("reviewsNumber") String reviewsNumber,
     		@RequestParam("content") String content,
     		@RequestParam("title") String title,
@@ -125,17 +125,17 @@ public class ReviewsController {
 		boolean update = reService.updateReview(vo);
 		String result = (update==true)?"update":"fail";
 		json.put("result",result);
-		return json;
+		return json.toString();
 	
     }
-	// ���� ����
-	// ���� ���� �߰� �ʿ�
+	// 占쏙옙占쏙옙 占쏙옙占쏙옙
+	// 占쏙옙占쏙옙 占쏙옙占쏙옙 占쌩곤옙 占십울옙
 	@CrossOrigin(origins = "*", allowedHeaders = "*")  
     @RequestMapping(
-  		  value = "/reviews/{reviewsNumber}",method = RequestMethod.DELETE
+  		  value = "/reviews/{reviewsNumber}",method = RequestMethod.DELETE,produces = "application/json; charset=utf8"
   		  )
     @ResponseBody
-    public JSONObject reviewUpdate(
+    public String reviewUpdate(
     		@PathVariable("reviewsNumber") String reviewsNumber)
     {
 		JSONObject json = new JSONObject();
@@ -150,11 +150,11 @@ public class ReviewsController {
 		}
 		String result = (delete==true)?"delete":"fail";
 		json.put("result",result);
-		return json;
+		return json.toString();
 		
     }
 	
-	//reviewNumber�� ���� ���ƿ� �ø���
+	//reviewNumber占쏙옙 占쏙옙占쏙옙 占쏙옙占싣울옙 占시몌옙占쏙옙
 	@CrossOrigin(origins = "*", allowedHeaders = "*")  
     @RequestMapping(
   		  value = "/com/review/{reviewNumber}",method = RequestMethod.GET
@@ -169,7 +169,7 @@ public class ReviewsController {
 	
 	
 	
-	// ���� : ���������(������)�� ����� �̹����� ��ȯ
+	// 占쏙옙占쏙옙 : 占쏙옙占쏙옙占쏙옙占쏙옙占�(占쏙옙占쏙옙占쏙옙)占쏙옙 占쏙옙占쏙옙占� 占싱뱄옙占쏙옙占쏙옙 占쏙옙환
     @CrossOrigin(origins = "*", allowedHeaders = "*")  
     @RequestMapping(
   		  value = "/com/reviewImage/{img}",method = RequestMethod.GET
