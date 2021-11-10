@@ -30,6 +30,7 @@ function ImageLodingEx() {
                     url:`http://pvpvpvpvp.gonetis.com:8080/sample/get`,
                     responseType:'blob',
             });
+            console.log("size binary",response);
             const url = URL.createObjectURL(response.data);
             setImage(url);
             console.log(response.data);
@@ -43,7 +44,7 @@ function ImageLodingEx() {
         fetchUsers();
       }, []);
     if (!image) return null;
-    return( <><a href="http://pvpvpvpvp.gonetis.com:8080/sample/get"> <img src={image}/></a></>
+    return( <><a href="http://pvpvpvpvp.gonetis.com:8080/sample/get"> <img src="http://pvpvpvpvp.gonetis.com:8080/sample/get" /></a></>
 )
 }
 

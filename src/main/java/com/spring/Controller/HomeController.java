@@ -3,6 +3,7 @@ package com.spring.Controller;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+
 import java.util.List;
 import java.util.Locale;
 
@@ -12,18 +13,18 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.MediaType;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
+
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.mysql.cj.xdevapi.JsonString;
+
 import com.spring.dto.MemberVO;
 import com.spring.service.MemberService;
 import com.spring.service.ProductsServiceImpl;
@@ -56,26 +57,34 @@ public class HomeController {
         return "home";
     }
     @CrossOrigin(origins = "*", allowedHeaders = "*")  
-    @GetMapping(
-    		  value = "/get",
-    		  produces = MediaType.IMAGE_JPEG_VALUE
+    @RequestMapping(
+    		  value = "/get"
+    		  ,method = RequestMethod.GET
+//    		  ,produces = MediaType.IMAGE_JPEG_VALUE
     		)
-    		public @ResponseBody byte[] getImageWithMediaType() throws IOException {
+    @ResponseBody 
+    		public byte[] getImageWithMediaType() throws IOException {
 //    			String url = servicePro.selectImage();
     		    InputStream in = getClass().getResourceAsStream("/com/image/product001.png");
     		    return IOUtils.toByteArray(in);
     		}
     @CrossOrigin(origins = "*", allowedHeaders = "*")  
     @RequestMapping(value = "/send", method = RequestMethod.POST)
-    public String imageLoding(@RequestParam("files") MultipartFile files) throws IOException {
-    	byte[] fileData = files.getBytes();
-    	System.out.println(fileData);
-    	FileOutputStream fos = new FileOutputStream(SAVE_PATH+"test"+".png");
-    	fos.write(fileData);
+    public String imageLoding(@RequestParam("files") List<MultipartFile> files) throws IOException {
+    	FileOutputStream fos = null;
+    	System.out.println(files.size());
+    	String imageSmall = "";
+    	for(int i=0;i<files.size();i++)
+    	{
+			byte[] fileData = files.get(i).getBytes();
+			System.out.println(fileData);
+			fos = new FileOutputStream(SAVE_PATH+"test"+fileData.toString()+".png");
+			imageSmall+="com/image/test"+fileData.toString()+",";
+			fos.write(fileData);
+    	}
     	fos.close();
-    	if(fileData==null)
+    	System.out.println(imageSmall);
     	return "N";
-    	return "S";
 	}
     @CrossOrigin(origins = "*", allowedHeaders = "*")  
     @RequestMapping(value = "/loginform", method = RequestMethod.POST)

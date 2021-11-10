@@ -19,12 +19,10 @@ function SearchBarUncontroller(props) {
     if (keyword!="") {// 입력값이 있을때만.!
       
     // data.@@@. 변경점
-    props.data.citys.forEach(element => {
-      let string = element.city.toLowerCase(); // 대소문자 상관없게 처리
-      let string2 = element.city.toUpperCase();
-      let string3 = element.city; //원본
-      if (string.indexOf(keyword)!=-1 || string2.indexOf(keyword)!=-1 || string3.indexOf(keyword)!=-1) {
-        data.push(element.city);       
+    props.data.products.forEach(element => {
+      let string = element.product; //원본
+      if (string.indexOf(keyword)!=-1) {
+        data.push(element.product);       
       }       
     });
   }
@@ -49,22 +47,22 @@ function SearchBarUncontroller(props) {
 
 
 function SearchBarController() {
-    const [citys, setUsers] = useState(null);
+    const [products, setProducts] = useState(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     useEffect(() => {
-        setUsers(null);
+      setProducts(null);
         const fetchUsers = async () => {
           try {
             // 요청이 시작 할 때에는 error 와 users 를 초기화하고
             setError(null);
-            setUsers(null);
+            setProducts(null);
             // loading 상태를 true 로 바꿉니다.
             setLoading(true);
             const response = await axios.get(
-                ''//데이터 없음..
+                'http://pvpvpvpvp.gonetis.com:8080/sample/products '//없음!
             );
-            setUsers(response.data); // 데이터는 response.data 안에 들어있습니다.
+            setProducts(response.data); // 데이터는 response.data 안에 들어있습니다.
             console.log("axios",response.data);
           } catch (e) {
             setError(e);
@@ -74,9 +72,9 @@ function SearchBarController() {
     
         fetchUsers();
       }, []);
-    if (!citys) return null;
+    if (!products) return null;
     return(
-    <SearchBarUncontroller data={citys}/>
+    <SearchBarUncontroller data={products}/>
     )
 }
 

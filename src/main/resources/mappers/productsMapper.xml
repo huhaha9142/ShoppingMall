@@ -2,10 +2,8 @@
 <!DOCTYPE mapper
   PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
- 
-<mapper namespace="com.example.mapper.products">
- 
-    <!-- 
+ <mapper namespace="com.example.mapper.products">
+     <!-- 
         mybatis-config.xml의 typeAlias에 등록해두지 않았다면 
         
         <select id="selectMember" resultType="com.example.dto.MemberVO" >
@@ -14,22 +12,73 @@
         
         이렇게 해야 한다.
     -->
-    <select id="selctList" resultType="String">
+    <select id="selectList" resultType="productVO">
     	 SELECT 
     		product,
-    		image_lazy as imageLazy
+    		color,
+    		size,
+    		price,
+    		kind,
+    		image_small AS imageSmall,
+    		product_number AS productNumber
          FROM products
     </select>
-    <select id="selectimage" resultType="String">
-        SELECT size,
-        		color,
-        		kind,
-   				quantity,
-   				price,
-   				content,
-   				product,
-   				product_number as productNumber
+    <select id="selectCheckInsert"  parameterType="productVO" resultType="productVO">
+        SELECT 
+        	product_number AS productNumber
          FROM products
+         WHERE size =#{size} AND
+         		color=#{color} AND
+         		kind=#{kind} AND
+         		price=#{price} AND
+         		product=#{product}
     </select>
-    
-</mapper>
+    <select id="selectProduct" parameterType="productVO" resultType="productVO">
+    	SELECT
+    		size,
+    		color,
+    		kind,
+    		quantity,
+    		price,
+    		content,
+    		image_small AS imageSmall,
+    		image_lazy AS imageLazy,
+    		product_image AS productImage,
+    		product,
+    		product_number AS productNumber,
+    		regdate AS regDate
+    	FROM products
+    	WHERE product_number=#{productNumber}
+    </select>
+    <update id="updateProduct"  parameterType="productVO">
+    	UPDATE products 
+    	SET size = #{size},
+    		 color = #{color},
+    		 quantity = #{quantity},
+    		 price = #{price},
+			 content = #{content},
+			 image_small = #{imageSmall},
+			 image_lazy = #{imageLazy},
+			 product_image = #{productImage},
+			 product = #{product},
+			 regdate = #{regDate}
+    	WHERE (product_number = #{productNumber})
+    </update>
+    <insert id="insertProduct" parameterType="productVO">
+    	INSERT INTO products
+    	(size,color,kind,quantity,price,content,image_small,
+    	image_lazy,product_image,product,regdate)
+			VALUE (#{size},
+					#{color},
+					#{kind},
+					#{quantity},
+					#{price},
+					#{content},
+					#{imageSmall},
+					#{imageLazy},
+					#{productImage},
+					#{product},
+					#{regDate}
+				)			
+    </insert>
+ </mapper>
