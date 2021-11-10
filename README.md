@@ -26,6 +26,10 @@ http://pvpvpvpvp.gonetis.com:8080/sample/products
 
 >이미지의 모든 포멧은 .png 로 저장됩니다.
 
+* 결과는 JSON형식으로 응답됩니다.
+* ex) 성공시 : {"result","insert"}
+* 실패시 : {"result","fail"}
+
 
 
 products/{product} .GET   
@@ -62,6 +66,10 @@ http://pvpvpvpvp.gonetis.com:8080/sample/reviews
 
 >이미지의 모든 포멧은 .png 로 저장됩니다.
 
+* 결과는 JSON형식으로 응답됩니다.
+* ex) 성공시 : {"result","insert"}
+* 실패시 : {"result","fail"}
+
 reviews{reviewNumber} .POST .DELETE   
 ---
 ___    
@@ -87,3 +95,7 @@ ___
 ``````
 http://pvpvpvpvp.gonetis.com:8080/sample/reviews/{reviewsNumber}
 ``````
+
+* 결과는 JSON형식으로 응답됩니다.
+* ex) 성공시 : {"result","delete"}
+* 실패시 : {"result","fail"}
