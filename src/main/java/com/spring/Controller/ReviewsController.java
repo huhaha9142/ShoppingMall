@@ -27,8 +27,8 @@ import com.spring.function.FunctionSpring;
 import com.spring.service.ReviewServiceImpl;
 
 @Controller
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class ReviewsController {
-//	private static String URL_
 	private static String URL_PATH="http://pvpvpvpvp.gonetis.com:8080/sample/com/reviewImage/";
 	private static final Logger logger = LoggerFactory.getLogger(ProductsController.class);
 	private static String SAVE_PATH="c:/Users/kim/Desktop/project/ShoppingMall/src/main/java/com/image/review/";
@@ -36,7 +36,7 @@ public class ReviewsController {
 	@Inject
 	private ReviewServiceImpl reService;
 	
-	//占쏙옙체 占쏙옙占쏙옙 占쌀뤄옙占쏙옙占쏙옙
+	// 리뷰의 전부를 반환 하는 API
 	@CrossOrigin(origins = "*", allowedHeaders = "*")
     @RequestMapping(value="/reviews",method = RequestMethod.GET,produces = "application/json; charset=utf8")
     @ResponseBody
@@ -55,27 +55,28 @@ public class ReviewsController {
 			list.put("index", i);
 			list.put("content", sql.get(i).getContent());
 			list.put("title", sql.get(i).getTitle());
-			list.put("indate", sql.get(i).getInDate());
+			//Date 형식은 넣으면 제이슨 파싱에 문제가 생김 변경해서 넣을것
+//			list.put("indate", sql.get(i).getInDate());
 			for(String img:image)
 			{
-				if(img!="") //0占쏙옙 占싸듸옙占쏙옙占쏙옙 占쏙옙瓦�占쏙옙 占쏙옙占쏙옙占쏙옙占쏙옙 
+				if(img!="") 
 					jsonimg.add(URL_PATH+img);
 			}
-			imgJ.put("image", jsonimg);
-			list.put("images", imgJ);
+			
 			list.put("hit", sql.get(i).getHit());
 			list.put("userId", sql.get(i).getId());
+			imgJ.put("image", jsonimg);
+			list.put("images", imgJ);
 			list.put("userName",sql.get(i).getName());
 			list.put("product", sql.get(i).getProduct());
 			list.put("reviewsNumber", sql.get(i).getReviewsNumber());
 			jsonArarry.add(list);
 			jsonObject.put("reviews", jsonArarry);
+//			System.out.println(jsonArarry.toString());
     	}
-    	
     	return jsonObject.toString();
     }
-	// 占쏙옙占쏙옙 占쌜쇽옙
-	// 占쏙옙占쏙옙 占쏙옙占쏙옙 占쌩곤옙 占십울옙
+	// 리뷰를 작성하는 API
 	@CrossOrigin(origins = "*", allowedHeaders = "*")  
     @RequestMapping(
   		  value = "/reviews",method = RequestMethod.POST,produces = "application/json; charset=utf8"
@@ -91,7 +92,7 @@ public class ReviewsController {
 		System.out.println(content);
 		System.out.println(imageReview);
 		//content title image indate hit(0), usersNumber, productsNumber
-		//占쏙옙占쏙옙 占쏙옙占쏙옙占쏙옙 占쏙옙占쏙옙占싱놂옙 JWT 占쏙옙 占쌨아울옙占쏙옙, 占쏙옙품 占쏙옙호占쏙옙 占쏙옙占쏙옙占쏙옙 占쏙옙占쏙옙 占식띰옙占쏙옙占� 占쏙옙 占싱울옙
+		// hit는 기본값 0 userNumber는 로그인이 완료되면 작업에 들어가야 한다.
 		ReviewVO vo = new ReviewVO(content, title, 
 				FunctionSpring.fileSave(imageReview,SAVE_PATH),
 				new Date(), (long)0, (long)1, productNumber);
@@ -101,9 +102,9 @@ public class ReviewsController {
 		json.put("result",result);
 		return json.toString();
     }
-	// 占쏙옙占쏙옙 占쏙옙占쏙옙
-	// 占쏙옙占쏙옙 占쏙옙占쏙옙 占쌩곤옙 占십울옙
-	// 占쏙옙占쏙옙 占쏙옙占쏙옙占싶띰옙 占쏙옙체 占십울옙 혹占쏙옙 占쏙옙占싻쏙옙 占쏙옙占쏙옙 占쏙옙占� 占쌔야듸옙
+	
+	// 리뷰의 재작성을 하는 API
+	// 기존의 파일을 지우는 동작을 작성해야한다.!
 	@CrossOrigin(origins = "*", allowedHeaders = "*")  
     @RequestMapping(
   		  value = "/reviews/{reviewsNumber}",method = RequestMethod.POST,produces = "application/json; charset=utf8"
@@ -128,8 +129,8 @@ public class ReviewsController {
 		return json.toString();
 	
     }
-	// 占쏙옙占쏙옙 占쏙옙占쏙옙
-	// 占쏙옙占쏙옙 占쏙옙占쏙옙 占쌩곤옙 占십울옙
+	// 리뷰을 삭제하는 API
+	// 파일도 같이 삭제해준다.!
 	@CrossOrigin(origins = "*", allowedHeaders = "*")  
     @RequestMapping(
   		  value = "/reviews/{reviewsNumber}",method = RequestMethod.DELETE,produces = "application/json; charset=utf8"
@@ -140,7 +141,13 @@ public class ReviewsController {
     {
 		JSONObject json = new JSONObject();
 		ReviewVO vo = new ReviewVO();
-		vo.setReviewsNumber(Long.valueOf(reviewsNumber));
+		try { //숫자 외 입력에 대해서 에러전송
+			vo.setReviewsNumber(Long.valueOf(reviewsNumber));
+    	}catch(Exception e)
+    	{
+    		json.put("error", e);
+    		return json.toString();
+    	}
 		String imgurl= reService.selectImage(vo);
 		boolean delete = reService.deleteReview(vo);
 		if(delete)
@@ -165,11 +172,20 @@ public class ReviewsController {
 	 	return null;
     }
 	
+	// 리뷰의 좋아요 올리는 API
+	
+	@CrossOrigin(origins = "*", allowedHeaders = "*")  
+    @RequestMapping(
+  		  value = "/reviews",method = RequestMethod.GET
+  		  )
+    @ResponseBody 
+    public String reviewsLike()
+    {
+	 	return null;
+    }
 	
 	
-	
-	
-	// 占쏙옙占쏙옙 : 占쏙옙占쏙옙占쏙옙占쏙옙占�(占쏙옙占쏙옙占쏙옙)占쏙옙 占쏙옙占쏙옙占� 占싱뱄옙占쏙옙占쏙옙 占쏙옙환
+	// 리뷰의 이미지를 보내주는 API
     @CrossOrigin(origins = "*", allowedHeaders = "*")  
     @RequestMapping(
   		  value = "/com/reviewImage/{img}",method = RequestMethod.GET
