@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+<mapper namespace="com.example.mapper.usersMapper">
+ 
+    <!-- 
+        mybatis-config.xml의 typeAlias에 등록해두지 않았다면 
+        
+        <select id="selectMember" resultType="com.example.dto.MemberVO" >
+            SELECT ID, PW ,NAME FROM TEST
+        </select>
+        
+        이렇게 해야 한다.
+    -->
+    
+    <!-- 로그인 -->
+    <select id="userLogin" resultType="com.spring.dto.userVO">
+        SELECT
+        	<!-- user_number AS usersNumber, -->
+        	id(email) AS id,
+        	password
+        	name,
+        	address,
+        	phone
+        	regdate AS regDate
+        FROM users
+        <!-- WHERE (user_number = #{userNumber}  -->
+        <!-- BCrypt 암호화는 매번 그 값이 바뀌기 때문에, 
+        입력한 아이디를 이용해 패스워드를 가져온 뒤, 
+        로그인할 때 입력한 패스워드와 데이터 베이스에 
+        저장된 패스워드를 비교하는 방식으로 합니다. -->	
+    </select>
+    
+    <!-- 회원가입 -->
+  	<insert id="userJoin" parameterType="userVO">
+  		INSERT INTO users 
+  		(id, password, name, address, phone, regDate)
+  		values (<!-- #{usersNumber} -->, 
+		  		#{id}, 
+		  		#{password}, 
+		  		#{name}, 
+		  		#{address}, 
+		  		#{phone}, 
+		  		#{regDate}
+		  	)
+	</insert>
+	
+</mapper>
+    
