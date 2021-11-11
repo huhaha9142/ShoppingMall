@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  <mapper namespace="com.example.mapper.customMapper">
+  
+  <insert id="insertCustom" parameterType="customVO">
+  		INSERT INTO products_custom
+  		(quantity,price,image,
+  		products_productnumber,users_user_number)
+  			VALUE (#{quantity},
+  					#{price},
+  					#{image},
+  					#{productNumber},
+  					#{userNumber}
+  				)
+  </insert>
+  </mapper>
+  
