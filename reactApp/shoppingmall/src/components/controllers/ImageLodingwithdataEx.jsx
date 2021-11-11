@@ -4,7 +4,7 @@ import { useState ,useEffect} from "react";
 
 
 function ImageLodingwithdataEx(){
-    const [products, setProduct] = useState("");
+    const [products, setProduct] = useState(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     useEffect(() => {;
@@ -20,23 +20,31 @@ function ImageLodingwithdataEx(){
         
             const response = await axios({
                     method:'GET',
-                    url:`http://pvpvpvpvp.gonetis.com:8080/sample/products`,
-                   
+                    url:`http://pvpvpvpvp.gonetis.com:8080/sample/reviews`,
             });
-            setProduct(response.data); 
+            console.log("============");
             console.log(response.data);
+            setProduct(response.data); 
             // 데이터는 response.data 안에 들어있습니다.
           } catch (e) {
             setError(e);
+            console.error(e);
           }
           setLoading(false);
         };
       fetchUsers();
       }, []);
+    if(loading) return (<p>로딩중</p>)
+    if(error) return (<p>error</p>)
     if (!products) return null;
-    return( <>
+
+    console.log("pro:",products);
+    return(
      <ul>
-      {products.products.map(product => (
+       {products.reviews.map(re => (
+         <li>{re.product}<img src={re.images.image}/></li>
+       ))}
+      {/* {products.products.map(product => (
         <li key={[product.index]}>{product.product}  {product.image}
           <a href={product.image}>
             <img src={product.image}/>
@@ -49,11 +57,10 @@ function ImageLodingwithdataEx(){
           ))}
         </li>
         
-      ))}
+      ))} */}
 
      </ul>
-     
-    </>)
+     )
 }
 
 export default ImageLodingwithdataEx;
