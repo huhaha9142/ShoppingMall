@@ -9,12 +9,20 @@ public class CustomVO {
 	private Long customNumber;
 	private String size;
 	private String color;
+	private String product;
 	
+
 	@Override
 	public String toString() {
-		return "Custom [quqntity=" + quantity + ", price=" + price + ", image=" + image + ", productNumber="
+		return "CustomVO [quantity=" + quantity + ", price=" + price + ", image=" + image + ", productNumber="
 				+ productNumber + ", userNumber=" + userNumber + ", customNumber=" + customNumber + ", size=" + size
-				+ ", color=" + color + "]";
+				+ ", color=" + color + ", product=" + product + "]";
+	}
+	public String getProduct() {
+		return product;
+	}
+	public void setProduct(String product) {
+		this.product = product;
 	}
 	public Long getQuantity() {
 		return quantity;

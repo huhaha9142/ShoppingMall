@@ -1,10 +1,7 @@
 package com.spring.Controller;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.Reader;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -38,7 +35,12 @@ public class ProductsController {
 //	private static String URL_PATH="http://pvpvpvpvp.gonetis.com:8080/sample";
 	private static String SAVE_PATH="c:/Users/kim/Desktop/project/ShoppingMall/src/main/java/com/image/";
     private static final Logger logger = LoggerFactory.getLogger(ProductsController.class);
-
+    
+    //서버 시작시 혹은 API 동작에 따라 값 변동 목적은 테이블에 변동이 없다면 select 쿼리는 실행안됨.
+    private static boolean ProductsChange = true;
+    private static List<ProductVO> sql=null;
+    private static JSONObject JSONObPro = new JSONObject();
+    private static Map<Long,ProductVO> mapSql = new HashMap<Long,ProductVO>();
     @Inject
     private ProductsServiceImpl proService;
     
@@ -52,11 +54,15 @@ public class ProductsController {
     		@RequestParam(value="color",required=false) String colorP,
     		@RequestParam(value="size",required=false) String sizeP,
     		@RequestParam(value="price",required=false) String priceP
-    		) throws IOException {
-    	JSONObject jsonObject = new JSONObject();
-    	
-    	JSONArray jsonArarry = new JSONArray();
-    	List<ProductVO> sql = proService.selectList();
+    		) throws IOException {   	
+    	if(!ProductsChange)
+    	{
+    		return JSONObPro.toString();
+    	}
+		sql = proService.selectList();
+		ProductsChange=!ProductsChange;
+		JSONArray jsonArarry = new JSONArray();
+	
     	System.out.println("kind:"+kindP);
     	System.out.println("color:"+colorP);
     	System.out.println("size:"+sizeP);
@@ -80,13 +86,11 @@ public class ProductsController {
 				for(String color:colors)
 				{
 					if(color!="") { //초기에 생기는 빈배열을 제외하고 각 항목에 #추가
-						jsoncolors.add("#"+color);
-					
+						jsoncolors.add("#"+color);						
 					}
 				}
 				colorJ.put("color",jsoncolors);
-				list.put("colors", colorJ);
-				
+				list.put("colors", colorJ);					
 				list.put("kind", sql.get(i).getKind());
 				list.put("size", sql.get(i).getSize());
 				list.put("price", sql.get(i).getPrice());
@@ -94,11 +98,12 @@ public class ProductsController {
 				list.put("productNumber", sql.get(i).getProductNumber());			
 				list.put("image", URL_PATH+image[0]);
 				jsonArarry.add(list);
-		    	jsonObject.put("products", jsonArarry);
+				JSONObPro.put("products", jsonArarry); 	
     		}
     	}
+	
     	
-    	return jsonObject.toString();
+    	return JSONObPro.toString();
     }
     
     // 제품을 등록하는 API
@@ -118,13 +123,17 @@ public class ProductsController {
     		@RequestParam("price") Long price
     		) throws IOException
     {
-    	ProductVO vo = new ProductVO(size, color, kind, price, product);
+    	
+    	// 이 구간도 최소화 작업 ..
+    	ProductVO vo = new ProductVO();
+    	vo.setProduct(product);
     	System.out.println(vo.toString());
     	
     	Long productNumber = proService.selectCheckInsert(vo);
     	System.out.println(productNumber);
     	vo = new ProductVO(size, color, kind, quantity, price, content, product, productNumber);
     	JSONObject json = new JSONObject();
+    	String result ="fail";
     	if(productNumber!=0)// 제품번호 존재 유무에 따라서 UPDATE INSERT 가 나뉘어 동작한다.
     	{
     		vo.setRegDate(new Date());
@@ -132,8 +141,9 @@ public class ProductsController {
     		vo.setImageLazy(FunctionSpring.fileSave(imageLazy,SAVE_PATH));
     		vo.setProductImage(FunctionSpring.fileSave(productImage,SAVE_PATH));
     		boolean sqlUpdate = proService.updateProduct(vo);
-    		json.put("result", "update");
-    		return json.toString();
+    		result = (sqlUpdate==true)?"update":"fail";
+    		json.put("result", result);
+    		
     	}
     	if(productNumber==0)
     	{
@@ -144,10 +154,14 @@ public class ProductsController {
     		//제품번호를 저장하는건데 이거 필요없는데?
 //    		vo.setProductNumber((long)(Math.random()*System.currentTimeMillis())%10000000);
     		boolean sqlInsert = proService.insertProduct(vo);
-    		json.put("result", "insert");
-    		return json.toString();
+    		result = (sqlInsert==true)?"insert":"fail";
+    		json.put("result", result);
     	}
-    	json.put("result", "fail");
+    	if(!result.equals("fail"))
+    		ProductsChange=false;
+    	// 업데이트 발생시 해당 데이터를 저장한 키값을 초기화
+    	if(result.equals("update"))
+    		mapSql.remove(productNumber);
     	return json.toString();
     	
     }
@@ -159,11 +173,14 @@ public class ProductsController {
     		)
     @ResponseBody 
     public String productCotent(@PathVariable("productNumber") String productNumber) {
-    	JSONObject jsonObject= new JSONObject();
     	
+    	
+    	JSONObject jsonObject= new JSONObject();
     	ProductVO vo = new ProductVO();
+    	
     	try { //숫자 외 입력에 대해서 에러전송
     		vo.setProductNumber(Long.valueOf(productNumber));
+    		mapSql.put(Long.valueOf(productNumber), vo);
     	}catch(Exception e)
     	{
     		jsonObject.put("error", e);

@@ -1,5 +1,7 @@
 package com.spring.dao;
 
+import java.util.List;
+
 import javax.inject.Inject;
 
 import org.apache.ibatis.session.SqlSession;
@@ -16,6 +18,10 @@ public class CustomDAOImpl implements CustomDAO {
 	@Override
 	public int insertCustom(CustomVO vo) {
 		return sqlSession.insert(Namespace+".insertCustom", vo);
+	}
+	@Override
+	public List<CustomVO> selectCustomList() {
+		return sqlSession.selectList(Namespace+".selectCustomList");
 	}
 
 }

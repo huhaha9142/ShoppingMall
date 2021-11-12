@@ -7,13 +7,28 @@
   <insert id="insertCustom" parameterType="customVO">
   		INSERT INTO products_custom
   		(quantity,price,image,
-  		products_productnumber,users_user_number)
+  		products_productnumber,users_user_number,size,color)
   			VALUE (#{quantity},
   					#{price},
   					#{image},
   					#{productNumber},
-  					#{userNumber}
+  					#{userNumber},
+  					#{size},
+  					#{color}
   				)
   </insert>
+  <select id="selectCustomList" parameterType="customVO">
+  		SELECT 
+	  		c.quantity,
+	  		c.price,
+	  		c.image,
+	  		c.size,
+	  		c.color,
+	  		c.users_user_number,
+	  		p.product
+	  	FROM products_custom c INNER JOIN products p
+        ON c.products_productnumber = p.product_number;
+  </select>
+	  	
   </mapper>
   

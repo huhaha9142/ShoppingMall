@@ -42,6 +42,7 @@ public class ReviewsController {
     @ResponseBody
     public String reviewList()
     {
+		System.out.println("reviews.GET");
 		JSONObject jsonObject = new JSONObject();
     	JSONArray jsonArarry = new JSONArray();
     	List<ReviewVO> sql = reService.selectList();
@@ -72,7 +73,7 @@ public class ReviewsController {
 			list.put("reviewsNumber", sql.get(i).getReviewsNumber());
 			jsonArarry.add(list);
 			jsonObject.put("reviews", jsonArarry);
-//			System.out.println(jsonArarry.toString());
+			System.out.println(jsonArarry.toString());
     	}
     	return jsonObject.toString();
     }
@@ -176,7 +177,7 @@ public class ReviewsController {
 	
 	@CrossOrigin(origins = "*", allowedHeaders = "*")  
     @RequestMapping(
-  		  value = "/reviews",method = RequestMethod.GET
+  		  value = "/reviewsqweqwe",method = RequestMethod.GET
   		  )
     @ResponseBody 
     public String reviewsLike()

@@ -27,11 +27,7 @@
         SELECT 
         	product_number AS productNumber
          FROM products
-         WHERE size =#{size} AND
-         		color=#{color} AND
-         		kind=#{kind} AND
-         		price=#{price} AND
-         		product=#{product}
+         WHERE product=#{product}
     </select>
     <select id="selectProduct" parameterType="productVO" resultType="productVO">
     	SELECT

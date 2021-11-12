@@ -1,5 +1,7 @@
 package com.spring.service;
 
+import java.util.List;
+
 import javax.inject.Inject;
 
 import org.springframework.stereotype.Service;
@@ -15,6 +17,11 @@ public class CustomServiceImpl implements CustomService {
 	@Override
 	public boolean insertCustom(CustomVO vo) {
 		return 1==dao.insertCustom(vo);
+	}
+	@Override
+	public List<CustomVO> selecCustomList() {
+		// TODO Auto-generated method stub
+		return dao.selectCustomList();
 	}
 
 }

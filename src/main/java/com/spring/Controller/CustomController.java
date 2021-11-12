@@ -26,7 +26,7 @@ import com.spring.service.CustomServiceImpl;
 
 @Controller
 public class CustomController {
-//	private static String URL_PATH="http://pvpvpvpvp.gonetis.com:8080/sample/com/image/custom/";
+	private static String URL_PATH="http://pvpvpvpvp.gonetis.com:8080/sample/com/image/custom/";
 	private static final Logger logger = LoggerFactory.getLogger(ProductsController.class);
 	private static String SAVE_PATH="c:/Users/kim/Desktop/project/ShoppingMall/src/main/java/com/image/custom/";
 
@@ -65,12 +65,32 @@ public class CustomController {
 			FunctionSpring.fileDelete(vo.getImage(), SAVE_PATH);
 		return jsonObject.toString();
     }
+	@CrossOrigin(origins = "*", allowedHeaders = "*")
+    @RequestMapping(value="/custom",method = RequestMethod.GET,produces = "application/json; charset=utf8")
+    @ResponseBody
+	public String customList()
+	{
+		JSONObject jsonObject = new JSONObject();
+		
+		List<CustomVO> sql=cusService.selecCustomList();
+		for(int i=0;i<sql.size();i++)
+		{
+			String image[] = sql.get(i).getImage().split(",");
+			jsonObject.put("index", i);
+			jsonObject.put("quantity", sql.get(i).getQuantity());
+			jsonObject.put("price", sql.get(i).getPrice());
+			jsonObject.put("image", URL_PATH+image[0]);
+			jsonObject.put("size", sql.get(i).getSize());
+			jsonObject.put("color", sql.get(i).getColor());
+			jsonObject.put("user_number", sql.get(i).getUserNumber());
+			jsonObject.put("product", sql.get(i).getProduct());
+		}
+		return jsonObject.toString();
+	}
 	
 	
-	
-	
-	
-	// 리뷰의 이미지를 보내주는 API
+	// TODO: 아무나 커스텀 이미지에 접근 할 수 없도록 로그인 조건을 추가해 봐야겠음.!
+	// 커스텀 제품의 이미지를 보내주는 API
     @CrossOrigin(origins = "*", allowedHeaders = "*")  
     @RequestMapping(
   		  value = "/com/customImage/{img}",method = RequestMethod.GET
