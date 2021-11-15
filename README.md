@@ -38,7 +38,7 @@ ___
 
 ### products/{product}.GET
 *DB에 저장된 제품{product}의 content들을 받아옵니다.*
->[JSON 데이터 보러가기{젤란 라이트 후드(남녀공용)}<<](http://pvpvpvpvp.gonetis.com:8080/sample/products/젤란%20라이트%20후드(남녀공용))
+>[JSON 데이터 보러가기{1}<<](http://pvpvpvpvp.gonetis.com:8080/sample/products/1)
 ``````
 http://pvpvpvpvp.gonetis.com:8080/sample/products/{product}
 ``````
@@ -151,7 +151,7 @@ ___
 ### Customs/{customNumber}.DELETE
 *DB의 리뷰를 삭제합니다.*
 ``````
-http://pvpvpvpvp.gonetis.com:8080/sample/reviews/{reviewsNumber}
+http://pvpvpvpvp.gonetis.com:8080/sample/customs/{customNumber}
 ``````
 
 * 결과는 JSON형식으로 응답됩니다.
