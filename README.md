@@ -99,3 +99,61 @@ http://pvpvpvpvp.gonetis.com:8080/sample/reviews/{reviewsNumber}
 * 결과는 JSON형식으로 응답됩니다.
 * ex) 성공시 : {"result","delete"}
 * 실패시 : {"result","fail"}
+
+
+customs .GET .POST    
+---
+___    
+### Customs.GET
+*DB에 저장된 커스텀리스트를 불러옵니다.*
+>[JSON 데이터 보러가기<<](http://pvpvpvpvp.gonetis.com:8080/sample/customs)
+``````
+http://pvpvpvpvp.gonetis.com:8080/sample/customs
+``````
+>json 데이터의 image(url)를 이미지의 src에 넣으면 됩니다.<br/>
+이미지는 **배열형식**으로도 존재할 수 있습니다.!<br/>자세한 형식은 위의 데이터 api의 응답 json를 참고해 주세요 
+### Customs.POST
+*DB에 리뷰를 추가합니다.*
+``````
+http://pvpvpvpvp.gonetis.com:8080/sample/customs
+``````
+>정해진 형식의 formData를 받아야 작동합니다.
+>>형식(항목)은 다음과 같습니다(**각 항목의 데이터는 반드시 존재해야함**)
+>>>quantity(int)<br>price(int)<br>image(file)<br>size(String)<br/>color(String)<br>productNUmber(int)</br>userNumber(int)</br>
+>>image는 여러장 넣을 수 있습니다.(제한 없음)<br>
+
+>이미지의 모든 포멧은 .png 로 저장됩니다.
+
+* 결과는 JSON형식으로 응답됩니다.
+* ex) 성공시 : {"result","insert"}
+* 실패시 : {"result","fail"}
+
+customs{customNumber} .POST .DELETE   
+---
+___    
+### Customs/{customNumber}.POST
+*DB의 커스텀을 UPDATE 합니다.*
+``````
+http://pvpvpvpvp.gonetis.com:8080/sample/customs/{customNumber}
+``````
+>정해진 형식의 formData를 받아야 작동합니다.
+>>형식(항목)은 다음과 같습니다(**각 항목의 데이터는 반드시 존재해야함**)
+>>>quantity(int)<br>price(int)<br>image(file)<br>size(String)<br/>color(String)</br>
+>>image는 여러장 넣을 수 있습니다.(제한 없음)<br>
+
+>이미지의 모든 포멧은 .png 로 저장됩니다.
+
+* 결과는 JSON형식으로 응답됩니다.
+* ex) 성공시 : {"result","update"}
+* 실패시 : {"result","fail"}
+
+___    
+### Customs/{customNumber}.DELETE
+*DB의 리뷰를 삭제합니다.*
+``````
+http://pvpvpvpvp.gonetis.com:8080/sample/reviews/{reviewsNumber}
+``````
+
+* 결과는 JSON형식으로 응답됩니다.
+* ex) 성공시 : {"result","delete"}
+* 실패시 : {"result","fail"}
