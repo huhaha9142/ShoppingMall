@@ -23,5 +23,15 @@ public class CustomServiceImpl implements CustomService {
 		// TODO Auto-generated method stub
 		return dao.selectCustomList();
 	}
+	@Override
+	public boolean updateCustom(CustomVO vo) {
+		// TODO Auto-generated method stub
+		return 1==dao.updateCustom(vo);
+	}
+	@Override
+	public boolean deleteCustom(CustomVO vo) {
+		// TODO Auto-generated method stub
+		return 1==dao.deleteCustom(vo);
+	}
 
 }

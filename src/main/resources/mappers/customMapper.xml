@@ -17,18 +17,32 @@
   					#{color}
   				)
   </insert>
-  <select id="selectCustomList" parameterType="customVO">
+  <select id="selectCustomList" parameterType="customVO" resultType="customVO">
   		SELECT 
 	  		c.quantity,
 	  		c.price,
 	  		c.image,
 	  		c.size,
 	  		c.color,
-	  		c.users_user_number,
+	  		c.users_user_number AS userNumber,
 	  		p.product
 	  	FROM products_custom c INNER JOIN products p
         ON c.products_productnumber = p.product_number;
   </select>
+  <update id="updateCustom" parameterType="customVO">
+  		UPDATE products_custom 
+  		SET
+  			quantity = #{quantity},
+  			price = #{price},
+  			image = #{image},
+  			size =#{size},
+  			color = #{color}
+  		WHERE products_custom_number = #{customNumber}
+  </update>
+  <delete id="deleteCustom">
+  		DELETE FROM products_custom
+  		WHERE products_custom_number = #{customNumber}
+  </delete>
 	  	
   </mapper>
   

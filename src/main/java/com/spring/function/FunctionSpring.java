@@ -3,11 +3,17 @@ package com.spring.function;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.time.Duration;
+import java.util.Date;
 import java.util.List;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.springframework.web.multipart.MultipartFile;
+
+import io.jsonwebtoken.Header;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 
 public class FunctionSpring {
 	// 파일을 저장해주는 함수 
@@ -91,4 +97,17 @@ public class FunctionSpring {
     	Jobj.put("size", Jarr);
 		return Jobj;
     }
+    
+    public static String makeJwtToken() {
+        Date now = new Date();
+        return Jwts.builder()
+            .setHeaderParam(Header.TYPE, Header.JWT_TYPE) // (1)
+            .setIssuer("fresh") // (2)
+            .setIssuedAt(now) // (3)
+            .setExpiration(new Date(now.getTime() + Duration.ofMinutes(30).toMillis())) // (4)
+            .claim("id", "아이디") // (5)
+            .claim("email", "ajufresh@gmail.com")
+            .signWith(SignatureAlgorithm.HS256, "secret") // (6)
+            .compact();
+      }
 }

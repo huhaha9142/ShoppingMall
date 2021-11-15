@@ -1,4 +1,4 @@
-package com.spring.Controller;
+package com.spring.controller;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -31,12 +31,12 @@ import com.spring.service.ProductsServiceImpl;
 @Controller
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 public class ProductsController {
-	private static String URL_PATH="http://pvpvpvpvp.gonetis.com:8080/sample/com/productImage/";
+	private static String URL_PATH="http://pvpvpvpvp.gonetis.com:8080/sample/com/product-image/";
 //	private static String URL_PATH="http://pvpvpvpvp.gonetis.com:8080/sample";
 	private static String SAVE_PATH="c:/Users/kim/Desktop/project/ShoppingMall/src/main/java/com/image/";
     private static final Logger logger = LoggerFactory.getLogger(ProductsController.class);
     
-    //ì„œë²„ ì‹œì‘ì‹œ í˜¹ì€ API ë™ì‘ì— ë”°ë¼ ê°’ ë³€ë™ ëª©ì ì€ í…Œì´ë¸”ì— ë³€ë™ì´ ì—†ë‹¤ë©´ select ì¿¼ë¦¬ëŠ” ì‹¤í–‰ì•ˆë¨.
+    //?„œë²? ?‹œ?‘?‹œ ?˜¹?? API ?™?‘?— ?”°?¼ ê°? ë³??™ ëª©ì ?? ?…Œ?´ë¸”ì— ë³??™?´ ?—†?‹¤ë©? select ì¿¼ë¦¬?Š” ?‹¤?–‰?•ˆ?¨.
     private static boolean ProductsChange = true;
     private static List<ProductVO> sql=null;
     private static JSONObject JSONObPro = new JSONObject();
@@ -45,7 +45,7 @@ public class ProductsController {
     private ProductsServiceImpl proService;
     
     
-    // ì œí’ˆì„ ëª¨ë‘ ë³´ë‚´ì£¼ëŠ” API
+    // ? œ?’ˆ?„ ëª¨ë‘ ë³´ë‚´ì£¼ëŠ” API
     @CrossOrigin(origins = "*", allowedHeaders = "*")
     @RequestMapping(value="/products",method = RequestMethod.GET,produces = "application/json; charset=utf8")
     @ResponseBody
@@ -76,16 +76,16 @@ public class ProductsController {
 				JSONObject list = new JSONObject();
 				JSONObject colorJ = new JSONObject();
 				JSONArray jsoncolors = new JSONArray();
-				// ì´ë¯¸ì§€ëŠ” ì—¬ëŸ¬ê°œ ì¡´ì¬ í•  ìˆ˜ ìˆê¸° ë•Œë¬¸ì— ,ë¡œ êµ¬ë¶„ë˜ì–´ ìˆì–´ ,ë¡œ SPLIT
+				// ?´ë¯¸ì??Š” ?—¬?Ÿ¬ê°? ì¡´ì¬ ?•  ?ˆ˜ ?ˆê¸? ?•Œë¬¸ì— ,ë¡? êµ¬ë¶„?˜?–´ ?ˆ?–´ ,ë¡? SPLIT
 				String[] image = sql.get(i).getImageSmall().split(",");    
-				// í¸ì˜ì„±ì„ ìœ„í•œ ì¸ë±ìŠ¤ ì¶”ê¸°
+				// ?¸?˜?„±?„ ?œ„?•œ ?¸?±?Š¤ ì¶”ê¸°
 				list.put("index", i);
-				// ìƒ‰ìƒì½”ë“œëŠ” ì—¬ëŸ¬ê°œ ì¡´ì¬ í•  ìˆ˜ ìˆê¸° ë•Œë¬¸ì— #ë¡œ êµ¬ë¶„ë˜ì–´ ìˆì–´ #ë¡œ SPLIT
+				// ?ƒ‰?ƒì½”ë“œ?Š” ?—¬?Ÿ¬ê°? ì¡´ì¬ ?•  ?ˆ˜ ?ˆê¸? ?•Œë¬¸ì— #ë¡? êµ¬ë¶„?˜?–´ ?ˆ?–´ #ë¡? SPLIT
 				String colors[] = sql.get(i).getColor().split("#");
-				// colors ë°°ì—´ì„ ì €ì¥
+				// colors ë°°ì—´?„ ???¥
 				for(String color:colors)
 				{
-					if(color!="") { //ì´ˆê¸°ì— ìƒê¸°ëŠ” ë¹ˆë°°ì—´ì„ ì œì™¸í•˜ê³  ê° í•­ëª©ì— #ì¶”ê°€
+					if(color!="") { //ì´ˆê¸°?— ?ƒê¸°ëŠ” ë¹ˆë°°?—´?„ ? œ?™¸?•˜ê³? ê°? ?•­ëª©ì— #ì¶”ê?
 						jsoncolors.add("#"+color);						
 					}
 				}
@@ -106,7 +106,7 @@ public class ProductsController {
     	return JSONObPro.toString();
     }
     
-    // ì œí’ˆì„ ë“±ë¡í•˜ëŠ” API
+    // ? œ?’ˆ?„ ?“±ë¡í•˜?Š” API
     @CrossOrigin(origins = "*", allowedHeaders = "*")
     @RequestMapping(value="/products",method = RequestMethod.POST,produces = "application/json; charset=utf8")
     @ResponseBody
@@ -124,7 +124,7 @@ public class ProductsController {
     		) throws IOException
     {
     	
-    	// ì´ êµ¬ê°„ë„ ìµœì†Œí™” ì‘ì—… ..
+    	// ?´ êµ¬ê°„?„ ìµœì†Œ?™” ?‘?—… ..
     	ProductVO vo = new ProductVO();
     	vo.setProduct(product);
     	System.out.println(vo.toString());
@@ -134,7 +134,7 @@ public class ProductsController {
     	vo = new ProductVO(size, color, kind, quantity, price, content, product, productNumber);
     	JSONObject json = new JSONObject();
     	String result ="fail";
-    	if(productNumber!=0)// ì œí’ˆë²ˆí˜¸ ì¡´ì¬ ìœ ë¬´ì— ë”°ë¼ì„œ UPDATE INSERT ê°€ ë‚˜ë‰˜ì–´ ë™ì‘í•œë‹¤.
+    	if(productNumber!=0)// ? œ?’ˆë²ˆí˜¸ ì¡´ì¬ ?œ ë¬´ì— ?”°?¼?„œ UPDATE INSERT ê°? ?‚˜?‰˜?–´ ?™?‘?•œ?‹¤.
     	{
     		vo.setRegDate(new Date());
     		vo.setImageSmall(FunctionSpring.fileSave(imageSmall,SAVE_PATH));
@@ -151,7 +151,7 @@ public class ProductsController {
     		vo.setImageSmall(FunctionSpring.fileSave(imageSmall,SAVE_PATH));
     		vo.setImageLazy(FunctionSpring.fileSave(imageLazy,SAVE_PATH));
     		vo.setProductImage(FunctionSpring.fileSave(productImage,SAVE_PATH));
-    		//ì œí’ˆë²ˆí˜¸ë¥¼ ì €ì¥í•˜ëŠ”ê±´ë° ì´ê±° í•„ìš”ì—†ëŠ”ë°?
+    		//? œ?’ˆë²ˆí˜¸ë¥? ???¥?•˜?Š”ê±´ë° ?´ê±? ?•„?š”?—†?Š”?°?
 //    		vo.setProductNumber((long)(Math.random()*System.currentTimeMillis())%10000000);
     		boolean sqlInsert = proService.insertProduct(vo);
     		result = (sqlInsert==true)?"insert":"fail";
@@ -159,14 +159,14 @@ public class ProductsController {
     	}
     	if(!result.equals("fail"))
     		ProductsChange=false;
-    	// ì—…ë°ì´íŠ¸ ë°œìƒì‹œ í•´ë‹¹ ë°ì´í„°ë¥¼ ì €ì¥í•œ í‚¤ê°’ì„ ì´ˆê¸°í™”
+    	// ?—…?°?´?Š¸ ë°œìƒ?‹œ ?•´?‹¹ ?°?´?„°ë¥? ???¥?•œ ?‚¤ê°’ì„ ì´ˆê¸°?™”
     	if(result.equals("update"))
     		mapSql.remove(productNumber);
     	return json.toString();
     	
     }
     
-    // ì œí’ˆì˜ ì„¸ë¶€ì •ë³´ë¥¼ ê°€ì ¸ì˜¤ëŠ” API
+    // ? œ?’ˆ?˜ ?„¸ë¶?? •ë³´ë?? ê°?? ¸?˜¤?Š” API
     @CrossOrigin(origins = "*", allowedHeaders = "*")  
     @RequestMapping(
   		  value = "/products/{productNumber}",method = RequestMethod.GET,produces = "application/json; charset=utf8"
@@ -178,7 +178,7 @@ public class ProductsController {
     	JSONObject jsonObject= new JSONObject();
     	ProductVO vo = new ProductVO();
     	
-    	try { //ìˆ«ì ì™¸ ì…ë ¥ì— ëŒ€í•´ì„œ ì—ëŸ¬ì „ì†¡
+    	try { //?ˆ«? ?™¸ ?…? ¥?— ???•´?„œ ?—?Ÿ¬? „?†¡
     		vo.setProductNumber(Long.valueOf(productNumber));
     		mapSql.put(Long.valueOf(productNumber), vo);
     	}catch(Exception e)
@@ -198,7 +198,7 @@ public class ProductsController {
 		// colorsï¿½ï¿½ sizeï¿½ï¿½Å­ ï¿½İºï¿½
 		for(String color:colors)
 		{
-			if(color!="") //0ï¿½ï¿½ ï¿½Îµï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½?ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 
+			if(color!="") //0ï¿½ï¿½ ï¿½Îµï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿??ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 
 				jsoncolors.add("#"+color);
 		}
 		jsonObject.put("id",vo.getProductNumber());
@@ -220,10 +220,10 @@ public class ProductsController {
     	return jsonObject.toString();
     }
    
-    // ì œí’ˆì˜ ì´ë¯¸ì§€ë¥¼ ë³´ë‚´ì£¼ëŠ” API
+    // ? œ?’ˆ?˜ ?´ë¯¸ì?ë¥? ë³´ë‚´ì£¼ëŠ” API
     @CrossOrigin(origins = "*", allowedHeaders = "*")  
     @RequestMapping(
-  		  value = "/com/productImage/{img}",method = RequestMethod.GET
+  		  value = "/com/product-image/{img}",method = RequestMethod.GET
   		 ,produces = MediaType.IMAGE_JPEG_VALUE
   		  )
     @ResponseBody 

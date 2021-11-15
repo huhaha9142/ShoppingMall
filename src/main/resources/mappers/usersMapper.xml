@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  <mapper namespace="com.example.mapper.usersMapper">
+  
+  <select id="selectLogin" resultType="usersVO">
+ 	SELECT 
+ 		id,
+ 		password,
+ 		name,
+ 		address,
+ 		regdate AS regDate,
+ 		phone,
+ 		user_number AS userNumber
+ 	FROM users
+ 	WHERE id = #{id} AND password = #{password}
+  </select>
+  <insert id="insertUser">
+  		INSERT INTO users(id,
+  						password,
+  						name,
+  						address,
+  						phone,
+  						regdate)
+  		VALUE(#{id},
+  			#{password},
+  			#{name},
+  			#{address},
+  			#{phone},
+  			#{regDate})
+  </insert>
+  	
+  
+  
+  
+  
+  </mapper>

@@ -1,4 +1,4 @@
-package com.spring.Controller;
+package com.spring.controller;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -29,14 +29,14 @@ import com.spring.service.ReviewServiceImpl;
 @Controller
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 public class ReviewsController {
-	private static String URL_PATH="http://pvpvpvpvp.gonetis.com:8080/sample/com/reviewImage/";
+	private static String URL_PATH="http://pvpvpvpvp.gonetis.com:8080/sample/com/review-image/";
 	private static final Logger logger = LoggerFactory.getLogger(ProductsController.class);
 	private static String SAVE_PATH="c:/Users/kim/Desktop/project/ShoppingMall/src/main/java/com/image/review/";
 	
 	@Inject
 	private ReviewServiceImpl reService;
 	
-	// ë¦¬ë·°ì˜ ì „ë¶€ë¥¼ ë°˜í™˜ í•˜ëŠ” API
+	// ë¦¬ë·°?˜ ? „ë¶?ë¥? ë°˜í™˜ ?•˜?Š” API
 	@CrossOrigin(origins = "*", allowedHeaders = "*")
     @RequestMapping(value="/reviews",method = RequestMethod.GET,produces = "application/json; charset=utf8")
     @ResponseBody
@@ -56,7 +56,7 @@ public class ReviewsController {
 			list.put("index", i);
 			list.put("content", sql.get(i).getContent());
 			list.put("title", sql.get(i).getTitle());
-			//Date í˜•ì‹ì€ ë„£ìœ¼ë©´ ì œì´ìŠ¨ íŒŒì‹±ì— ë¬¸ì œê°€ ìƒê¹€ ë³€ê²½í•´ì„œ ë„£ì„ê²ƒ
+			//Date ?˜•?‹?? ?„£?œ¼ë©? ? œ?´?Š¨ ?ŒŒ?‹±?— ë¬¸ì œê°? ?ƒê¹? ë³?ê²½í•´?„œ ?„£?„ê²?
 //			list.put("indate", sql.get(i).getInDate());
 			for(String img:image)
 			{
@@ -77,7 +77,7 @@ public class ReviewsController {
     	}
     	return jsonObject.toString();
     }
-	// ë¦¬ë·°ë¥¼ ì‘ì„±í•˜ëŠ” API
+	// ë¦¬ë·°ë¥? ?‘?„±?•˜?Š” API
 	@CrossOrigin(origins = "*", allowedHeaders = "*")  
     @RequestMapping(
   		  value = "/reviews",method = RequestMethod.POST,produces = "application/json; charset=utf8"
@@ -93,7 +93,7 @@ public class ReviewsController {
 		System.out.println(content);
 		System.out.println(imageReview);
 		//content title image indate hit(0), usersNumber, productsNumber
-		// hitëŠ” ê¸°ë³¸ê°’ 0 userNumberëŠ” ë¡œê·¸ì¸ì´ ì™„ë£Œë˜ë©´ ì‘ì—…ì— ë“¤ì–´ê°€ì•¼ í•œë‹¤.
+		// hit?Š” ê¸°ë³¸ê°? 0 userNumber?Š” ë¡œê·¸?¸?´ ?™„ë£Œë˜ë©? ?‘?—…?— ?“¤?–´ê°??•¼ ?•œ?‹¤.
 		ReviewVO vo = new ReviewVO(content, title, 
 				FunctionSpring.fileSave(imageReview,SAVE_PATH),
 				new Date(), (long)0, (long)1, productNumber);
@@ -104,8 +104,8 @@ public class ReviewsController {
 		return json.toString();
     }
 	
-	// ë¦¬ë·°ì˜ ì¬ì‘ì„±ì„ í•˜ëŠ” API
-	// ê¸°ì¡´ì˜ íŒŒì¼ì„ ì§€ìš°ëŠ” ë™ì‘ì„ ì‘ì„±í•´ì•¼í•œë‹¤.!
+	// ë¦¬ë·°?˜ ?¬?‘?„±?„ ?•˜?Š” API
+	// ê¸°ì¡´?˜ ?ŒŒ?¼?„ ì§??š°?Š” ?™?‘?„ ?‘?„±?•´?•¼?•œ?‹¤.!
 	@CrossOrigin(origins = "*", allowedHeaders = "*")  
     @RequestMapping(
   		  value = "/reviews/{reviewsNumber}",method = RequestMethod.POST,produces = "application/json; charset=utf8"
@@ -130,8 +130,8 @@ public class ReviewsController {
 		return json.toString();
 	
     }
-	// ë¦¬ë·°ì„ ì‚­ì œí•˜ëŠ” API
-	// íŒŒì¼ë„ ê°™ì´ ì‚­ì œí•´ì¤€ë‹¤.!
+	// ë¦¬ë·°?„ ?‚­? œ?•˜?Š” API
+	// ?ŒŒ?¼?„ ê°™ì´ ?‚­? œ?•´ì¤??‹¤.!
 	@CrossOrigin(origins = "*", allowedHeaders = "*")  
     @RequestMapping(
   		  value = "/reviews/{reviewsNumber}",method = RequestMethod.DELETE,produces = "application/json; charset=utf8"
@@ -142,7 +142,7 @@ public class ReviewsController {
     {
 		JSONObject json = new JSONObject();
 		ReviewVO vo = new ReviewVO();
-		try { //ìˆ«ì ì™¸ ì…ë ¥ì— ëŒ€í•´ì„œ ì—ëŸ¬ì „ì†¡
+		try { //?ˆ«? ?™¸ ?…? ¥?— ???•´?„œ ?—?Ÿ¬? „?†¡
 			vo.setReviewsNumber(Long.valueOf(reviewsNumber));
     	}catch(Exception e)
     	{
@@ -162,7 +162,7 @@ public class ReviewsController {
 		
     }
 	
-	//reviewNumberå ì™ì˜™ å ì™ì˜™å ì™ì˜™ å ì™ì˜™å ì‹£ìš¸ì˜™ å ì‹œëªŒì˜™å ì™ì˜™
+	//reviewNumber? ?™?˜™ ? ?™?˜™? ?™?˜™ ? ?™?˜™? ?‹£?š¸?˜™ ? ?‹œëªŒì˜™? ?™?˜™
 	@CrossOrigin(origins = "*", allowedHeaders = "*")  
     @RequestMapping(
   		  value = "/com/review/{reviewNumber}",method = RequestMethod.GET
@@ -173,7 +173,7 @@ public class ReviewsController {
 	 	return null;
     }
 	
-	// ë¦¬ë·°ì˜ ì¢‹ì•„ìš” ì˜¬ë¦¬ëŠ” API
+	// ë¦¬ë·°?˜ ì¢‹ì•„?š” ?˜¬ë¦¬ëŠ” API
 	
 	@CrossOrigin(origins = "*", allowedHeaders = "*")  
     @RequestMapping(
@@ -186,10 +186,10 @@ public class ReviewsController {
     }
 	
 	
-	// ë¦¬ë·°ì˜ ì´ë¯¸ì§€ë¥¼ ë³´ë‚´ì£¼ëŠ” API
+	// ë¦¬ë·°?˜ ?´ë¯¸ì?ë¥? ë³´ë‚´ì£¼ëŠ” API
     @CrossOrigin(origins = "*", allowedHeaders = "*")  
     @RequestMapping(
-  		  value = "/com/reviewImage/{img}",method = RequestMethod.GET
+  		  value = "/com/review-image/{img}",method = RequestMethod.GET
   		 ,produces = MediaType.IMAGE_JPEG_VALUE
   		  )
     @ResponseBody 

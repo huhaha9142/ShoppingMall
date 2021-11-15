@@ -23,5 +23,15 @@ public class CustomDAOImpl implements CustomDAO {
 	public List<CustomVO> selectCustomList() {
 		return sqlSession.selectList(Namespace+".selectCustomList");
 	}
+	@Override
+	public int updateCustom(CustomVO vo) {
+		// TODO Auto-generated method stub
+		return sqlSession.update(Namespace+".updateCustom", vo);
+	}
+	@Override
+	public int deleteCustom(CustomVO vo) {
+		// TODO Auto-generated method stub
+		return sqlSession.delete(Namespace+".deleteCustom", vo);
+	}
 
 }

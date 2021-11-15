@@ -1,4 +1,4 @@
-package com.spring.Controller;
+package com.spring.controller;
 
 import java.io.BufferedReader;
 import java.io.FileOutputStream;
@@ -108,15 +108,15 @@ public class HomeController {
 //    	System.out.println(id1);
     	return id1; 
     }
-    // ë°ì´í„° ë² ì´ìŠ¤ ë°ì´í„° ë°±ì—…
+    // ?°?´?„° ë² ì´?Š¤ ?°?´?„° ë°±ì—…
     
-    // í…ìŠ¤íŠ¸ë¥¼ ë°ì´í„° ë² ì´ìŠ¤ì— ë„£ê¸° (í¬ë¡¤ë§ ë°ì´í„°ë“¤)
+    // ?…?Š¤?Š¸ë¥? ?°?´?„° ë² ì´?Š¤?— ?„£ê¸? (?¬ë¡¤ë§ ?°?´?„°?“¤)
     static final String rootPath = "C:\\Users\\kim\\Desktop\\project\\ShoppingMall\\files\\";
     static String sourceProducts = rootPath + "books.txt";
     @RequestMapping(value = "/putDatabase")
     public void putDatabase() {
     	// ï¿½Ö½ï¿½Æ®ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
-    	System.out.println("ï¿½ï¿½ï¿½ï¿½ï¿½?");
+    	System.out.println("ï¿½ï¿½ï¿½ï¿½ï¿??");
     			Reader fr = null; 			
     			// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Æ®ï¿½ï¿½
     			BufferedReader br = null;
@@ -145,7 +145,7 @@ public class HomeController {
     					vo.setKind(data[5]);
     					vo.setRegDate(new Date());
     					vo.setProductNumber((long)i);
-    					// ë™ì‘ì§€ì  ë¹„í™œì„±í™”
+    					// ?™?‘ì§??  ë¹„í™œ?„±?™”
     					proService.insertProduct(vo);
 //    					System.out.println(vo.toString());
     				}

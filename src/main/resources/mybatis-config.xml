@@ -9,6 +9,7 @@
             <typeAlias type="com.spring.dto.ProductVO" alias="productVO"/>
             <typeAlias type="com.spring.dto.ReviewVO" alias="reviewVO"/>
             <typeAlias type="com.spring.dto.CustomVO" alias="customVO"/>
+            <typeAlias type="com.spring.dto.UsersVO" alias="usersVO"/>
         </typeAliases>
 
         
