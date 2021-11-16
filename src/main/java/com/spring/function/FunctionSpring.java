@@ -3,17 +3,31 @@ package com.spring.function;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.time.Duration;
+import java.util.ArrayList;
+import java.util.Base64;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import javax.crypto.SecretKey;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.spring.dto.ProductVO;
+
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Header;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.SignatureException;
+import io.jsonwebtoken.UnsupportedJwtException;
 
 public class FunctionSpring {
 	// 파일을 저장해주는 함수 
@@ -57,6 +71,36 @@ public class FunctionSpring {
     	}
     	return result;
     }
+    //중복제거 사이즈 컬러
+    public static Map<String,String> sizeArray(List<ProductVO> sql)
+    {
+		Map<String,String> sizeData = new HashMap<String,String>();
+		for(int j = 0; j<sql.size();j++)
+		{
+			sizeData.put(sql.get(j).getSize(), sql.get(j).getSize());
+		}
+		return sizeData;
+    }
+    public static Map<String,String> colorArray(List<ProductVO> sql)
+    {
+    	Map<String,String> colorData = new HashMap<String,String>();	
+		for(int j = 0; j<sql.size();j++)
+		{
+			colorData.put(sql.get(j).getColor(), sql.get(j).getColor());		
+		}
+		return colorData;
+    }
+    public static Map<String,String> quantityArray(List<ProductVO> sql)
+    {
+    	Map<String,String> quantityData = new HashMap<String,String>();	
+		for(int j = 0; j<sql.size();j++)
+		{
+			quantityData.put(sql.get(j).getQuantity(), sql.get(j).getQuantity());		
+		}
+		return quantityData;
+    }
+    
+    
     //사이즈 변환 배열
     public static String sizes[] = {"XS","S","M","L","XL","2XL","3XL","4XL","5XL","6XL","7XL",
     								"XS(80)","S(85)","M(90)","L(95)","XL(100)","2XL(105)","3XL(110)","4XL(115)",
@@ -98,16 +142,55 @@ public class FunctionSpring {
 		return Jobj;
     }
     
-    public static String makeJwtToken() {
+    public static ArrayList<String> sizeArray1(String size) {
+    	boolean addSize = false;
+    	ArrayList<String> size1 = new ArrayList<String>();
+    	for(String s : sizes)
+    	{
+    		//시작 지점 찾기
+    		if(size.contains(s+" ~"))
+    		{
+//    			System.out.println("contains:"+s);
+    			addSize=!addSize;
+    		}
+    		//범위 데이터 등록
+    		if(addSize)
+    		{
+//    			System.out.println(s);
+    			size1.add(s);		
+    		}
+    		//끝 지점 찾기
+    		if(addSize&&size.contains("~ "+s))
+    		{
+//    			System.out.println("contains:"+s);
+    			addSize=!addSize;
+    		}
+    	}
+    	if(size1.isEmpty())
+		{
+    		size1.add("FREE");
+		}
+    
+		return size1;
+    }
+    
+    public static String key ="11";  // 따로 저장하고 .gitignore에 제외항목에 등록시킬것.!
+    public static String makeJwtToken(String id, String password) {
         Date now = new Date();
         return Jwts.builder()
             .setHeaderParam(Header.TYPE, Header.JWT_TYPE) // (1)
-            .setIssuer("fresh") // (2)
-            .setIssuedAt(now) // (3)
-            .setExpiration(new Date(now.getTime() + Duration.ofMinutes(30).toMillis())) // (4)
-            .claim("id", "아이디") // (5)
-            .claim("email", "ajufresh@gmail.com")
-            .signWith(SignatureAlgorithm.HS256, "secret") // (6)
+            .setIssuer("kim") // (2) 발급자
+            .setIssuedAt(now) // (3) 
+            .setExpiration(new Date(now.getTime() + Duration.ofMinutes(30).toMillis())) // (4) 만료시간
+            .claim("id", id) // (5)
+            .signWith(SignatureAlgorithm.HS256, key.getBytes()) // (6) 암호화 키 (노출되면 안된다.!)
             .compact();
       }
+    public static Claims parseringJwtToken(String jwtToken) throws ExpiredJwtException, UnsupportedJwtException, MalformedJwtException, SignatureException, IllegalArgumentException, UnsupportedEncodingException
+    {
+    	return Jwts.parser()
+    		.setSigningKey(key.getBytes("UTF-8"))
+    		.parseClaimsJws(jwtToken)
+    		.getBody();
+    }
 }

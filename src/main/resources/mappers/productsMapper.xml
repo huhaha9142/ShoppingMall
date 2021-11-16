@@ -14,14 +14,20 @@
     -->
     <select id="selectList" resultType="productVO">
     	 SELECT 
-    		product,
-    		color,
-    		size,
+    		product,   		
     		price,
     		kind,
-    		image_small AS imageSmall,
+    		title_image AS titleImage,
     		product_number AS productNumber
          FROM products
+    </select>
+    <select id="selectListColorAndSize" resultType="productVo" parameterType="productVO">
+    	SELECT
+    		color,
+    		size
+    	FROM products p  Join products_data pd 
+    	ON product_number = products_product_number
+		WHERE p.product_number=#{productNumber};
     </select>
     <select id="selectCheckInsert"  parameterType="productVO" resultType="productVO">
         SELECT 
@@ -37,14 +43,14 @@
     		quantity,
     		price,
     		content,
-    		image_small AS imageSmall,
-    		image_lazy AS imageLazy,
+    		title_image AS titleImage,
     		product_image AS productImage,
     		product,
     		product_number AS productNumber,
-    		regdate AS regDate
-    	FROM products
+    		p.regdate AS regDate
+    	FROM products p join products_data pd on product_number=products_product_number
     	WHERE product_number=#{productNumber}
+    	
     </select>
     <update id="updateProduct"  parameterType="productVO">
     	UPDATE products 
@@ -62,19 +68,27 @@
     </update>
     <insert id="insertProduct" parameterType="productVO">
     	INSERT INTO products
-    	(size,color,kind,quantity,price,content,image_small,
-    	image_lazy,product_image,product,regdate)
-			VALUE (#{size},
-					#{color},
-					#{kind},
-					#{quantity},
+    	(kind,price,content,title_image,content_image,product,regdate,indate)
+			VALUE (#{kind},
 					#{price},
 					#{content},
-					#{imageSmall},
-					#{imageLazy},
-					#{productImage},
+					#{titleImage},
+					#{contentImage},
 					#{product},
-					#{regDate}
+					#{regDate},
+					#{inDate}
 				)			
+    </insert>
+    <insert id="insertProductData" parameterType="productVO">
+    	INSERT INTO products_data
+    	(color,size,product_image,quantity,regdate,indate,products_product_number)
+    		VALUE(#{color},
+    				#{size},
+    				#{productImage},
+    				#{quantity},
+    				#{regDate},
+    				#{inDate},
+    				#{productNumber} 		
+    		)
     </insert>
  </mapper>

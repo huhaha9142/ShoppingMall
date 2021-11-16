@@ -39,6 +39,7 @@ public class ProductsController {
     //?„œë²? ?‹œ?‘?‹œ ?˜¹?? API ?™?‘?— ?”°?¼ ê°? ë³??™ ëª©ì ?? ?…Œ?´ë¸”ì— ë³??™?´ ?—†?‹¤ë©? select ì¿¼ë¦¬?Š” ?‹¤?–‰?•ˆ?¨.
     private static boolean ProductsChange = true;
     private static List<ProductVO> sql=null;
+    private static List<ProductVO> sql2=null;
     private static JSONObject JSONObPro = new JSONObject();
     private static Map<Long,ProductVO> mapSql = new HashMap<Long,ProductVO>();
     @Inject
@@ -71,28 +72,37 @@ public class ProductsController {
     	for(int i=0;i<sql.size();i++)
     	{
     		if((kindP==null||kindP.equals(sql.get(i).getKind())))
-    		{
-//    			System.out.println(sql.get(i).getKind());
-				JSONObject list = new JSONObject();
+    		{   		
+    			sql2 = proService.selectListColorAndSize(sql.get(i));
+    			Map<String,String> colorData = FunctionSpring.colorArray(sql2);
+    			Map<String,String> sizeData = FunctionSpring.sizeArray(sql2);
+    			
+    			JSONObject list = new JSONObject();
 				JSONObject colorJ = new JSONObject();
 				JSONArray jsoncolors = new JSONArray();
-				// ?´ë¯¸ì??Š” ?—¬?Ÿ¬ê°? ì¡´ì¬ ?•  ?ˆ˜ ?ˆê¸? ?•Œë¬¸ì— ,ë¡? êµ¬ë¶„?˜?–´ ?ˆ?–´ ,ë¡? SPLIT
-				String[] image = sql.get(i).getImageSmall().split(",");    
-				// ?¸?˜?„±?„ ?œ„?•œ ?¸?±?Š¤ ì¶”ê¸°
-				list.put("index", i);
-				// ?ƒ‰?ƒì½”ë“œ?Š” ?—¬?Ÿ¬ê°? ì¡´ì¬ ?•  ?ˆ˜ ?ˆê¸? ?•Œë¬¸ì— #ë¡? êµ¬ë¶„?˜?–´ ?ˆ?–´ #ë¡? SPLIT
-				String colors[] = sql.get(i).getColor().split("#");
-				// colors ë°°ì—´?„ ???¥
-				for(String color:colors)
-				{
-					if(color!="") { //ì´ˆê¸°?— ?ƒê¸°ëŠ” ë¹ˆë°°?—´?„ ? œ?™¸?•˜ê³? ê°? ?•­ëª©ì— #ì¶”ê?
-						jsoncolors.add("#"+color);						
-					}
-				}
+    			for(String colorA:colorData.values())
+    			{
+    				jsoncolors.add(colorA);
+    			}
+    			//º¯°æÇØÁÖ´Â ÇÔ¼ö¸¦ ÀÛ¼º ÇØ¾ß µÉµí..
+    			String size="";
+    			for(String sizeA:sizeData.values())
+    			{
+    				size+=sizeA;
+    			}
+//    			System.out.println(sql.get(i).getKind());
+				
+				
+				String[] image = sql.get(i).getTitleImage().split(",");    
+				
+				
 				colorJ.put("color",jsoncolors);
 				list.put("colors", colorJ);					
-				list.put("kind", sql.get(i).getKind());
-				list.put("size", sql.get(i).getSize());
+				
+				list.put("size", size);
+				
+				list.put("index", i);
+				list.put("kind", sql.get(i).getKind());				
 				list.put("price", sql.get(i).getPrice());
 				list.put("product", sql.get(i).getProduct());
 				list.put("productNumber", sql.get(i).getProductNumber());			
@@ -106,7 +116,7 @@ public class ProductsController {
     	return JSONObPro.toString();
     }
     
-    // ? œ?’ˆ?„ ?“±ë¡í•˜?Š” API
+    // Á¦Ç°Ãß°¡ API
     @CrossOrigin(origins = "*", allowedHeaders = "*")
     @RequestMapping(value="/products",method = RequestMethod.POST,produces = "application/json; charset=utf8")
     @ResponseBody
@@ -124,7 +134,7 @@ public class ProductsController {
     		) throws IOException
     {
     	
-    	// ?´ êµ¬ê°„?„ ìµœì†Œ?™” ?‘?—… ..
+    	
     	ProductVO vo = new ProductVO();
     	vo.setProduct(product);
     	System.out.println(vo.toString());
@@ -166,7 +176,7 @@ public class ProductsController {
     	
     }
     
-    // ? œ?’ˆ?˜ ?„¸ë¶?? •ë³´ë?? ê°?? ¸?˜¤?Š” API
+    // Á¦Ç°ÀÇ »ó¼¼ Á¤º¸! API
     @CrossOrigin(origins = "*", allowedHeaders = "*")  
     @RequestMapping(
   		  value = "/products/{productNumber}",method = RequestMethod.GET,produces = "application/json; charset=utf8"
@@ -178,7 +188,7 @@ public class ProductsController {
     	JSONObject jsonObject= new JSONObject();
     	ProductVO vo = new ProductVO();
     	
-    	try { //?ˆ«? ?™¸ ?…? ¥?— ???•´?„œ ?—?Ÿ¬? „?†¡
+    	try { 
     		vo.setProductNumber(Long.valueOf(productNumber));
     		mapSql.put(Long.valueOf(productNumber), vo);
     	}catch(Exception e)
@@ -186,30 +196,37 @@ public class ProductsController {
     		jsonObject.put("error", e);
     		return jsonObject.toString();
     	}
-    	
-    	vo = proService.selectProduct(vo);
-    	
-    	jsonObject.put("product", vo.getProduct());
-    	jsonObject.put("sizes",FunctionSpring.sizeArray(vo.getSize()));
-//    	jsonObject.put("size", vo.getSize());
-    	JSONObject colorJ = new JSONObject();
+    	List<ProductVO> volist = proService.selectProduct(vo);
+    	Map<String,String> colorData = FunctionSpring.colorArray(volist);
+		Map<String,String> sizeData = FunctionSpring.sizeArray(volist);
+		JSONObject colorJ = new JSONObject();
 		JSONArray jsoncolors = new JSONArray();
-    	String colors[] = vo.getColor().split("#");
-		// colorsï¿½ï¿½ sizeï¿½ï¿½Å­ ï¿½İºï¿½
-		for(String color:colors)
+		JSONObject sizeJ = new JSONObject();
+		JSONArray jsonsizes = new JSONArray();
+		
+		for(String colorA:colorData.values())
 		{
-			if(color!="") //0ï¿½ï¿½ ï¿½Îµï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿??ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 
-				jsoncolors.add("#"+color);
+			jsoncolors.add(colorA);
 		}
-		jsonObject.put("id",vo.getProductNumber());
+		for(String sizeA:sizeData.values())
+		{
+			jsonsizes.add(sizeA);
+		}
+
 		colorJ.put("color",jsoncolors);
+		sizeJ.put("size", jsonsizes);
+    	
+    	
+    	jsonObject.put("product", volist.get(0).getProduct());
+    	
+		jsonObject.put("id",volist.get(0).getProductNumber());
+		jsonObject.put("sizes", sizeJ);
 		jsonObject.put("colors", colorJ);
-    	jsonObject.put("kind", vo.getKind());
-    	jsonObject.put("quantity", vo.getQuantity());
+//    	jsonObject.put("quantity", vo.getQuantity());
     	jsonObject.put("price", vo.getPrice());
     	jsonObject.put("content", vo.getContent());
 //    	jsonObject.put("image", vo.getProduct());
-    	String[] image = vo.getImageSmall().split(","); 
+    	String[] image = volist.get(0).getTitleImage().split(","); 
     	JSONObject imagelist = new JSONObject();
     	JSONArray imageArr = new JSONArray();
     	for(int i=0;i<image.length;i++)

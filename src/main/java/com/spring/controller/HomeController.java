@@ -6,6 +6,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -27,6 +28,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.spring.dto.MemberVO;
 import com.spring.dto.ProductVO;
+import com.spring.function.FunctionSpring;
 import com.spring.service.MemberService;
 import com.spring.service.ProductsServiceImpl;
  
@@ -108,9 +110,9 @@ public class HomeController {
 //    	System.out.println(id1);
     	return id1; 
     }
-    // ?ç∞?ù¥?Ñ∞ Î≤†Ïù¥?ä§ ?ç∞?ù¥?Ñ∞ Î∞±ÏóÖ
+ // µ•¿Ã≈Õ ∫£¿ÃΩ∫ µ•¿Ã≈Õ πÈæ˜
     
-    // ?Öç?ä§?ä∏Î•? ?ç∞?ù¥?Ñ∞ Î≤†Ïù¥?ä§?óê ?Ñ£Í∏? (?Å¨Î°§ÎßÅ ?ç∞?ù¥?Ñ∞?ì§)
+ // ≈ÿΩ∫∆Æ∏¶ µ•¿Ã≈Õ ∫£¿ÃΩ∫ø° ≥÷±‚ (≈©∑—∏µ µ•¿Ã≈ÕµÈ)
     static final String rootPath = "C:\\Users\\kim\\Desktop\\project\\ShoppingMall\\files\\";
     static String sourceProducts = rootPath + "books.txt";
     @RequestMapping(value = "/putDatabase")
@@ -124,7 +126,7 @@ public class HomeController {
     			try {
     				fr= new FileReader(sourceProducts);    				
     				br  =new BufferedReader(fr);   				
-    				int i= 100;
+    				int i= 0;
     				ProductVO vo = new ProductVO();
     				String line="";
     				String priceD[];
@@ -136,17 +138,34 @@ public class HomeController {
     					// product size price color image
     					String data[] = line.split("\"");
     					vo.setProduct(data[0]);
-    					vo.setSize(data[1]);
+    					
     					priceD=data[2].split(",");   					
     					vo.setPrice(Long.valueOf(priceD[0]+priceD[1]));
-    					vo.setColor(data[3]);
-    					colorall+=data[3];
-    					vo.setImageSmall(data[4]);
-    					vo.setKind(data[5]);
+    					ArrayList<String> size = FunctionSpring.sizeArray1(data[1]);
+    					String[] color = data[3].split("#");
     					vo.setRegDate(new Date());
+    					vo.setInDate(new Date());
     					vo.setProductNumber((long)i);
-    					// ?èô?ûëÏß??†ê ÎπÑÌôú?Ñ±?ôî
+    					vo.setQuantity("100");
+//    					vo.setSize(data[1]);
+//    					vo.setColor(data[3]); 					
+    					vo.setTitleImage(data[4]);   			
+    					vo.setKind(data[5]);   			
     					proService.insertProduct(vo);
+    					
+    					for(int j = 0 ; j< size.size();j++)
+    					{
+    						vo.setSize(size.get(j));
+    						for(int z = 0;z< color.length;z++)
+    						{
+    							if(color[z]!="") {
+    								vo.setColor("#"+color[z]);
+    								proService.insertProductData(vo);
+    							}
+    						}
+    					}
+    					
+    					
 //    					System.out.println(vo.toString());
     				}
     			}catch (Exception e) {
