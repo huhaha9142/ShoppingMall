@@ -24,4 +24,22 @@ public class UsersServiceImpl implements UsersService {
 		return 1==dao.insertUser(vo);
 	}
 
+	@Override
+	public int selectIdCheck(UsersVO vo) {
+		// TODO Auto-generated method stub
+		return dao.selectIdCheck(vo);
+	}
+
+	@Override
+	public boolean updateUserPrivacy(UsersVO vo) {
+		// TODO Auto-generated method stub
+		return 1==dao.updateUserPrivacy(vo);
+	}
+
+	@Override
+	public boolean updatePassword(UsersVO vo) {
+		// TODO Auto-generated method stub
+		return 1==dao.updatePassword(vo);
+	}
+
 }

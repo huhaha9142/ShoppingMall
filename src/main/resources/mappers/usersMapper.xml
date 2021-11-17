@@ -22,15 +22,40 @@
   						name,
   						address,
   						phone,
-  						regdate)
+  						regdate,
+  						indate)
   		VALUE(#{id},
   			#{password},
   			#{name},
   			#{address},
   			#{phone},
-  			#{regDate})
+  			#{regDate},
+  			#{inDate})
   </insert>
-  	
+  <select id="selectIdCheck" resultType="int" parameterType="usersVO">
+  		SELECT COUNT(id)
+  		FROM users
+  		WHERE id = #{id}
+  </select>
+  <update id="updateUserPrivacy">
+  		UPDATE users
+  		SET name = #{name},
+  			address = #{address},
+  			nick_name = #{nickName},
+  			regdate = #{regDate},
+  			phone = #{phone}
+  		WHERE user_number = #{userNumber}		
+  </update>
+  <update id="updatePassword" parameterType="usersVO">
+  		UPDATE users
+  		SET password = #{password}
+  		WHERE user_number = #{userNumber}
+  </update>
+  <delete id="deleteUser" parameterType="usersVO">
+  		DELETE
+  		FROM users
+  		WHERE user_number = #{userNumber}
+  </delete>
   
   
   

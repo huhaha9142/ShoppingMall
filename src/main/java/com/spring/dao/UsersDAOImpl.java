@@ -16,14 +16,32 @@ public class UsersDAOImpl implements UsersDAO {
 	
 	@Override
 	public UsersVO selectLogin(UsersVO vo) {
-		// TODO Auto-generated method stub
+		
 		return sqlSession.selectOne(Namespace+".selectLogin", vo);
 	}
 
 	@Override
 	public int insertUser(UsersVO vo) {
-		// TODO Auto-generated method stub
+	
 		return sqlSession.insert(Namespace+".insertUser", vo);
+	}
+
+	@Override
+	public int selectIdCheck(UsersVO vo) {
+		
+		return sqlSession.selectOne(Namespace+".selectIdCheck", vo);
+	}
+
+	@Override
+	public int updateUserPrivacy(UsersVO vo) {
+		
+		return sqlSession.update(Namespace+".updateUserPrivacy", vo);
+	}
+
+	@Override
+	public int updatePassword(UsersVO vo) {
+		
+		return sqlSession.update(Namespace+".updatePassword", vo);
 	}
 
 }

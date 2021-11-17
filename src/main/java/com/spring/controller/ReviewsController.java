@@ -64,7 +64,6 @@ public class ReviewsController {
 					jsonimg.add(URL_PATH+img);
 			}
 			
-			list.put("hit", sql.get(i).getHit());
 			list.put("userId", sql.get(i).getId());
 			imgJ.put("image", jsonimg);
 			list.put("images", imgJ);
@@ -96,7 +95,7 @@ public class ReviewsController {
 		// hit?äî Í∏∞Î≥∏Í∞? 0 userNumber?äî Î°úÍ∑∏?ù∏?ù¥ ?ôÑÎ£åÎêòÎ©? ?ûë?óÖ?óê ?ì§?ñ¥Í∞??ïº ?ïú?ã§.
 		ReviewVO vo = new ReviewVO(content, title, 
 				FunctionSpring.fileSave(imageReview,SAVE_PATH),
-				new Date(), (long)0, (long)1, productNumber);
+				new Date(), (long)1, productNumber);
 		JSONObject json = new JSONObject();
 		boolean insert = reService.insertReview(vo);
 		String result = (insert==true)?"insert":"fail";
@@ -122,6 +121,7 @@ public class ReviewsController {
 		ReviewVO vo = new ReviewVO();
 		vo.setContent(content);
 		vo.setTitle(title);
+		vo.setRegDate(new Date());
 		vo.setImage(FunctionSpring.fileSave(imageReview, SAVE_PATH));
 		vo.setReviewsNumber(Long.valueOf(reviewsNumber));
 		boolean update = reService.updateReview(vo);

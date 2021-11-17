@@ -10,7 +10,23 @@ public class UsersVO {
 	private String address;
 	private String phone;
 	private Date regDate;
-	
+	private Date inDate;
+	private String nickName;
+	public String getNickName() {
+		return nickName;
+	}
+
+	public void setNickName(String nickName) {
+		this.nickName = nickName;
+	}
+	public Date getInDate() {
+		return inDate;
+	}
+
+	public void setInDate(Date inDate) {
+		this.inDate = inDate;
+	}
+
 	public UsersVO(){}
 	
 	public UsersVO(String id,String password)
