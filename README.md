@@ -1,6 +1,16 @@
 # ShoppingMall
 
 ## REST API 가이드
+API 리스트
+1. [제품(product)](#product)
+2. [리뷰(review)](#review)
+3. [커스텀(custom)](#custom)
+4. [유저(user)](#user)
+5. [주문(order)](#order)
+
+
+
+## product
 products .GET .POST .DELETE   
 ---
 ___    
@@ -31,7 +41,6 @@ http://pvpvpvpvp.gonetis.com:8080/sample/products
 * 실패시 : {"result","fail"}
 
 
-
 products/{product} .GET   
 ---
 ___ 
@@ -43,6 +52,7 @@ ___
 http://pvpvpvpvp.gonetis.com:8080/sample/products/{product}
 ``````
 
+## review
 reviews .GET .POST    
 ---
 ___    
@@ -101,6 +111,7 @@ http://pvpvpvpvp.gonetis.com:8080/sample/reviews/{reviewsNumber}
 * 실패시 : {"result","fail"}
 
 
+## custom
 customs .GET .POST    
 ---
 ___    
@@ -119,7 +130,7 @@ http://pvpvpvpvp.gonetis.com:8080/sample/customs
 ``````
 >정해진 형식의 formData를 받아야 작동합니다.
 >>형식(항목)은 다음과 같습니다(**각 항목의 데이터는 반드시 존재해야함**)
->>>quantity(int)<br>price(int)<br>image(file)<br>size(String)<br/>color(String)<br>productNUmber(int)</br>userNumber(int)</br>
+>>>image(file)<br>size(String)<br/>color(String)<br>productNUmber(int)</br>userNumber(int)</br>
 >>image는 여러장 넣을 수 있습니다.(제한 없음)<br>
 
 >이미지의 모든 포멧은 .png 로 저장됩니다.
@@ -138,7 +149,7 @@ http://pvpvpvpvp.gonetis.com:8080/sample/customs/{customNumber}
 ``````
 >정해진 형식의 formData를 받아야 작동합니다.
 >>형식(항목)은 다음과 같습니다(**각 항목의 데이터는 반드시 존재해야함**)
->>>quantity(int)<br>price(int)<br>image(file)<br>size(String)<br/>color(String)</br>
+>>>image(file)<br>size(String)<br/>color(String)</br>
 >>image는 여러장 넣을 수 있습니다.(제한 없음)<br>
 
 >이미지의 모든 포멧은 .png 로 저장됩니다.
@@ -157,3 +168,68 @@ http://pvpvpvpvp.gonetis.com:8080/sample/customs/{customNumber}
 * 결과는 JSON형식으로 응답됩니다.
 * ex) 성공시 : {"result","delete"}
 * 실패시 : {"result","fail"}
+
+## user
+
+### User-login.POST
+*로그인을 합니다*
+``````
+http://pvpvpvpvp.gonetis.com:8080/sample/user-login
+``````
+>정해진 형식의 formData를 받아야 작동합니다.
+>>형식(항목)은 다음과 같습니다(**각 항목의 데이터는 반드시 존재해야함**)
+>>>id(String)<br>password(String)
+* 결과는 JSON형식으로 응답됩니다.
+* ex) 성공시 : {"result","Success"} + cookie에 JWT 토큰(토큰에는 id정보가 담겨있습니다.)
+* 실패시 : {"result","Fail"}
+
+### User-join.POST
+*회원가입을 합니다*
+``````
+http://pvpvpvpvp.gonetis.com:8080/sample/user-join
+``````
+>정해진 형식의 formData를 받아야 작동합니다.
+>>형식(항목)은 다음과 같습니다(**id,password,name은 반드시 존재해야합니다.**)
+>>>id(String)<br>password(String)<br>name(String)<br>address(String)<br>phone(String)<br>
+
+>>address,phone은 필수 입력 사항이 아니며 없다면  null값이 입력됩니다.
+
+* 결과는 JSON형식으로 응답됩니다.
+* ex) 성공시 : {"result","Join"}
+* 실패시 : {"result","Fail"}
+
+### User-id.POST
+*유저 id 중복검사결과를 보내줍니다.*
+``````
+http://pvpvpvpvp.gonetis.com:8080/sample/user-id
+``````
+>정해진 형식의 formData를 받아야 작동합니다.
+>>형식(항목)은 다음과 같습니다(**각 항목의 데이터는 반드시 존재해야함**)
+>>>id(String)
+* 결과는 JSON형식으로 응답됩니다.
+* ex) 성공시 : {"result","사용 가능한 아이디입니다."}
+* 실패시 : {"result","이미 사용중인 아이디 입니다"}
+
+### User-privacy.POST
+*유저의 개인정보를 업데이트 합니다.*
+``````
+http://pvpvpvpvp.gonetis.com:8080/sample/user-privacy
+``````
+>정해진 형식의 formData를 받아야 작동합니다.
+>>형식(항목)은 다음과 같습니다(**name,userNuber는 반드시 존재해야함**)
+>>>id(String)<br>password(String)<br>name(String)<br>address(String)<br>phone(String)<br>nickName(String)<br>userNumber(int)
+>>address,phone,nickName은 필수 입력 사항이 아니며<br>
+>> address,phone는 없다면 null값이 입력됩니다.
+>> nickName default 값으로 설정됩니다.
+* 결과는 JSON형식으로 응답됩니다.
+* ex) 성공시 : {"result","Update"}
+* 실패시 : {"result","Fail"}
+### User-password.POST
+*유저의 비밀번호를 변경(업데이트) 합니다.*
+>정해진 형식의 formData를 받아야 작동합니다.
+>>형식(항목)은 다음과 같습니다(**name,userNuber는 반드시 존재해야함**)
+>>>password(String)<br>userNumber(int)
+* 결과는 JSON형식으로 응답됩니다.
+* ex) 성공시 : {"result","Update"}
+* 실패시 : {"result","Fail"}
+## order
