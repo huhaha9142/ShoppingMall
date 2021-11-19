@@ -42,11 +42,22 @@ public class ProductsDAOImpl implements ProductsDAO {
 	@Override
 	public int insertProduct(ProductVO vo) {
 		return sqlSession.insert(Namespace+".insertProduct", vo);
+				
 	}
 
 	@Override
-	public ProductVO selectProduct(ProductVO vo) {
-		return sqlSession.selectOne(Namespace+".selectProduct", vo);
+	public List<ProductVO> selectProduct(ProductVO vo) {
+		return sqlSession.selectList(Namespace+".selectProduct", vo);
+	}
+
+	@Override
+	public int insertProductData(ProductVO vo) {
+		return sqlSession.insert(Namespace+".insertProductData", vo);
+	}
+
+	@Override
+	public List<ProductVO> selectListColorAndSize(ProductVO vo) {
+		return sqlSession.selectList(Namespace+".selectListColorAndSize", vo);
 	}
 
 }

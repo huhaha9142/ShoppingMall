@@ -10,7 +10,6 @@
 			re.title,
 			re.indate AS inDate,
 			re.image,
-			re.hit,
 			re.users_usernumber AS usersNumber,
 			re.products_productnumber AS productsNumber,
 			re.reviews_number AS reviewsNumber,
@@ -25,11 +24,10 @@
 	</select>
 	<insert id="insertReview" parameterType="reviewVO" >
 		INSERT INTO reviews
-		(content,title,image,hit,users_usernumber,products_productnumber,indate)
+		(content,title,image,users_usernumber,products_productnumber,indate)
 			VALUE (#{content},
 					#{title},
 					#{image},
-					#{hit},
 					#{usersNumber},
 					#{productsNumber},
 					#{inDate}
@@ -39,7 +37,8 @@
 		UPDATE reviews
 			SET content = #{content},
 				title = #{title},
-				image = #{image}
+				image = #{image},
+				indate = #{inDate}
 		WHERE (reviews_number = #{reviewsNumber})	
 	</update>
 	<delete id="deleteReview" parameterType="reviewVO">

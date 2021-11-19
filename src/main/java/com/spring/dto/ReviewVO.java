@@ -7,7 +7,7 @@ public class ReviewVO {
 	private String title;
 	private String image;
 	private Date inDate;
-	private Long hit;
+	private Date regDate;
 	private	Long usersNumber;
 	private Long productsNumber;
 	private Long reviewsNumber;
@@ -15,12 +15,7 @@ public class ReviewVO {
 	private String id;
 	private String name;
 	
-	@Override
-	public String toString() {
-		return "ReviewVO [content=" + content + ", title=" + title + ", image=" + image + ", inDate=" + inDate
-				+ ", hit=" + hit + ", usersNumber=" + usersNumber + ", productsNumber=" + productsNumber
-				+ ", reviewsNumber=" + reviewsNumber + ", product=" + product + ", id=" + id + ", name=" + name + "]";
-	}
+	
 
 	public String getProduct() {
 		return product;
@@ -49,13 +44,12 @@ public class ReviewVO {
 	public ReviewVO() {}
 	
 	public ReviewVO(String content,String title, String image, Date inDate,
-			Long hit, Long usersNumber, Long productsNumber)
+		 Long usersNumber, Long productsNumber)
 	{
 		setContent(content);
 		setTitle(title);
 		setImage(image);
 		setInDate(inDate);
-		setHit(hit);
 		setUsersNumber(usersNumber);
 		setProductsNumber(productsNumber); 
 	}
@@ -106,10 +100,13 @@ public class ReviewVO {
 	public void setInDate(Date inDate) {
 		this.inDate = inDate;
 	}
-	public Long getHit() {
-		return hit;
+
+	public Date getRegDate() {
+		return regDate;
 	}
-	public void setHit(Long hit) {
-		this.hit = hit;
+
+	public void setRegDate(Date regDate) {
+		this.regDate = regDate;
 	}
+	
 }

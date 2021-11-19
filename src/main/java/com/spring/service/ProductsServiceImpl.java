@@ -39,8 +39,18 @@ public class ProductsServiceImpl implements ProductsService {
 		return 1==dao.insertProduct(vo);
 	}
 	@Override
-	public ProductVO selectProduct(ProductVO vo) {
+	public List<ProductVO> selectProduct(ProductVO vo) {
 		return dao.selectProduct(vo);
+	}
+	@Override
+	public boolean insertProductData(ProductVO vo) {
+		// TODO Auto-generated method stub
+		return 1==dao.insertProductData(vo);
+	}
+	@Override
+	public List<ProductVO> selectListColorAndSize(ProductVO vo) {
+		// TODO Auto-generated method stub
+		return dao.selectListColorAndSize(vo);
 	}
 
 }
