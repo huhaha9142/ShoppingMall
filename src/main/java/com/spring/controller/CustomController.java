@@ -2,6 +2,7 @@ package com.spring.controller;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Date;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -39,8 +40,6 @@ public class CustomController {
     @RequestMapping(value="/customs",method = RequestMethod.POST,produces = "application/json; charset=utf8")
     @ResponseBody
     public String customInsert(
-    		@RequestParam("quantity") Long quantity,
-    		@RequestParam("price") Long price,
     		@RequestParam("image") List <MultipartFile> image,
     		@RequestParam("productNumber") Long productNumber,
     		@RequestParam("userNumber") Long userNumber,
@@ -50,14 +49,14 @@ public class CustomController {
     {
 		JSONObject jsonObject = new JSONObject();
 		CustomVO vo = new CustomVO();
-		vo.setQuantity(Long.valueOf(quantity));
-		vo.setPrice(Long.valueOf(price));
 		vo.setProductNumber(Long.valueOf(productNumber));
 		// 로그인 이랑 연계
 		vo.setUserNumber(Long.valueOf(userNumber));
 		vo.setSize(size);
 		vo.setColor(color);
 		vo.setImage(FunctionSpring.fileSave(image, SAVE_PATH));
+		vo.setInDate(new Date());
+		vo.setRegDate(new Date());
 		boolean insert = cusService.insertCustom(vo);
 		String result =(insert==true)?"insert":"fail";
 		jsonObject.put("result", result);
@@ -80,8 +79,8 @@ public class CustomController {
 			JSONObject list = new JSONObject();
 			String image[] = sql.get(i).getImage().split(",");
 			list.put("index", i);
-			list.put("quantity", sql.get(i).getQuantity());
-			list.put("price", sql.get(i).getPrice());
+			list.put("inDate", sql.get(i).getInDate());
+			list.put("regDate", sql.get(i).getRegDate());
 			list.put("image", URL_PATH+image[0]);
 			list.put("size", sql.get(i).getSize());
 			list.put("color", sql.get(i).getColor());
@@ -97,8 +96,6 @@ public class CustomController {
     @RequestMapping(value="/customs/{customNumber}",method = RequestMethod.POST,produces = "application/json; charset=utf8")
     @ResponseBody
     public String customUpdate(
-    		@RequestParam("quantity") Long quantity,
-    		@RequestParam("price") Long price,
     		@RequestParam("image") List <MultipartFile> image,
     		@RequestParam("size") String size,
     		@RequestParam("color") String color,
@@ -107,8 +104,7 @@ public class CustomController {
     {
 		JSONObject jsonObject = new JSONObject();
 		CustomVO vo = new CustomVO();
-		vo.setQuantity(Long.valueOf(quantity));
-		vo.setPrice(Long.valueOf(price));
+		vo.setRegDate(new Date());
 		vo.setSize(size);
 		vo.setColor(color);
 		vo.setCustomNumber(Long.valueOf(customNumber));

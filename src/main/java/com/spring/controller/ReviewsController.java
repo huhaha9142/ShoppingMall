@@ -85,22 +85,35 @@ public class ReviewsController {
     public String reviewInsert(
     		@RequestParam("content") String content,
     		@RequestParam("title") String title,
-    		@RequestParam("image") List<MultipartFile> imageReview,
+    		@RequestParam(value="image",required=false) List<MultipartFile> imageReview,
     		@RequestParam("productNumber") Long productNumber
     	) throws IOException
     {
 		System.out.println(content);
 		System.out.println(imageReview);
 		//content title image indate hit(0), usersNumber, productsNumber
-		// hit?äî Í∏∞Î≥∏Í∞? 0 userNumber?äî Î°úÍ∑∏?ù∏?ù¥ ?ôÑÎ£åÎêòÎ©? ?ûë?óÖ?óê ?ì§?ñ¥Í∞??ïº ?ïú?ã§.
-		ReviewVO vo = new ReviewVO(content, title, 
+		System.out.println("ªÁ¿Ã¡Ó"+imageReview.size());
+		ReviewVO vo = new ReviewVO();
+		if(imageReview.size()==0)
+		{
+			vo = new ReviewVO(content, title, 
+					"noData",
+					new Date(), (long)1, productNumber);	
+			JSONObject json = new JSONObject();	
+			boolean insert = reService.insertReview(vo);
+			String result = (insert==true)?"insert":"fail";
+			json.put("result",result);
+			return json.toString();
+		}
+		vo = new ReviewVO(content, title, 
 				FunctionSpring.fileSave(imageReview,SAVE_PATH),
-				new Date(), (long)1, productNumber);
-		JSONObject json = new JSONObject();
+				new Date(), (long)1, productNumber);	
+		JSONObject json = new JSONObject();	
 		boolean insert = reService.insertReview(vo);
 		String result = (insert==true)?"insert":"fail";
 		json.put("result",result);
 		return json.toString();
+
     }
 	
 	// Î¶¨Î∑∞?ùò ?û¨?ûë?Ñ±?ùÑ ?ïò?äî API

@@ -36,17 +36,15 @@ public class ProductsController {
 	private static String SAVE_PATH="c:/Users/kim/Desktop/project/ShoppingMall/src/main/java/com/image/";
     private static final Logger logger = LoggerFactory.getLogger(ProductsController.class);
     
-    //?ÑúÎ≤? ?ãú?ûë?ãú ?òπ?? API ?èô?ûë?óê ?î∞?ùº Í∞? Î≥??èô Î™©Ï†Å?? ?Öå?ù¥Î∏îÏóê Î≥??èô?ù¥ ?óÜ?ã§Î©? select ÏøºÎ¶¨?äî ?ã§?ñâ?ïà?ê®.
+    
     private static boolean ProductsChange = true;
-    private static List<ProductVO> sql=null;
-    private static List<ProductVO> sql2=null;
-    private static JSONObject JSONObPro = new JSONObject();
+    private static Map<String,JSONObject> AllJson = new HashMap<String, JSONObject>();
     private static Map<Long,ProductVO> mapSql = new HashMap<Long,ProductVO>();
     @Inject
     private ProductsServiceImpl proService;
     
     
-    // ?†ú?íà?ùÑ Î™®Îëê Î≥¥ÎÇ¥Ï£ºÎäî API
+
     @CrossOrigin(origins = "*", allowedHeaders = "*")
     @RequestMapping(value="/products",method = RequestMethod.GET,produces = "application/json; charset=utf8")
     @ResponseBody
@@ -55,52 +53,40 @@ public class ProductsController {
     		@RequestParam(value="color",required=false) String colorP,
     		@RequestParam(value="size",required=false) String sizeP,
     		@RequestParam(value="price",required=false) String priceP
-    		) throws IOException {   	
-    	if(!ProductsChange)
+    		) throws IOException {
+    	
+    	if(AllJson.get(kindP+colorP+sizeP+priceP)!=null)
+			return AllJson.get(kindP+colorP+sizeP+priceP).toString();
+    	JSONObject JSONObPro = new JSONObject();
+    	List<ProductVO> sql = proService.selectList();
+    	ProductsChange = false;
+    	if(ProductsChange)
     	{
-    		return JSONObPro.toString();
+    		AllJson.clear();
     	}
-		sql = proService.selectList();
-		ProductsChange=!ProductsChange;
 		JSONArray jsonArarry = new JSONArray();
 	
-    	System.out.println("kind:"+kindP);
-    	System.out.println("color:"+colorP);
-    	System.out.println("size:"+sizeP);
-    	System.out.println("price:"+priceP);
+    	
     	
     	for(int i=0;i<sql.size();i++)
     	{
-    		if((kindP==null||kindP.equals(sql.get(i).getKind())))
-    		{   		
-    			sql2 = proService.selectListColorAndSize(sql.get(i));
-    			Map<String,String> colorData = FunctionSpring.colorArray(sql2);
-    			Map<String,String> sizeData = FunctionSpring.sizeArray(sql2);
-    			
+    		if((kindP==null||kindP.equals(sql.get(i).getKind())))   	
+    		{   
+    			List<ProductVO> sql2 = proService.selectListColorAndSize(sql.get(i));
+    			Map<String,String> colorData = FunctionSpring.anyArray(sql2 , "color");
+    			Map<String,String> sizeData = FunctionSpring.anyArray(sql2, "size");
     			JSONObject list = new JSONObject();
 				JSONObject colorJ = new JSONObject();
 				JSONArray jsoncolors = new JSONArray();
     			for(String colorA:colorData.values())
     			{
     				jsoncolors.add(colorA);
-    			}
-    			//∫Ø∞Ê«ÿ¡÷¥¬ «‘ºˆ∏¶ ¿€º∫ «ÿæﬂ µ…µÌ..
-    			String size="";
-    			for(String sizeA:sizeData.values())
-    			{
-    				size+=sizeA;
-    			}
-//    			System.out.println(sql.get(i).getKind());
-				
-				
+    			}   			
+    			String size = FunctionSpring.sizeString(sizeData);			
 				String[] image = sql.get(i).getTitleImage().split(",");    
-				
-				
 				colorJ.put("color",jsoncolors);
-				list.put("colors", colorJ);					
-				
-				list.put("size", size);
-				
+				list.put("colors", colorJ);									
+				list.put("size", size);				
 				list.put("index", i);
 				list.put("kind", sql.get(i).getKind());				
 				list.put("price", sql.get(i).getPrice());
@@ -108,11 +94,14 @@ public class ProductsController {
 				list.put("productNumber", sql.get(i).getProductNumber());			
 				list.put("image", URL_PATH+image[0]);
 				jsonArarry.add(list);
-				JSONObPro.put("products", jsonArarry); 	
+				JSONObPro.put("products", jsonArarry);
+				AllJson.put(kindP+colorP+sizeP+priceP, JSONObPro);
     		}
-    	}
-	
-    	
+    	}	
+    	System.out.println("kind:"+kindP);
+    	System.out.println("color:"+colorP);
+    	System.out.println("size:"+sizeP);
+    	System.out.println("price:"+priceP);
     	return JSONObPro.toString();
     }
     
@@ -147,8 +136,6 @@ public class ProductsController {
     	if(productNumber!=0)// ?†ú?íàÎ≤àÌò∏ Ï°¥Ïû¨ ?ú†Î¨¥Ïóê ?î∞?ùº?Ñú UPDATE INSERT Í∞? ?Çò?âò?ñ¥ ?èô?ûë?ïú?ã§.
     	{
     		vo.setRegDate(new Date());
-    		vo.setImageSmall(FunctionSpring.fileSave(imageSmall,SAVE_PATH));
-    		vo.setImageLazy(FunctionSpring.fileSave(imageLazy,SAVE_PATH));
     		vo.setProductImage(FunctionSpring.fileSave(productImage,SAVE_PATH));
     		boolean sqlUpdate = proService.updateProduct(vo);
     		result = (sqlUpdate==true)?"update":"fail";
@@ -158,10 +145,7 @@ public class ProductsController {
     	if(productNumber==0)
     	{
     		vo.setRegDate(new Date());
-    		vo.setImageSmall(FunctionSpring.fileSave(imageSmall,SAVE_PATH));
-    		vo.setImageLazy(FunctionSpring.fileSave(imageLazy,SAVE_PATH));
     		vo.setProductImage(FunctionSpring.fileSave(productImage,SAVE_PATH));
-    		//?†ú?íàÎ≤àÌò∏Î•? ???û•?ïò?äîÍ±¥Îç∞ ?ù¥Í±? ?ïÑ?öî?óÜ?äî?ç∞?
 //    		vo.setProductNumber((long)(Math.random()*System.currentTimeMillis())%10000000);
     		boolean sqlInsert = proService.insertProduct(vo);
     		result = (sqlInsert==true)?"insert":"fail";
@@ -169,7 +153,6 @@ public class ProductsController {
     	}
     	if(!result.equals("fail"))
     		ProductsChange=false;
-    	// ?óÖ?ç∞?ù¥?ä∏ Î∞úÏÉù?ãú ?ï¥?ãπ ?ç∞?ù¥?Ñ∞Î•? ???û•?ïú ?Ç§Í∞íÏùÑ Ï¥àÍ∏∞?ôî
     	if(result.equals("update"))
     		mapSql.remove(productNumber);
     	return json.toString();
@@ -197,8 +180,8 @@ public class ProductsController {
     		return jsonObject.toString();
     	}
     	List<ProductVO> volist = proService.selectProduct(vo);
-    	Map<String,String> colorData = FunctionSpring.colorArray(volist);
-		Map<String,String> sizeData = FunctionSpring.sizeArray(volist);
+    	Map<String,String> colorData = FunctionSpring.anyArray(volist, "color");
+		Map<String,String> sizeData = FunctionSpring.anyArray(volist, "size");
 		JSONObject colorJ = new JSONObject();
 		JSONArray jsoncolors = new JSONArray();
 		JSONObject sizeJ = new JSONObject();

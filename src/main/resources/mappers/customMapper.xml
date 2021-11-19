@@ -6,39 +6,38 @@
   
   <insert id="insertCustom" parameterType="customVO">
   		INSERT INTO products_custom
-  		(quantity,price,image,
-  		products_productnumber,users_user_number,size,color)
-  			VALUE (#{quantity},
-  					#{price},
-  					#{image},
+  		(image,products_productnumber,users_user_number,size,color,indate,regdate)
+  			VALUE (#{image},
   					#{productNumber},
   					#{userNumber},
   					#{size},
-  					#{color}
+  					#{color},
+  					#{inDate},
+  					#{regDate}
   				)
   </insert>
   <select id="selectCustomList" parameterType="customVO" resultType="customVO">
   		SELECT 
-	  		c.quantity,
-	  		c.price,
 	  		c.image,
 	  		c.size,
 	  		c.color,
 	  		c.users_user_number AS userNumber,
-	  		p.product
+	  		p.product,
+	  		c.indate AS inDate,
+	  		c.regdate AS regDate
 	  	FROM products_custom c INNER JOIN products p
         ON c.products_productnumber = p.product_number;
   </select>
   <update id="updateCustom" parameterType="customVO">
   		UPDATE products_custom 
   		SET
-  			quantity = #{quantity},
-  			price = #{price},
   			image = #{image},
-  			size =#{size},
-  			color = #{color}
+  			size = #{size},
+  			color = #{color},
+  			regdate = #{regDate}
   		WHERE products_custom_number = #{customNumber}
   </update>
+  <!-- WHERE에 userNumber 추가를 해야겠음! 업데이트도 마찬가지 -->
   <delete id="deleteCustom">
   		DELETE FROM products_custom
   		WHERE products_custom_number = #{customNumber}

@@ -1,8 +1,9 @@
 package com.spring.dto;
 
+import java.util.Date;
+
 public class CustomVO {
-	private Long quantity;
-	private Long price;
+
 	private String image;
 	private Long productNumber;
 	private Long userNumber;
@@ -10,31 +11,15 @@ public class CustomVO {
 	private String size;
 	private String color;
 	private String product;
+	private Date inDate;
+	private Date regDate;
+		
 	
-
 	@Override
 	public String toString() {
-		return "CustomVO [quantity=" + quantity + ", price=" + price + ", image=" + image + ", productNumber="
-				+ productNumber + ", userNumber=" + userNumber + ", customNumber=" + customNumber + ", size=" + size
-				+ ", color=" + color + ", product=" + product + "]";
-	}
-	public String getProduct() {
-		return product;
-	}
-	public void setProduct(String product) {
-		this.product = product;
-	}
-	public Long getQuantity() {
-		return quantity;
-	}
-	public void setQuantity(Long quantity) {
-		this.quantity = quantity;
-	}
-	public Long getPrice() {
-		return price;
-	}
-	public void setPrice(Long price) {
-		this.price = price;
+		return "CustomVO [image=" + image + ", productNumber=" + productNumber + ", userNumber=" + userNumber
+				+ ", customNumber=" + customNumber + ", size=" + size + ", color=" + color + ", product=" + product
+				+ ", inDate=" + inDate + ", regDate=" + regDate + "]";
 	}
 	public String getImage() {
 		return image;
@@ -72,4 +57,27 @@ public class CustomVO {
 	public void setColor(String color) {
 		this.color = color;
 	}
+	public String getProduct() {
+		return product;
+	}
+	public void setProduct(String product) {
+		this.product = product;
+	}
+	public Date getInDate() {
+		return inDate;
+	}
+	public void setInDate(Date inDate) {
+		this.inDate = inDate;
+	}
+	public Date getRegDate() {
+		return regDate;
+	}
+	public void setRegDate(Date regDate) {
+		this.regDate = regDate;
+	}
+	
+	
+
+	
+	
 }
