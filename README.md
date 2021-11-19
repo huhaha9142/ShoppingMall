@@ -70,9 +70,9 @@ http://pvpvpvpvp.gonetis.com:8080/sample/reviews
 http://pvpvpvpvp.gonetis.com:8080/sample/reviews
 ``````
 >정해진 형식의 formData를 받아야 작동합니다.
->>형식(항목)은 다음과 같습니다(**각 항목의 데이터는 반드시 존재해야함**)
+>>형식(항목)은 다음과 같습니다(**각 항목의 데이터는 반드시 존재해야함(image만 null허용)**)
 >>>content(String)<br>title(String)<br>image(file)<br>productNumber(int)<br/>
->>image는 여러장 넣을 수 있습니다.(제한 없음)<br>
+>>image는 여러장 넣을 수 있습니다.(제한 없음)<br>image 값이 null 일때 임시데이터가 들어갑니다.
 
 >이미지의 모든 포멧은 .png 로 저장됩니다.
 
@@ -226,10 +226,19 @@ http://pvpvpvpvp.gonetis.com:8080/sample/user-privacy
 * 실패시 : {"result","Fail"}
 ### User-password.POST
 *유저의 비밀번호를 변경(업데이트) 합니다.*
+``````
+http://pvpvpvpvp.gonetis.com:8080/sample/user-password
+``````
 >정해진 형식의 formData를 받아야 작동합니다.
 >>형식(항목)은 다음과 같습니다(**name,userNuber는 반드시 존재해야함**)
 >>>password(String)<br>userNumber(int)
+
 * 결과는 JSON형식으로 응답됩니다.
 * ex) 성공시 : {"result","Update"}
 * 실패시 : {"result","Fail"}
+
+### User.DELETE
+
+
+
 ## order
