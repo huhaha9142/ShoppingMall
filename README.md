@@ -80,9 +80,17 @@ http://pvpvpvpvp.gonetis.com:8080/sample/reviews
 * ex) 성공시 : {"result","insert"}
 * 실패시 : {"result","fail"}
 
-reviews{reviewNumber} .POST .DELETE   
+reviews{reviewNumber} .GET .POST .DELETE   
 ---
 ___    
+### Reviews/{reviewNumber}.GET
+*DB의 리뷰하나를 받아옵니다.*
+>[JSON 데이터 보러가기{1}<<](http://pvpvpvpvp.gonetis.com:8080/sample/reviews/1)
+``````
+http://pvpvpvpvp.gonetis.com:8080/sample/reviews/{reviewsNumber}
+``````
+>업데이트 하실때 쓰시면 됩니다.!
+
 ### Reviews/{reviewNumber}.POST
 *DB의 리뷰를 UPDATE 합니다.*
 ``````
@@ -110,7 +118,12 @@ http://pvpvpvpvp.gonetis.com:8080/sample/reviews/{reviewsNumber}
 * ex) 성공시 : {"result","delete"}
 * 실패시 : {"result","fail"}
 
-
+### ProductReviews/{productNumber}.GET
+*DB의 제품기준 리뷰를 불러옵니다.*
+>[JSON 데이터 보러가기[100번 상품]<<](http://pvpvpvpvp.gonetis.com:8080/sample/productReviews/100)
+``````
+http://pvpvpvpvp.gonetis.com:8080/sample/productReviews/{producrReview}
+``````
 ## custom
 customs .GET .POST    
 ---
