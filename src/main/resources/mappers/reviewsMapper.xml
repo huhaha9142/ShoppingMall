@@ -22,6 +22,63 @@
 		ON re.users_usernumber = us.user_number 
 			AND re.products_productnumber = pr.product_number
 	</select>
+	<select id ="selectOne" resultType="reviewVO" parameterType="reviewVO">
+		SELECT
+			re.content,
+			re.title,
+			re.indate AS inDate,
+			re.image,
+			re.users_usernumber AS usersNumber,
+			re.products_productnumber AS productsNumber,
+			re.reviews_number AS reviewsNumber,
+			us.id,
+			us.name,
+			pr.product
+		FROM reviews re 
+			INNER JOIN users us 
+			INNER JOIN products pr
+		ON re.users_usernumber = us.user_number 
+			AND re.products_productnumber = pr.product_number
+		WHERE reviews_number = #{reviewsNumber}
+	</select>
+	<select id="selectMyReviews" resultType="reviewVO" parameterType="reviewVO">
+			SELECT
+			re.content,
+			re.title,
+			re.indate AS inDate,
+			re.image,
+			re.users_usernumber AS usersNumber,
+			re.products_productnumber AS productsNumber,
+			re.reviews_number AS reviewsNumber,
+			us.id,
+			us.name,
+			pr.product
+		FROM reviews re 
+			INNER JOIN users us 
+			INNER JOIN products pr
+		ON re.users_usernumber = us.user_number 
+			AND re.products_productnumber = pr.product_number
+		WHERE re.users_usernumber = #{usersNumber}
+	</select>
+	<select id="selectProductReviews" resultType="reviewVO" parameterType="reviewVO">
+			SELECT
+			re.content,
+			re.title,
+			re.indate AS inDate,
+			re.image,
+			re.users_usernumber AS usersNumber,
+			re.products_productnumber AS productsNumber,
+			re.reviews_number AS reviewsNumber,
+			us.id,
+			us.name,
+			pr.product
+		FROM reviews re 
+			INNER JOIN users us 
+			INNER JOIN products pr
+		ON re.users_usernumber = us.user_number 
+			AND re.products_productnumber = pr.product_number
+		WHERE  re.products_productnumber = #{productsNumber}
+	</select>
 	<insert id="insertReview" parameterType="reviewVO" >
 		INSERT INTO reviews
 		(content,title,image,users_usernumber,products_productnumber,indate)

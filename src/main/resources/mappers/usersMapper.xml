@@ -56,6 +56,21 @@
   		FROM users
   		WHERE user_number = #{userNumber}
   </delete>
+  <select id="selectUserNumber">
+  		SELECT user_number
+  		FROM users
+  		WHERE id = #{id}
+  </select>
+  <select id="selectUserPrivacy">
+  		SELECT id,
+  			nick_name,
+  			address,
+  			phone,
+  			indate
+  		FROM users
+  		WHERE user_number = #{userNumber}
+  </select>
+  
   
   
   

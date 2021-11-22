@@ -206,8 +206,9 @@ public class ProductsController {
 		jsonObject.put("sizes", sizeJ);
 		jsonObject.put("colors", colorJ);
 //    	jsonObject.put("quantity", vo.getQuantity());
-    	jsonObject.put("price", vo.getPrice());
-    	jsonObject.put("content", vo.getContent());
+    	jsonObject.put("price", volist.get(0).getPrice());
+    	jsonObject.put("kind", volist.get(0).getKind());
+    	jsonObject.put("content", volist.get(0).getContent());
 //    	jsonObject.put("image", vo.getProduct());
     	String[] image = volist.get(0).getTitleImage().split(","); 
     	JSONObject imagelist = new JSONObject();

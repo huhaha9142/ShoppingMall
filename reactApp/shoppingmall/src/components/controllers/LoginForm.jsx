@@ -25,7 +25,7 @@ const LoginForm = () =>
                 method:'POST',
                 url:`http://pvpvpvpvp.gonetis.com:8080/sample/user-login`,
                 data:formdata,
-                // withCredentials: "true",
+                withCredentials: "true",
             });
             console.log(send);
             console.log(send.data);

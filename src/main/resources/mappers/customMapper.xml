@@ -26,7 +26,7 @@
 	  		c.indate AS inDate,
 	  		c.regdate AS regDate
 	  	FROM products_custom c INNER JOIN products p
-        ON c.products_productnumber = p.product_number;
+        ON c.products_productnumber = p.product_number
   </select>
   <update id="updateCustom" parameterType="customVO">
   		UPDATE products_custom 
@@ -42,6 +42,7 @@
   		DELETE FROM products_custom
   		WHERE products_custom_number = #{customNumber}
   </delete>
+  
 	  	
   </mapper>
   

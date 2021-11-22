@@ -34,6 +34,19 @@ public class ReviewServiceImpl implements ReviewService {
 	public String selectImage(ReviewVO vo) {
 		return dao.selectImage(vo);
 	}
+	@Override
+	public List<ReviewVO> selectMyReviews(ReviewVO vo) {
+		return dao.selectMyReviews(vo);
+	}
+	@Override
+	public List<ReviewVO> selectProductReviews(ReviewVO vo) {	
+		return dao.selectProductReviews(vo);
+	}
+	@Override
+	public ReviewVO selectOne(ReviewVO vo) {
+		// TODO Auto-generated method stub
+		return dao.selectOne(vo);
+	}
 
 
 }

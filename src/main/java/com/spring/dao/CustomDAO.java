@@ -9,4 +9,5 @@ public interface CustomDAO {
 	public List<CustomVO> selectCustomList();
 	public int updateCustom(CustomVO vo);
 	public int deleteCustom(CustomVO vo);
+	
 }
