@@ -183,3 +183,4 @@ yarn-debug.log*
 yarn-error.log*
 # End of https://www.toptal.com/developers/gitignore/api/eclipse,git,java,windows,maven
 
+target/m2e-wtp/web-resources/META-INF/maven/com.spring/sample/pom.properties
