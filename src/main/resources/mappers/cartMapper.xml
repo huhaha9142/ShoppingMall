@@ -38,8 +38,22 @@
   		ON ca.users_usernumber = us.user_number
   			AND ca.products_productnumber = pr.product_number
   		ORDER BY cart_number
-  		WHERE (users_number)
+  		WHERE (users_number = #{usersNumber})
   	</select>
+  
+  <!-- 수량 select -->
+  	<select id ="selectUserQuanCart" resultType="cartVO">
+  		SELECT
+  			ca.quantity
+  		FROM cart ca
+  			INNER JOIN users us
+  			INNER JOIN products pr
+  		ON ca.users_usernumber = us.user_number
+  			AND ca.products_productnumber = pr.product_number
+  		ORDER BY cart_number
+  		WHERE (users_number = #{usersNumber})
+  	</select>
+  	
   	<insert id ="insertCart" parameterType="cartVO" >
   		INSERT INTO cart
 			(quantity, users_usernumber, 
