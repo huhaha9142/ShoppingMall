@@ -72,17 +72,28 @@
   		SET rule = "user"
   		WHERE id = #{id} AND rule = #{rule} 
   </update>
-  <update id="updateRulePassword">
+  <update id="updateRulePassword" parameterType="usersVO">
   		UPDATE users
   		SET rule = #{rule}
   		WHERE id = #{id}
   </update>
-  <update id="updatePassword">
+  <update id="updatePassword" parameterType="usersVO">
   		UPDATE users
-  		SET rule = user,
+  		SET password = #{password}
+  		WHERE user_number = #{user Number}
+  </update>
+  <update id="updatePasswordByEmail" parameterType="usersVO" >
+  		UPDATE users
+  		SET rule = "user",
   			password = #{password}
   		WHERE id = #{id} AND rule = #{rule}
   </update>
+  <select id="selectUserRule" parameterType="usersVO" resultType="usersVO">
+  		SELECT 
+  			rule
+  		FROM users
+  		WHERE id = #{id}
+  </select>
   
   
   

@@ -183,6 +183,57 @@ public class UsersController {
 		jsonObject.put("result", result);
 		return jsonObject.toString();
 	}
+	@CrossOrigin(origins = "*", allowedHeaders = "*")
+	@RequestMapping(value="/user/reset",method = RequestMethod.GET,produces = "application/json; charset=utf8")
+	@ResponseBody
+	public String userPasswordReseting(@RequestParam(value = "id") String id)
+	{
+		JSONObject jsonObject = new JSONObject();
+		UsersVO vo = new UsersVO();
+		vo.setId(id);
+		UsersVO sql = usersService.selectUserRule(vo);
+		String key = null;
+		if(!sql.getRule().contains("uncertified"))
+		{
+			key= "user"+FunctionSpring.init(false, 20);
+			vo.setRule(key);
+		}
+		boolean update = usersService.updateRulePassword(vo);
+		String result = (true==update)?"success":"fail";
+		if(update)
+		{
+			MimeMessage mail = mailSender.createMimeMessage();
+			String htmlStr = "<h2>안녕하세요 MS :p CUSTOM SHOPPINGMALL 입니다!</h2><br><br>" 
+					+ "<h3>" + id + "님</h3>" + "<p>비밀번호 재설정 버튼을 누르시면 비밀번호를 재설정 하실 수 있습니다.: " 
+					+ "<a href='http://pvpvpvpvp.gonetis.com:8080/sample"+"/user/reset?id="+ id +"&key="+key+"'>인증하기</a></p>"
+					+ "(혹시 잘못 전달된 메일이라면 이 이메일을 무시하셔도 됩니다)";
+			try {
+				mail.setSubject("[본인인증] MS :p CUSTOM SHOPPINGMALL의 비밀번호 재설정 메일입니다", "utf-8");
+				mail.setText(htmlStr, "utf-8", "html");
+				mail.addRecipient(RecipientType.TO, new InternetAddress(id));
+				mailSender.send(mail);
+			} catch (MessagingException e) {
+				e.printStackTrace();
+			}
+		}	
+		jsonObject.put("result", result);
+		return jsonObject.toString();
+	}
+	@CrossOrigin(origins = "*", allowedHeaders = "*")
+	@RequestMapping(value="/user/reset",method = RequestMethod.POST,produces = "application/json; charset=utf8")
+	@ResponseBody
+	public String userPasswordReset(@RequestParam(value = "id") String id,
+			@RequestParam(value = "key") String key,
+			@RequestParam(value = "password") String password)
+	{
+		JSONObject jsonObject = new JSONObject();
+		BCryptPasswordEncoder scpwd = new BCryptPasswordEncoder();
+		UsersVO vo = new UsersVO(id,scpwd.encode(password));
+		vo.setRule(key);
+		String result = (true==usersService.updatePasswordByEmail(vo))?"success":"fail";
+		jsonObject.put("result", result); 
+		return jsonObject.toString();
+	}
 	
 	// id duplicateCheck API
 	@CrossOrigin(origins = "*", allowedHeaders = "*")
