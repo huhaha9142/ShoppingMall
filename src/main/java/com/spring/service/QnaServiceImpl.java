@@ -15,8 +15,8 @@ public class QnaServiceImpl implements QnaService {
 	@Inject
 	private QnaDAO dao;
 	@Override
-	public List<QnaVO> selectList() {
-		return dao.selectList();
+	public List<QnaVO> selectListQna() {
+		return dao.selectListQna();
 	}
 
 	@Override

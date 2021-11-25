@@ -4,32 +4,42 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
  <mapper namespace="com.example.mapper.qnaMapper">
  <!-- qna select 최소 3개 (전체, user, 관리자) -->
+ <!-- state 컬럼 - 0: 답변대기, 1:답변완료, 2: 관리자 답변, 3: FAQ -->
  	<select id="selectListQna" resultType="qnaVO">
  		SELECT 
  			q.content,
  			q.indate AS inDate,
  			q.title,
- 			q.hit, <!-- state로 바꿔줘야함 -->
- 			us.users_usernumber AS usersNumber,
- 			q.qna_number AS qnaNumber
+ 			q.state, 
+ 			us.user_number AS usersNumber,
+ 			q.qna_number AS qnaNumber,
+ 			q.regdate AS regDate,
+ 			q.image
  		FROM qna q
  			INNER JOIN users us
  		ON	q.users_usernumber = us.user_number
  	</select>
  	<insert id="insertQna" parameterType="qnaVO" >
  		INSERT INTO qna
- 		(content, indate, title, hit, users_usernumber, qna_number)
+ 		(content, indate, title, state, users_usernumber, 
+ 							qna_number, regdate, image)
  			VALUE (#{content},
- 					now(),
+ 					#{inDate},
  					#{title},
  					#{usersNumber},
+ 					#{state},
+ 					#{usersNumber},
+ 					#{qnaNumber},
+ 					#{regDate},
+ 					#{image}
  					)	
  	</insert>
- 	<!-- updatedate(수정된날짜) 컬럼 추가해야됨 -->
+
  	<update id="updateQna" parameterType="qnaVO" >
  		UPDATE qna
  			SET	content = #{content},
- 				title = #{title}
+ 				title = #{title},
+ 				regdate = #{regDate}
 		WHERE (qna_number = #{qnaNumber})
  	</update>
  	

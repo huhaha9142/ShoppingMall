@@ -16,23 +16,25 @@ public class QnaDAOImpl implements QnaDAO {
 	private SqlSession sqlSession;
 	private static final String Namespace = "com.example.mapper.qnaMapper";
 	@Override
-	public List<QnaVO> selectList() {
+	public List<QnaVO> selectListQna() {
 		return sqlSession.selectList(Namespace + ".selectListQna");
 	}
 
 	@Override
 	public int insertQna(QnaVO vo) {
-		return sqlSession.insert(Namespace + ".insertQna");
+		return sqlSession.insert(Namespace + ".insertQna", vo);
 	}
 
 	@Override
 	public int updateQna(QnaVO vo) {
-		return sqlSession.update(Namespace + ".updateQna");
+		return sqlSession.update(Namespace + ".updateQna", vo);
 	}
 
 	@Override
 	public int deleteQna(QnaVO vo) {
-		return sqlSession.delete(Namespace + ".deleteQna");
+		return sqlSession.delete(Namespace + ".deleteQna", vo);
 	}
+
+
 
 }
