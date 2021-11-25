@@ -56,7 +56,7 @@ public class HomeController {
         logger.info("home");
         
         List<MemberVO> memberList = service.selectMember();
-        
+        System.out.println(new Date().toLocaleString());
         model.addAttribute("memberList", memberList);
  
         return "home";

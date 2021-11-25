@@ -27,7 +27,7 @@ import com.spring.function.FunctionSpring;
 import com.spring.service.ReviewServiceImpl;
 
 @Controller
-@CrossOrigin(origins = "*", allowedHeaders = "*")
+@CrossOrigin(allowCredentials = "false")
 public class ReviewsController {
 	private static String URL_PATH="http://pvpvpvpvp.gonetis.com:8080/sample/com/review-image/";
 	private static final Logger logger = LoggerFactory.getLogger(ProductsController.class);
@@ -61,18 +61,17 @@ public class ReviewsController {
 			{
 				if(img!="") 
 					jsonimg.add(URL_PATH+img);
-			}
-			
+			}			
 			list.put("userId", sql.get(i).getId());
 			imgJ.put("image", jsonimg);
 			list.put("images", imgJ);
 			list.put("userName",sql.get(i).getName());
 			list.put("product", sql.get(i).getProduct());
 			list.put("reviewsNumber", sql.get(i).getReviewsNumber());
-			jsonArarry.add(list);
-			jsonObject.put("reviews", jsonArarry);
+			jsonArarry.add(list);	
 			System.out.println(jsonArarry.toString());
     	}
+    	jsonObject.put("reviews", jsonArarry);
     	return jsonObject.toString();
     }
 	// Review INSERT API
@@ -235,10 +234,10 @@ public class ReviewsController {
 			list.put("userName",sql.get(i).getName());
 			list.put("product", sql.get(i).getProduct());
 			list.put("reviewsNumber", sql.get(i).getReviewsNumber());
-			jsonArarry.add(list);
-			jsonObject.put("reviews", jsonArarry);
-			System.out.println(jsonArarry.toString());
+			jsonArarry.add(list);		
     	}
+    	jsonObject.put("reviews", jsonArarry);
+		System.out.println(jsonArarry.toString());
     	return jsonObject.toString();
     }
 	
@@ -277,11 +276,7 @@ public class ReviewsController {
 		json.put("reviewsNumber", sql.getReviewsNumber());
 		return json.toString();
     }
-	
-
-	
-	
-	
+		
 	// 사진만 보내주는 API
     @CrossOrigin(origins = "*", allowedHeaders = "*")  
     @RequestMapping(
@@ -294,7 +289,9 @@ public class ReviewsController {
     	System.out.println(url);
 	    InputStream in = getClass().getResourceAsStream(url);
 	    System.out.println(img+".png");
-	    return IOUtils.toByteArray(in);
+	    byte[] data = IOUtils.toByteArray(in);
+	    in.close();
+	    return data;
 	}
 	
 	

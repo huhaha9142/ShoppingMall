@@ -9,28 +9,29 @@
  		id,
  		password,
  		name,
- 		address,
- 		regdate AS regDate,
- 		phone,
- 		user_number AS userNumber
+ 		rule
  	FROM users
- 	WHERE id = #{id} AND password = #{password}
+ 	WHERE id = #{id}
   </select>
   <insert id="insertUser">
   		INSERT INTO users(id,
   						password,
   						name,
-  						address,
+  						address1,
+  						address2,
   						phone,
   						regdate,
-  						indate)
+  						indate,
+  						rule)
   		VALUE(#{id},
   			#{password},
   			#{name},
-  			#{address},
+  			#{address1},
+  			#{address2},
   			#{phone},
   			#{regDate},
-  			#{inDate})
+  			#{inDate},
+  			#{rule})
   </insert>
   <select id="selectIdCheck" resultType="int" parameterType="usersVO">
   		SELECT COUNT(id)
@@ -40,16 +41,12 @@
   <update id="updateUserPrivacy">
   		UPDATE users
   		SET name = #{name},
-  			address = #{address},
+  			address1 = #{address1},
+  			address2 = #{address2},
   			nick_name = #{nickName},
   			regdate = #{regDate},
   			phone = #{phone}
   		WHERE user_number = #{userNumber}		
-  </update>
-  <update id="updatePassword" parameterType="usersVO">
-  		UPDATE users
-  		SET password = #{password}
-  		WHERE user_number = #{userNumber}
   </update>
   <delete id="deleteUser" parameterType="usersVO">
   		DELETE
@@ -61,7 +58,7 @@
   		FROM users
   		WHERE id = #{id}
   </select>
-  <select id="selectUserPrivacy">
+  <select id="selectUserPrivacy" parameterType="usersVO" resultType="usersVO">
   		SELECT id,
   			nick_name,
   			address,
@@ -70,7 +67,22 @@
   		FROM users
   		WHERE user_number = #{userNumber}
   </select>
-  
+  <update id="updateRuleByEmail" parameterType="usersVO"> 
+  		UPDATE users
+  		SET rule = "user"
+  		WHERE id = #{id} AND rule = #{rule} 
+  </update>
+  <update id="updateRulePassword">
+  		UPDATE users
+  		SET rule = #{rule}
+  		WHERE id = #{id}
+  </update>
+  <update id="updatePassword">
+  		UPDATE users
+  		SET rule = user,
+  			password = #{password}
+  		WHERE id = #{id} AND rule = #{rule}
+  </update>
   
   
   

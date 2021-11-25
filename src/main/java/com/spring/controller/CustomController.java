@@ -27,9 +27,10 @@ import com.spring.function.FunctionSpring;
 import com.spring.service.CustomServiceImpl;
 
 @Controller
+@CrossOrigin(allowCredentials = "false")
 public class CustomController {
 	private static String URL_PATH="http://pvpvpvpvp.gonetis.com:8080/sample/com/custom-image/";
-	private static final Logger logger = LoggerFactory.getLogger(ProductsController.class);
+	private static final Logger logger = LoggerFactory.getLogger(CustomController.class);
 	private static String SAVE_PATH="c:/Users/kim/Desktop/project/ShoppingMall/src/main/java/com/image/custom/";
 
 	@Inject
@@ -86,6 +87,7 @@ public class CustomController {
 			list.put("color", sql.get(i).getColor());
 			list.put("user_number", sql.get(i).getUserNumber());
 			list.put("product", sql.get(i).getProduct());
+			list.put("customNumber", sql.get(i).getCustomNumber());
 			jsonArarry.add(list);
 		}
 		jsonObject.put("customs", jsonArarry);
@@ -150,7 +152,9 @@ public class CustomController {
     	System.out.println(url);
 	    InputStream in = getClass().getResourceAsStream(url);
 	    System.out.println(img+".png");
-	    return IOUtils.toByteArray(in);
+	    byte[] data = IOUtils.toByteArray(in);
+	    in.close();
+	    return data;
 	}
 	
 	

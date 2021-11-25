@@ -42,7 +42,7 @@
 		WHERE reviews_number = #{reviewsNumber}
 	</select>
 	<select id="selectMyReviews" resultType="reviewVO" parameterType="reviewVO">
-			SELECT
+		SELECT
 			re.content,
 			re.title,
 			re.indate AS inDate,
@@ -61,7 +61,7 @@
 		WHERE re.users_usernumber = #{usersNumber}
 	</select>
 	<select id="selectProductReviews" resultType="reviewVO" parameterType="reviewVO">
-			SELECT
+		SELECT
 			re.content,
 			re.title,
 			re.indate AS inDate,

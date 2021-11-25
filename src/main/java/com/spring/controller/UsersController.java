@@ -4,6 +4,10 @@ import java.io.UnsupportedEncodingException;
 import java.util.Date;
 
 import javax.inject.Inject;
+import javax.mail.Message.RecipientType;
+import javax.mail.MessagingException;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -11,15 +15,16 @@ import javax.servlet.http.HttpServletResponse;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.util.UrlPathHelper;
 
 import com.spring.dto.UsersVO;
 import com.spring.function.FunctionSpring;
@@ -31,32 +36,62 @@ import io.jsonwebtoken.SignatureException;
 import io.jsonwebtoken.UnsupportedJwtException;
 
 @Controller
+//@CrossOrigin(allowCredentials = "false")
 public class UsersController {
 	private static final Logger logger = LoggerFactory.getLogger(ProductsController.class);
-	 @Inject
+	@Inject
 	    private UsersServiceImpl usersService;
+	@Inject
+		private JavaMailSender mailSender;
+
 //	@CrossOrigin(exposedHeaders = "Set-Cookie,Authorization")
 	@RequestMapping(value="/user-login",method = RequestMethod.POST,produces = "application/json; charset=utf8")
 	@ResponseBody
 	public String userLogin(@RequestParam("id") String id,
 			@RequestParam("password") String password,
-			HttpServletResponse response) {
+			HttpServletResponse response,
+			HttpServletRequest request) {
 		
 		JSONObject jsonObject = new JSONObject();
+		BCryptPasswordEncoder scpwd = new BCryptPasswordEncoder();
 		UsersVO vo = new UsersVO(id,password);
+		System.out.println("====================="+vo.toString());
+		System.out.println(request.getRequestURI()+"=="+request.getServletPath());
+		System.out.println(request.getServerName());
+		System.out.println(request.getRemoteAddr());
+		System.out.println(request.getLocales().getClass());
+		System.out.println(request.getSession());
+		
 	
-		response.addHeader("Access-Control-Allow-Origin", "http://pvpvpvpvp.gonetis.com:3000");		
+//			response.addHeader("Access-Control-Allow-Origin", "http://pvpvpvpvp.gonetis.com:3000");	
+		
+		response.addHeader("Access-Control-Allow-Origin", "http://localhost:3000");	
 		response.addHeader("Access-Control-Allow-Methods", "POST, GET, DELETE, PUT"); 
 		response.addHeader("Access-Control-Max-Age", "1890"); 
 		response.addHeader("Access-Control-Allow-Credentials", "true");
 		response.addHeader("Access-Control-Allow-Headers", "x-requested-with, origin, content-type, accept, Authorization"); 
-		vo = usersService.selectLogin(vo);
+		UsersVO vo1 = usersService.selectLogin(vo);
+		
 		try {
-			vo.getUserNumber();			
+			if(!scpwd.matches(vo.getPassword(),vo1.getPassword()))
+			{
+				System.err.println(scpwd.matches(vo.getPassword(),vo1.getPassword()));
+				System.err.println(vo.getPassword());
+				jsonObject.put("result", "Fail");
+				return jsonObject.toString();
+			}
+			vo1.getUserNumber();
+			if(vo1.getRule().contains("uncertified"))
+			{
+				jsonObject.put("result", "Uncertified");
+				return jsonObject.toString();
+			}
 		}catch (Exception e) {
+			System.err.println(e);
 			jsonObject.put("result", "Fail");
 			return jsonObject.toString();
 		}
+		
 		Cookie cookie = new Cookie("tokenCookie", FunctionSpring.makeJwtToken(id,password));
 		cookie.setMaxAge(60*30);
 		cookie.setPath("/");
@@ -73,7 +108,7 @@ public class UsersController {
 	@ResponseBody
 	public String userJwtTokenCheck(HttpServletResponse response,@CookieValue(value = "tokenCookie", defaultValue = "token is null") String token) throws ExpiredJwtException, UnsupportedJwtException, MalformedJwtException, SignatureException, IllegalArgumentException, UnsupportedEncodingException
 	{
-		response.addHeader("Access-Control-Allow-Origin", "http://pvpvpvpvp.gonetis.com:3000");		
+		response.addHeader("Access-Control-Allow-Origin", "http://localhost:3000");		
 		response.addHeader("Access-Control-Allow-Methods", "POST, GET, DELETE, PUT"); 
 		response.addHeader("Access-Control-Max-Age", "3600"); 
 		response.addHeader("Access-Control-Allow-Credentials", "true");
@@ -104,15 +139,51 @@ public class UsersController {
 			@RequestParam(value = "address",required=false) String address,
 			@RequestParam(value = "phone",required=false) String phone) {
 		JSONObject jsonObject = new JSONObject();
-		UsersVO vo = new UsersVO(id,password);
+		BCryptPasswordEncoder scpwd = new BCryptPasswordEncoder();
+		UsersVO vo = new UsersVO(id,scpwd.encode(password));
 		vo.setName(name);
 		vo.setRegDate(new Date());
 		vo.setInDate(new Date());
+		String key= "uncertified"+FunctionSpring.init(false, 20);
+		vo.setRule(key);
 		boolean join = usersService.insertUser(vo);
 		String result = (join==true)?"Join":"Fail";
+		if(join)
+		{
+			MimeMessage mail = mailSender.createMimeMessage();
+			String htmlStr = "<h2>안녕하세요 MS :p CUSTOM SHOPPINGMALL 입니다!</h2><br><br>" 
+					+ "<h3>" + id + "님</h3>" + "<p>인증하기 버튼을 누르시면 로그인을 하실 수 있습니다 : " 
+					+ "<a href='http://pvpvpvpvp.gonetis.com:8080/sample"+"/user-join-email?id="+ id +"&key="+key+"'>인증하기</a></p>"
+					+ "(혹시 잘못 전달된 메일이라면 이 이메일을 무시하셔도 됩니다)";
+			try {
+				mail.setSubject("[본인인증] MS :p CUSTOM SHOPPINGMALL의 인증메일입니다", "utf-8");
+				mail.setText(htmlStr, "utf-8", "html");
+				mail.addRecipient(RecipientType.TO, new InternetAddress(id));
+				mailSender.send(mail);
+			} catch (MessagingException e) {
+				e.printStackTrace();
+			}
+
+
+		}
 		jsonObject.put("result", result);
 		return jsonObject.toString();
 	}
+	@CrossOrigin(origins = "*", allowedHeaders = "*")
+	@RequestMapping(value="/user-join-email",method = RequestMethod.GET,produces = "application/json; charset=utf8")
+	@ResponseBody
+	public String userJoinEmailCheck(@RequestParam(value = "id") String id,
+			@RequestParam(value = "key") String key)
+	{
+		JSONObject jsonObject = new JSONObject();
+		UsersVO vo = new UsersVO();
+		vo.setRule(key);
+		vo.setId(id);
+		String result = (true==usersService.updateRuleByEmail(vo))?"success":"fail";
+		jsonObject.put("result", result);
+		return jsonObject.toString();
+	}
+	
 	// id duplicateCheck API
 	@CrossOrigin(origins = "*", allowedHeaders = "*")
 	@RequestMapping(value="/user-id",method = RequestMethod.POST,produces = "application/json; charset=utf8")
@@ -132,12 +203,18 @@ public class UsersController {
 	@ResponseBody
 	public String userPrivacy(@RequestParam("name") String name,
 			@RequestParam(value = "nickName",required=false) String nickName,
-			@RequestParam(value = "address",required=false) String address,
+			@RequestParam(value = "address1",required=false) String address1,
+			@RequestParam(value = "address2",required=false) String address2,
+			@RequestParam(value = "address3",required=false) String address3,
+			@RequestParam(value = "address4",required=false) String address4,
 			@RequestParam(value = "phone",required=false) String phone,
 			@RequestParam("userNumber") String userNumber) {
 		JSONObject jsonObject = new JSONObject();
 		UsersVO vo = new UsersVO();
-		vo.setAddress(address);
+		vo.setAddress1(address1);
+		vo.setAddress2(address2);
+		vo.setAddress3(address3);
+		vo.setAddress4(address4);
 		vo.setName(name);
 		vo.setNickName(nickName);
 		vo.setPhone(phone);
@@ -157,8 +234,9 @@ public class UsersController {
 	public String userPassword(@RequestParam("password") String password,
 			@RequestParam("userNumber") String userNumber) {
 		JSONObject jsonObject = new JSONObject();
+		BCryptPasswordEncoder scpwd = new BCryptPasswordEncoder();
 		UsersVO vo = new UsersVO();
-		vo.setPassword(password);
+		vo.setPassword(scpwd.encode(password));
 		vo.setUserNumber(Long.valueOf(userNumber));
 		String result = (usersService.updatePassword(vo)==true)?"update":"fail";
 		jsonObject.put("result", result);
@@ -175,6 +253,23 @@ public class UsersController {
 		vo.setUserNumber(Long.valueOf(userNumber));
 		String result = (usersService.updatePassword(vo)==true)?"update":"fail";
 		jsonObject.put("result", result);
+		return jsonObject.toString();
+	}
+	@CrossOrigin(origins = "*", allowedHeaders = "*")
+	@RequestMapping(value="/user-privacy",method = RequestMethod.GET,produces = "application/json; charset=utf8")
+	@ResponseBody
+	public String userPrivacy() {
+		JSONObject jsonObject = new JSONObject();
+		UsersVO vo = new UsersVO();
+		vo.setUserNumber(1l);
+		UsersVO sql = usersService.selectUserPrivacy(vo);
+		jsonObject.put("id", sql.getId());
+		jsonObject.put("nickName", sql.getNickName());
+		jsonObject.put("address1", sql.getAddress1());
+		jsonObject.put("address2", sql.getAddress2());
+		jsonObject.put("address3", sql.getAddress3());
+		jsonObject.put("address4", sql.getAddress4());
+		jsonObject.put("phone", sql.getPhone());
 		return jsonObject.toString();
 	}
 	

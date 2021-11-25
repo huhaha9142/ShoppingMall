@@ -6,13 +6,11 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.time.Duration;
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import javax.crypto.SecretKey;
+import java.util.Random;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -88,10 +86,10 @@ public class FunctionSpring {
     }  
     //사이즈 변환 배열
     public static String sizes[] = {"XS","S","M","L","XL","2XL","3XL","4XL","5XL","6XL","7XL",
-    								"XS(80)","S(85)","M(90)","L(95)","XL(100)","2XL(105)","3XL(110)","4XL(115)",
-    								"XS(85)","S(90)","M(95)","L(100)","XL(105)","2XL(110)","3XL(115)","4XL(120)",
-    								"XS(90)","S(95)","M(100)","L(105)","XL(110)","2XL(115)","3XL(120)","4XL(125)",
-    								"85","90","95","100","105","110","115","120","125","FREE"};
+    								"XS(80)","S(85)","M(90)","L(95)","XL(100)","2XL(105)","3XL(110)","4XL(115)","5XL(120)",
+    								"XS(85)","S(90)","M(95)","L(100)","XL(105)","2XL(110)","3XL(115)","4XL(120)","5XL(125)",
+    								"XS(90)","S(95)","M(100)","L(105)","XL(110)","2XL(115)","3XL(120)","4XL(125)","5XL(130)",
+    								"85","90","95","100","105","110","115","120","125","130","FREE"};
     public static String sizeString(Map<String,String> size)
     {
     	
@@ -201,4 +199,24 @@ public class FunctionSpring {
     		.parseClaimsJws(jwtToken)
     		.getBody();
     }
+ // 이메일 난수 만드는 메서드
+ 	public static String init(boolean lowerCheck,int size) {
+ 		Random ran = new Random();
+ 		StringBuffer sb = new StringBuffer();
+ 		int num = 0;
+
+ 		do {
+ 			num = ran.nextInt(75) + 48;
+ 			if ((num >= 48 && num <= 57) || (num >= 65 && num <= 90) || (num >= 97 && num <= 122)) {
+ 				sb.append((char) num);
+ 			} else {
+ 				continue;
+ 			}
+
+ 		} while (sb.length() < size);
+ 		if (lowerCheck) {
+ 			return sb.toString().toLowerCase();
+ 		}
+ 		return sb.toString();
+ 	}
 }

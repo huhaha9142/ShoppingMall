@@ -22,6 +22,7 @@
 	  		c.size,
 	  		c.color,
 	  		c.users_user_number AS userNumber,
+	  		c.products_custom_number AS customNumber,
 	  		p.product,
 	  		c.indate AS inDate,
 	  		c.regdate AS regDate

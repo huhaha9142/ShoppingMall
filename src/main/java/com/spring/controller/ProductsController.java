@@ -29,7 +29,7 @@ import com.spring.function.FunctionSpring;
 import com.spring.service.ProductsServiceImpl;
 
 @Controller
-@CrossOrigin(origins = "*", allowedHeaders = "*")
+@CrossOrigin(allowCredentials = "false")
 public class ProductsController {
 	private static String URL_PATH="http://pvpvpvpvp.gonetis.com:8080/sample/com/product-image/";
 //	private static String URL_PATH="http://pvpvpvpvp.gonetis.com:8080/sample";
@@ -38,8 +38,12 @@ public class ProductsController {
     
     
     private static boolean ProductsChange = true;
+    //최소응답을 위한 저장장소
     private static Map<String,JSONObject> AllJson = new HashMap<String, JSONObject>();
+    private static Map<Long,List<ProductVO>> Allsql = new HashMap<Long, List<ProductVO>>();
+    private static List<ProductVO> Prosql = null;
     private static Map<Long,ProductVO> mapSql = new HashMap<Long,ProductVO>();
+    
     @Inject
     private ProductsServiceImpl proService;
     
@@ -58,23 +62,37 @@ public class ProductsController {
     	if(AllJson.get(kindP+colorP+sizeP+priceP)!=null)
 			return AllJson.get(kindP+colorP+sizeP+priceP).toString();
     	JSONObject JSONObPro = new JSONObject();
-    	List<ProductVO> sql = proService.selectList();
+    	if(Prosql==null)
+    	{
+    		Prosql = proService.selectList();	
+    	}
+//    	List<ProductVO> sql = proService.selectList();
     	ProductsChange = false;
     	if(ProductsChange)
     	{
     		AllJson.clear();
+    		Prosql.clear();
+    		Allsql.clear();
     	}
 		JSONArray jsonArarry = new JSONArray();
 	
     	
     	
-    	for(int i=0;i<sql.size();i++)
+    	for(int i=0;i<Prosql.size();i++)
     	{
-    		if((kindP==null||kindP.equals(sql.get(i).getKind())))   	
+    		try {
+    			if(Allsql.get(Long.valueOf(i)).isEmpty());
+    		}
+    		catch (Exception e) {
+    			Allsql.put(Long.valueOf(i), proService.selectListColorAndSize(Prosql.get(i)));
+			}			
+    		Map<String,String> colorData = FunctionSpring.anyArray(Allsql.get(Long.valueOf(i)) , "color");
+			Map<String,String> sizeData = FunctionSpring.anyArray(Allsql.get(Long.valueOf(i)), "size");
+
+    		if((kindP==null||kindP.equals(Prosql.get(i).getKind()))&&(sizeP==null||sizeData.toString().contains("="+sizeP)))   	
     		{   
-    			List<ProductVO> sql2 = proService.selectListColorAndSize(sql.get(i));
-    			Map<String,String> colorData = FunctionSpring.anyArray(sql2 , "color");
-    			Map<String,String> sizeData = FunctionSpring.anyArray(sql2, "size");
+//    			List<ProductVO> sql2 = proService.selectListColorAndSize(sql.get(i));
+    			
     			JSONObject list = new JSONObject();
 				JSONObject colorJ = new JSONObject();
 				JSONArray jsoncolors = new JSONArray();
@@ -83,25 +101,26 @@ public class ProductsController {
     				jsoncolors.add(colorA);
     			}   			
     			String size = FunctionSpring.sizeString(sizeData);			
-				String[] image = sql.get(i).getTitleImage().split(",");    
+				String[] image = Prosql.get(i).getTitleImage().split(",");    
 				colorJ.put("color",jsoncolors);
 				list.put("colors", colorJ);									
 				list.put("size", size);				
 				list.put("index", i);
-				list.put("kind", sql.get(i).getKind());				
-				list.put("price", sql.get(i).getPrice());
-				list.put("product", sql.get(i).getProduct());
-				list.put("productNumber", sql.get(i).getProductNumber());			
+				list.put("kind", Prosql.get(i).getKind());				
+				list.put("price", Prosql.get(i).getPrice());
+				list.put("product", Prosql.get(i).getProduct());
+				list.put("productNumber", Prosql.get(i).getProductNumber());			
 				list.put("image", URL_PATH+image[0]);
-				jsonArarry.add(list);
-				JSONObPro.put("products", jsonArarry);
-				AllJson.put(kindP+colorP+sizeP+priceP, JSONObPro);
+				jsonArarry.add(list);				
     		}
     	}	
+    	JSONObPro.put("products", jsonArarry);
+		AllJson.put(kindP+colorP+sizeP+priceP, JSONObPro);
     	System.out.println("kind:"+kindP);
     	System.out.println("color:"+colorP);
     	System.out.println("size:"+sizeP);
     	System.out.println("price:"+priceP);
+//    	System.out.println(Allsql.get(1l).toString());
     	return JSONObPro.toString();
     }
     
@@ -233,7 +252,9 @@ public class ProductsController {
 //    	System.out.println(url);
 	    InputStream in = getClass().getResourceAsStream(url);
 //	    System.out.println(img+".png");
-	    return IOUtils.toByteArray(in);
+	    byte[] data = IOUtils.toByteArray(in);
+	    in.close();
+	    return data;
 	}
    
 }

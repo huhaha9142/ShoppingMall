@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  <mapper namespace="com.example.mapper.ordersMapper">
+  
+  <select id="selectList" resultType="orderVO">
+  		SELECT 
+  			ord.price,
+  			ord.quantity,
+  			ord.result,
+  			ord.users_userNumber AS usersNumber,
+  			ord.products_productnumber AS productsNumber,
+  			ord.orders_number AS ordersNumber,
+  			ord.p_c_products_custom_number AS productCustomNumber,
+  			ord.indate AS inDate,
+  			ord.regdate AS regDate,
+  			pr.product,
+  			pr.title_image AS titleImage,
+  			cu.size,
+  			cu.color,
+  			cu.image AS customImage
+  		FROM orders ord INNER JOIN products pr INNER JOIN products_custom cu
+  		ON ord.products_productnumber = pr.product_number
+  		AND ord.p_c_products_custom_number = cu.products_custom_number		
+  </select>
+  <select id="selectUserOrderList" resultType="orderVO" parameterType="orderVO">
+  		SELECT 
+  			ord.price,
+  			ord.quantity,
+  			ord.result,
+  			ord.users_usernumber AS usersNumber,
+  			ord.products_productnumber AS productsNumber,
+  			ord.orders_number AS ordersNumber,
+  			ord.p_c_products_custom_number AS productCustomNumber,
+  			ord.indate AS inDate,
+  			ord.regdate AS regDate,
+  			pr.product,
+  			pr.title_image AS titleImage,
+  			cu.size,
+  			cu.color,
+  			cu.image AS customImage
+  		FROM orders ord INNER JOIN products pr INNER JOIN products_custom cu
+  		ON ord.products_productnumber = pr.product_number
+  		AND ord.p_c_products_custom_number = cu.products_custom_number
+  		WHERE users_userNumber = #{usersNumber}
+  </select>
+  <select id="selectUserOrderOne" resultType="orderVO" parameterType="orderVO">
+  		SELECT 
+  			ord.price,
+  			ord.quantity,
+  			ord.result,
+  			ord.users_usernumber AS usersNumber,
+  			ord.products_productnumber AS productsNumber,
+  			ord.orders_number AS ordersNumber,
+  			ord.p_c_products_custom_number AS productCustomNumber,
+  			ord.indate AS inDate,
+  			ord.regdate AS regDate,
+  			pr.product,
+  			pr.title_image AS titleImage,
+  			cu.size,
+  			cu.color,
+  			cu.image AS customImage
+  		FROM orders ord INNER JOIN products pr INNER JOIN products_custom cu
+  		ON ord.products_productnumber = pr.product_number
+  		AND ord.p_c_products_custom_number = cu.products_custom_number
+  		WHERE orders_number = #{ordersNumber}
+  </select>
+  <insert id="insertOrder" parameterType="orderVO">
+  		INSERT INTO orders(
+  			price,
+  			quantity,
+  			result,
+  			users_usernumber,
+  			products_productnumber,
+  			p_c_products_custom_number,
+  			indate,
+  			regdate)
+  		VALUE(#{price},
+  			#{quantity},
+  			#{result},
+  			#{usersNumber},
+  			#{productsNumber},
+  			#{productCustomNumber},
+  			#{inDate},
+  			#{regDate})
+  </insert>
+  <update id="updateOrderResult" parameterType="orderVO">
+  		UPDATE orders
+  		SET result = #{result}
+  		WHERE orders_number = #{ordersNumber}
+  </update>
+  <delete id="deleteOrder" parameterType="orderVO">
+  		DELETE
+  		FROM orders
+  		WHERE orders_number = #{ordersNumber}
+  </delete>
+  
+  
+  </mapper>
