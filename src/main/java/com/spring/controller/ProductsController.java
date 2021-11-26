@@ -47,8 +47,6 @@ public class ProductsController {
     @Inject
     private ProductsServiceImpl proService;
     
-    
-
     @CrossOrigin(origins = "*", allowedHeaders = "*")
     @RequestMapping(value="/products",method = RequestMethod.GET,produces = "application/json; charset=utf8")
     @ResponseBody
@@ -74,10 +72,7 @@ public class ProductsController {
     		Prosql.clear();
     		Allsql.clear();
     	}
-		JSONArray jsonArarry = new JSONArray();
-	
-    	
-    	
+		JSONArray jsonArarry = new JSONArray();  	
     	for(int i=0;i<Prosql.size();i++)
     	{
     		try {
