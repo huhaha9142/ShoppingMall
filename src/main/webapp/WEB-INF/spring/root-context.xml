@@ -18,10 +18,10 @@
         class="org.springframework.jdbc.datasource.DriverManagerDataSource">
         <property name="driverClassName" value="net.sf.log4jdbc.sql.jdbcapi.DriverSpy"></property>
         <property name="url"
-            value="jdbc:log4jdbc:mysql://127.0.0.1:3306/shoppingmall?useSSL=false&amp;serverTimezone=UTC">
+            value="jdbc:log4jdbc:mysql://database-1.czrx92xp9fx8.ap-northeast-2.rds.amazonaws.com/shoppingmall?useSSL=false&amp;serverTimezone=UTC">
         </property>
         <property name="username" value="root"></property>
-        <property name="password" value="root"></property>
+        <property name="password" value="495949dks!"></property>
     </bean>    
     
        <!-- mybatis SqlSessionFactoryBean -->
