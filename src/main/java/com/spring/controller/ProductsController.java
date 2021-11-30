@@ -46,6 +46,8 @@ public class ProductsController {
     
     @Inject
     private ProductsServiceImpl proService;
+    @Inject 
+    private FunctionSpring functionSpring;
     
     @CrossOrigin(origins = "*", allowedHeaders = "*")
     @RequestMapping(value="/products",method = RequestMethod.GET,produces = "application/json; charset=utf8")
@@ -81,8 +83,8 @@ public class ProductsController {
     		catch (Exception e) {
     			Allsql.put(Long.valueOf(i), proService.selectListColorAndSize(Prosql.get(i)));
 			}			
-    		Map<String,String> colorData = FunctionSpring.anyArray(Allsql.get(Long.valueOf(i)) , "color");
-			Map<String,String> sizeData = FunctionSpring.anyArray(Allsql.get(Long.valueOf(i)), "size");
+    		Map<String,String> colorData = functionSpring.anyArray(Allsql.get(Long.valueOf(i)) , "color");
+			Map<String,String> sizeData = functionSpring.anyArray(Allsql.get(Long.valueOf(i)), "size");
 
     		if((kindP==null||kindP.equals(Prosql.get(i).getKind()))&&(sizeP==null||sizeData.toString().contains("="+sizeP)))   	
     		{   
@@ -95,7 +97,7 @@ public class ProductsController {
     			{
     				jsoncolors.add(colorA);
     			}   			
-    			String size = FunctionSpring.sizeString(sizeData);			
+    			String size = functionSpring.sizeString(sizeData);			
 				String[] image = Prosql.get(i).getTitleImage().split(",");    
 				colorJ.put("color",jsoncolors);
 				list.put("colors", colorJ);									
@@ -150,7 +152,7 @@ public class ProductsController {
     	if(productNumber!=0)// ?†ú?íàÎ≤àÌò∏ Ï°¥Ïû¨ ?ú†Î¨¥Ïóê ?î∞?ùº?Ñú UPDATE INSERT Í∞? ?Çò?âò?ñ¥ ?èô?ûë?ïú?ã§.
     	{
     		vo.setRegDate(new Date());
-    		vo.setProductImage(FunctionSpring.fileSave(productImage,SAVE_PATH));
+    		vo.setProductImage(functionSpring.fileSave(productImage,SAVE_PATH,"ec2"));
     		boolean sqlUpdate = proService.updateProduct(vo);
     		result = (sqlUpdate==true)?"update":"fail";
     		json.put("result", result);
@@ -159,7 +161,7 @@ public class ProductsController {
     	if(productNumber==0)
     	{
     		vo.setRegDate(new Date());
-    		vo.setProductImage(FunctionSpring.fileSave(productImage,SAVE_PATH));
+    		vo.setProductImage(functionSpring.fileSave(productImage,SAVE_PATH,"ec2"));
 //    		vo.setProductNumber((long)(Math.random()*System.currentTimeMillis())%10000000);
     		boolean sqlInsert = proService.insertProduct(vo);
     		result = (sqlInsert==true)?"insert":"fail";
@@ -194,8 +196,8 @@ public class ProductsController {
     		return jsonObject.toString();
     	}
     	List<ProductVO> volist = proService.selectProduct(vo);
-    	Map<String,String> colorData = FunctionSpring.anyArray(volist, "color");
-		Map<String,String> sizeData = FunctionSpring.anyArray(volist, "size");
+    	Map<String,String> colorData = functionSpring.anyArray(volist, "color");
+		Map<String,String> sizeData = functionSpring.anyArray(volist, "size");
 		JSONObject colorJ = new JSONObject();
 		JSONArray jsoncolors = new JSONArray();
 		JSONObject sizeJ = new JSONObject();

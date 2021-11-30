@@ -35,7 +35,8 @@ public class CustomController {
 
 	@Inject
 	private CustomServiceImpl cusService;
-	
+	@Inject 
+    private FunctionSpring functionSpring;
 	// custom한 제품을 등록하는  API
 	@CrossOrigin(origins = "*", allowedHeaders = "*")
     @RequestMapping(value="/customs",method = RequestMethod.POST,produces = "application/json; charset=utf8")
@@ -55,7 +56,7 @@ public class CustomController {
 		vo.setUserNumber(Long.valueOf(userNumber));
 		vo.setSize(size);
 		vo.setColor(color);
-		vo.setImage(FunctionSpring.fileSave(image, SAVE_PATH));
+		vo.setImage(functionSpring.fileSave(image, SAVE_PATH,"s3"));
 		vo.setInDate(new Date());
 		vo.setRegDate(new Date());
 		boolean insert = cusService.insertCustom(vo);
@@ -63,7 +64,7 @@ public class CustomController {
 		jsonObject.put("result", result);
 		// 쿼리가 실패한다면 저장된 파일을 삭제한다
 		if(result.equals("fail"))
-			FunctionSpring.fileDelete(vo.getImage(), SAVE_PATH);
+			functionSpring.fileDelete(vo.getImage(), SAVE_PATH);
 		return jsonObject.toString();
     }
 	// 커스텀 제품의 목록을 불러옴!
@@ -110,13 +111,13 @@ public class CustomController {
 		vo.setSize(size);
 		vo.setColor(color);
 		vo.setCustomNumber(Long.valueOf(customNumber));
-		vo.setImage(FunctionSpring.fileSave(image, SAVE_PATH));
+		vo.setImage(functionSpring.fileSave(image, SAVE_PATH,"s3"));
 		boolean update = cusService.updateCustom(vo);
 		String result =(update==true)?"update":"fail";
 		jsonObject.put("result", result);
 		// 쿼리가 실패한다면 저장된 파일을 삭제한다
 		if(result.equals("fail"))
-			FunctionSpring.fileDelete(vo.getImage(), SAVE_PATH);
+			functionSpring.fileDelete(vo.getImage(), SAVE_PATH);
 		return jsonObject.toString();
     }
 	

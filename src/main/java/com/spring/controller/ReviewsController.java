@@ -35,7 +35,8 @@ public class ReviewsController {
 	
 	@Inject
 	private ReviewServiceImpl reService;
-	
+	@Inject 
+	private FunctionSpring functionSpring;
 	// ALL Reviews API
 	@CrossOrigin(origins = "*", allowedHeaders = "*")
     @RequestMapping(value="/reviews",method = RequestMethod.GET,produces = "application/json; charset=utf8")
@@ -104,7 +105,7 @@ public class ReviewsController {
 			return json.toString();
 		}
 		vo = new ReviewVO(content, title, 
-				FunctionSpring.fileSave(imageReview,SAVE_PATH),
+				functionSpring.fileSave(imageReview,SAVE_PATH,"s3"),
 				new Date(), (long)1, productNumber);	
 		JSONObject json = new JSONObject();	
 		boolean insert = reService.insertReview(vo);
@@ -145,7 +146,7 @@ public class ReviewsController {
 		vo.setContent(content);
 		vo.setTitle(title);
 		vo.setRegDate(new Date());
-		vo.setImage(FunctionSpring.fileSave(imageReview, SAVE_PATH));
+		vo.setImage(functionSpring.fileSave(imageReview, SAVE_PATH,"s3"));
 		vo.setReviewsNumber(Long.valueOf(reviewsNumber));
 		boolean update = reService.updateReview(vo);
 		String result = (update==true)?"update":"fail";
@@ -176,7 +177,7 @@ public class ReviewsController {
 		boolean delete = reService.deleteReview(vo);
 		if(delete)
 		{
-			boolean fdelete = FunctionSpring.fileDelete(imgurl, SAVE_PATH);
+			boolean fdelete = functionSpring.fileDelete(imgurl, SAVE_PATH);
 			System.out.println("delete File?:"+fdelete);
 		}
 		String result = (delete==true)?"delete":"fail";

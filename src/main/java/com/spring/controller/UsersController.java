@@ -43,6 +43,8 @@ public class UsersController {
 	    private UsersServiceImpl usersService;
 	@Inject
 		private JavaMailSender mailSender;
+	@Inject 
+	    private FunctionSpring functionSpring;
 
 //	@CrossOrigin(exposedHeaders = "Set-Cookie,Authorization")
 	@RequestMapping(value="/user-login",method = RequestMethod.POST,produces = "application/json; charset=utf8")
@@ -92,7 +94,7 @@ public class UsersController {
 			return jsonObject.toString();
 		}
 		
-		Cookie cookie = new Cookie("tokenCookie", FunctionSpring.makeJwtToken(id,password));
+		Cookie cookie = new Cookie("tokenCookie", functionSpring.makeJwtToken(id,password));
 		cookie.setMaxAge(60*30);
 		cookie.setPath("/");
 //		cookie.setSecure(true);
@@ -121,7 +123,7 @@ public class UsersController {
 			return jsonObject.toString();
 		}
 		try {
-			String userId =FunctionSpring.parseringJwtToken(token).get("id", String.class);
+			String userId =functionSpring.parseringJwtToken(token).get("id", String.class);
 			jsonObject.put("id",userId);
 		}
 		catch (Exception e) {
@@ -144,7 +146,7 @@ public class UsersController {
 		vo.setName(name);
 		vo.setRegDate(new Date());
 		vo.setInDate(new Date());
-		String key= "uncertified"+FunctionSpring.init(false, 20);
+		String key= "uncertified"+functionSpring.init(false, 20);
 		vo.setRule(key);
 		boolean join = usersService.insertUser(vo);
 		String result = (join==true)?"Join":"Fail";
@@ -195,7 +197,7 @@ public class UsersController {
 		String key = null;
 		if(!sql.getRule().contains("uncertified"))
 		{
-			key= "user"+FunctionSpring.init(false, 20);
+			key= "user"+functionSpring.init(false, 20);
 			vo.setRule(key);
 		}
 		boolean update = usersService.updateRulePassword(vo);

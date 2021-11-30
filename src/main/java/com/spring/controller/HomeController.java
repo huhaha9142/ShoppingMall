@@ -46,7 +46,8 @@ public class HomeController {
     @Inject
     private MemberService service;
     @Inject ProductsServiceImpl servicePro;
-    
+    @Inject 
+    private FunctionSpring functionSpring;
     /**
      * Simply selects the home view to render by returning its name.
      */
@@ -141,7 +142,7 @@ public class HomeController {
     					
     					priceD=data[2].split(",");   					
     					vo.setPrice(Long.valueOf(priceD[0]+priceD[1]));
-    					ArrayList<String> size = FunctionSpring.sizeArray1(data[1]);
+    					ArrayList<String> size = functionSpring.sizeArray1(data[1]);
     					String[] color = data[3].split("#");
     					vo.setRegDate(new Date());
     					vo.setInDate(new Date());
