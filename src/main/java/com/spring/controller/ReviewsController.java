@@ -25,11 +25,12 @@ import org.springframework.web.multipart.MultipartFile;
 import com.spring.dto.ReviewVO;
 import com.spring.function.FunctionSpring;
 import com.spring.service.ReviewServiceImpl;
+import com.spring.service.S3Uploader;
 
 @Controller
 @CrossOrigin(allowCredentials = "false")
 public class ReviewsController {
-	private static String URL_PATH="http://pvpvpvpvp.gonetis.com:8080/sample/com/review-image/";
+	private static String URL_PATH="https://shoppingmal.s3.ap-northeast-2.amazonaws.com/";
 	private static final Logger logger = LoggerFactory.getLogger(ProductsController.class);
 	private static String SAVE_PATH="c:/Users/kim/Desktop/project/ShoppingMall/src/main/java/com/image/review/";
 	
@@ -37,6 +38,8 @@ public class ReviewsController {
 	private ReviewServiceImpl reService;
 	@Inject 
 	private FunctionSpring functionSpring;
+	@Inject
+	private S3Uploader s3Uploader;
 	// ALL Reviews API
 	@CrossOrigin(origins = "*", allowedHeaders = "*")
     @RequestMapping(value="/reviews",method = RequestMethod.GET,produces = "application/json; charset=utf8")
@@ -104,8 +107,14 @@ public class ReviewsController {
 			json.put("result",result);
 			return json.toString();
 		}
+		String url="";
+    	for(int i=0;i<imageReview.size();i++)
+    	{
+    		url += s3Uploader.upload(imageReview.get(i), "review");
+    		url +=",";
+    	}
 		vo = new ReviewVO(content, title, 
-				functionSpring.fileSave(imageReview,SAVE_PATH,"s3"),
+				url,
 				new Date(), (long)1, productNumber);	
 		JSONObject json = new JSONObject();	
 		boolean insert = reService.insertReview(vo);
@@ -143,10 +152,16 @@ public class ReviewsController {
 			json.put("result",result);
 			return json.toString();
 		}
+		String url="";
+    	for(int i=0;i<imageReview.size();i++)
+    	{
+    		url += s3Uploader.upload(imageReview.get(i), "review");
+    		url +=",";
+    	}
 		vo.setContent(content);
 		vo.setTitle(title);
 		vo.setRegDate(new Date());
-		vo.setImage(functionSpring.fileSave(imageReview, SAVE_PATH,"s3"));
+		vo.setImage(url);
 		vo.setReviewsNumber(Long.valueOf(reviewsNumber));
 		boolean update = reService.updateReview(vo);
 		String result = (update==true)?"update":"fail";

@@ -39,11 +39,15 @@
   		WHERE products_custom_number = #{customNumber}
   </update>
   <!-- WHERE에 userNumber 추가를 해야겠음! 업데이트도 마찬가지 -->
-  <delete id="deleteCustom">
+  <delete id="deleteCustom" parameterType="customVO">
   		DELETE FROM products_custom
   		WHERE products_custom_number = #{customNumber}
   </delete>
-  
+  <select id="selectImage" resultType="customVO" parameterType="customVO">
+  		SELECT image 
+  		FROM products_custom 
+  		WHERE users_user_number = #{userNumber}
+  </select>
 	  	
   </mapper>
   

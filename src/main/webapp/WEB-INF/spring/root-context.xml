@@ -16,8 +16,8 @@
 
  <!-- dataSource 설정, spring-jdbc 모듈 사용, spring 에서 jdbc 를 통해 mysql 에 접속할 수 있게 함 -->
     <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
-        <property name="driverClassName" value="com.mysql.jdbc.Driver"></property>
-        <property name="url" value="jdbc:mysql://database-1.czrx92xp9fx8.ap-northeast-2.rds.amazonaws.com:3306/shoppingmall?useSSL=false&amp;serverTimezone=UTC"></property>
+        <property name="driverClassName" value="net.sf.log4jdbc.sql.jdbcapi.DriverSpy"></property>
+        <property name="url" value="jdbc:log4jdbc:mysql://database-1.czrx92xp9fx8.ap-northeast-2.rds.amazonaws.com:3306/shoppingmall?useSSL=false&amp;serverTimezone=UTC"></property>
         <property name="username" value="root"></property>
         <property name="password" value="495949dks!"></property>
     </bean>
@@ -36,6 +36,7 @@
     <context:component-scan base-package="com.spring.dao"></context:component-scan>
     <context:component-scan base-package="com.spring.service"></context:component-scan>
     <context:component-scan base-package="com.spring.function"></context:component-scan>
+    <context:component-scan base-package="com.spring.config"></context:component-scan>
 
     
     <!-- mybatis  -->
