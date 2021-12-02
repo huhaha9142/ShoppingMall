@@ -25,17 +25,17 @@ import org.springframework.web.multipart.MultipartFile;
 import com.spring.dto.CustomVO;
 import com.spring.function.FunctionSpring;
 import com.spring.service.CustomServiceImpl;
+import com.spring.service.S3Uploader;
 
 @Controller
 @CrossOrigin(allowCredentials = "false")
 public class CustomController {
-	private static String URL_PATH="http://pvpvpvpvp.gonetis.com:8080/sample/com/custom-image/";
+	private static String URL_PATH="https://shoppingmal.s3.ap-northeast-2.amazonaws.com/";
 	private static final Logger logger = LoggerFactory.getLogger(CustomController.class);
-
+	@Inject
+	private S3Uploader s3Uploader;
 	@Inject
 	private CustomServiceImpl cusService;
-	@Inject 
-    private FunctionSpring functionSpring;
 	// custom한 제품을 등록하는  API
 	@CrossOrigin(origins = "*", allowedHeaders = "*")
     @RequestMapping(value="/customs",method = RequestMethod.POST,produces = "application/json; charset=utf8")
@@ -56,15 +56,21 @@ public class CustomController {
 		vo.setUserNumber(Long.valueOf(userNumber));
 		vo.setSize(size);
 		vo.setColor(color);
-		vo.setImage(functionSpring.fileSave(image, "test","s3"));
+		String url="";
+    	for(int i=0;i<image.size();i++)
+    	{
+    		url += s3Uploader.upload(image.get(i), "custom");
+    		url +=",";
+    	}
+    	vo.setImage(url);
 		vo.setInDate(new Date());
 		vo.setRegDate(new Date());
 		boolean insert = cusService.insertCustom(vo);
 		String result =(insert==true)?"insert":"fail";
 		jsonObject.put("result", result);
 		// 쿼리가 실패한다면 저장된 파일을 삭제한다
-		if(result.equals("fail"))
-			functionSpring.fileDelete(vo.getImage(), ".");
+//		if(result.equals("fail"))
+//			functionSpring.fileDelete(vo.getImage(), ".");
 		return jsonObject.toString();
     }
 	// 커스텀 제품의 목록을 불러옴!
@@ -76,14 +82,24 @@ public class CustomController {
 		JSONObject jsonObject = new JSONObject();
 		JSONArray jsonArarry = new JSONArray();
 		List<CustomVO> sql=cusService.selecCustomList();
+		
 		for(int i=0;i<sql.size();i++)
 		{
 			JSONObject list = new JSONObject();
+			
 			String image[] = sql.get(i).getImage().split(",");
+			JSONObject imgJ = new JSONObject();
+			JSONArray jsonimg = new JSONArray();
+			for(String img:image)
+			{
+				if(img!="") 
+					jsonimg.add(URL_PATH+img);
+			}	
+			imgJ.put("image", jsonimg);
+			list.put("images", imgJ);
 			list.put("index", i);
 			list.put("inDate", sql.get(i).getInDate());
 			list.put("regDate", sql.get(i).getRegDate());
-			list.put("image", URL_PATH+image[0]);
 			list.put("size", sql.get(i).getSize());
 			list.put("color", sql.get(i).getColor());
 			list.put("user_number", sql.get(i).getUserNumber());
@@ -109,8 +125,16 @@ public class CustomController {
 		{
 			JSONObject list = new JSONObject();
 			String image[] = sql.get(i).getImage().split(",");
+			JSONObject imgJ = new JSONObject();
+			JSONArray jsonimg = new JSONArray();
+			for(String img:image)
+			{
+				if(img!="") 
+					jsonimg.add(URL_PATH+img);
+			}	
+			imgJ.put("image", jsonimg);
+			list.put("images", imgJ);
 			list.put("index", i);
-			list.put("image", URL_PATH+image[0]);
 			jsonArarry.add(list);
 		}
 		jsonObject.put("customs", jsonArarry);
@@ -135,13 +159,19 @@ public class CustomController {
 		vo.setSize(size);
 		vo.setColor(color);
 		vo.setCustomNumber(Long.valueOf(customNumber));
-		vo.setImage(functionSpring.fileSave(image, ".","s3"));
+		String url="";
+    	for(int i=0;i<image.size();i++)
+    	{
+    		url += s3Uploader.upload(image.get(i), "custom");
+    		url +=",";
+    	}
+    	vo.setImage(url);
 		boolean update = cusService.updateCustom(vo);
 		String result =(update==true)?"update":"fail";
 		jsonObject.put("result", result);
 		// 쿼리가 실패한다면 저장된 파일을 삭제한다
-		if(result.equals("fail"))
-			functionSpring.fileDelete(vo.getImage(), ".");
+//		if(result.equals("fail"))
+//			functionSpring.fileDelete(vo.getImage(), ".");
 		return jsonObject.toString();
     }
 	
