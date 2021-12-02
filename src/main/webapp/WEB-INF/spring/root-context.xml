@@ -13,28 +13,30 @@
 	
 	<!-- Root Context: defines shared resources visible to all other web components -->
 		
-	<!-- MySQL dataSource -->
-	   <bean id="dataSource"
-        class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+
+ <!-- dataSource 설정, spring-jdbc 모듈 사용, spring 에서 jdbc 를 통해 mysql 에 접속할 수 있게 함 -->
+    <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
         <property name="driverClassName" value="net.sf.log4jdbc.sql.jdbcapi.DriverSpy"></property>
-        <property name="url"
-            value="jdbc:log4jdbc:mysql://127.0.0.1:3306/shoppingmall?useSSL=false&amp;serverTimezone=UTC">
-        </property>
+        <property name="url" value="jdbc:log4jdbc:mysql://database-1.czrx92xp9fx8.ap-northeast-2.rds.amazonaws.com:3306/shoppingmall?useSSL=false&amp;serverTimezone=UTC"></property>
         <property name="username" value="root"></property>
-        <property name="password" value="root"></property>
-    </bean>    
+        <property name="password" value="495949dks!"></property>
+    </bean>
+
+	
     
        <!-- mybatis SqlSessionFactoryBean -->
     <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
         <property name="dataSource" ref="dataSource"></property>
         <property name="configLocation" value="classpath:/mybatis-config.xml"></property>
-        <property name="mapperLocations" value="classpath:mappers/**/*Mapper.xml"></property>
+        <property name="mapperLocations" value="classpath:mappers/*Mapper.xml"></property>
 
     </bean>
     
     <!-- bean 등록 -->
     <context:component-scan base-package="com.spring.dao"></context:component-scan>
     <context:component-scan base-package="com.spring.service"></context:component-scan>
+    <context:component-scan base-package="com.spring.function"></context:component-scan>
+    <context:component-scan base-package="com.spring.config"></context:component-scan>
 
     
     <!-- mybatis  -->
@@ -47,7 +49,7 @@
 	<bean id="multipartResolver"
 		class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
 		<!-- 최대 업로드 사이즈 -->
-		<property name="maxUploadSize" value="10485760000" /><!-- 10mb -->
+		<property name="maxUploadSize" value="10485760" /><!-- 10mb -->
 		<!-- 기본 인코딩 -->
 		<property name="defaultEncoding" value="UTF-8" />
 	</bean>

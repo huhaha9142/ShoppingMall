@@ -25,18 +25,22 @@ import org.springframework.web.multipart.MultipartFile;
 import com.spring.dto.ReviewVO;
 import com.spring.function.FunctionSpring;
 import com.spring.service.ReviewServiceImpl;
+import com.spring.service.S3Uploader;
 
 @Controller
-@CrossOrigin(origins = "*", allowedHeaders = "*")
+@CrossOrigin(allowCredentials = "false")
 public class ReviewsController {
-	private static String URL_PATH="http://pvpvpvpvp.gonetis.com:8080/sample/com/review-image/";
+	private static String URL_PATH="https://shoppingmal.s3.ap-northeast-2.amazonaws.com/";
 	private static final Logger logger = LoggerFactory.getLogger(ProductsController.class);
 	private static String SAVE_PATH="c:/Users/kim/Desktop/project/ShoppingMall/src/main/java/com/image/review/";
 	
 	@Inject
 	private ReviewServiceImpl reService;
-	
-	// Î¶¨Î∑∞?ùò ?†ÑÎ∂?Î•? Î∞òÌôò ?ïò?äî API
+	@Inject 
+	private FunctionSpring functionSpring;
+	@Inject
+	private S3Uploader s3Uploader;
+	// ALL Reviews API
 	@CrossOrigin(origins = "*", allowedHeaders = "*")
     @RequestMapping(value="/reviews",method = RequestMethod.GET,produces = "application/json; charset=utf8")
     @ResponseBody
@@ -56,27 +60,25 @@ public class ReviewsController {
 			list.put("index", i);
 			list.put("content", sql.get(i).getContent());
 			list.put("title", sql.get(i).getTitle());
-			//Date ?òï?ãù?? ?Ñ£?úºÎ©? ?†ú?ù¥?ä® ?åå?ã±?óê Î¨∏Ï†úÍ∞? ?ÉùÍπ? Î≥?Í≤ΩÌï¥?Ñú ?Ñ£?ùÑÍ≤?
 //			list.put("indate", sql.get(i).getInDate());
 			for(String img:image)
 			{
 				if(img!="") 
 					jsonimg.add(URL_PATH+img);
-			}
-			
+			}			
 			list.put("userId", sql.get(i).getId());
 			imgJ.put("image", jsonimg);
 			list.put("images", imgJ);
 			list.put("userName",sql.get(i).getName());
 			list.put("product", sql.get(i).getProduct());
 			list.put("reviewsNumber", sql.get(i).getReviewsNumber());
-			jsonArarry.add(list);
-			jsonObject.put("reviews", jsonArarry);
+			jsonArarry.add(list);	
 			System.out.println(jsonArarry.toString());
     	}
+    	jsonObject.put("reviews", jsonArarry);
     	return jsonObject.toString();
     }
-	// Î¶¨Î∑∞Î•? ?ûë?Ñ±?ïò?äî API
+	// Review INSERT API
 	@CrossOrigin(origins = "*", allowedHeaders = "*")  
     @RequestMapping(
   		  value = "/reviews",method = RequestMethod.POST,produces = "application/json; charset=utf8"
@@ -105,8 +107,14 @@ public class ReviewsController {
 			json.put("result",result);
 			return json.toString();
 		}
+		String url="";
+    	for(int i=0;i<imageReview.size();i++)
+    	{
+    		url += s3Uploader.upload(imageReview.get(i), "review");
+    		url +=",";
+    	}
 		vo = new ReviewVO(content, title, 
-				FunctionSpring.fileSave(imageReview,SAVE_PATH),
+				url,
 				new Date(), (long)1, productNumber);	
 		JSONObject json = new JSONObject();	
 		boolean insert = reService.insertReview(vo);
@@ -116,8 +124,7 @@ public class ReviewsController {
 
     }
 	
-	// Î¶¨Î∑∞?ùò ?û¨?ûë?Ñ±?ùÑ ?ïò?äî API
-	// Í∏∞Ï°¥?ùò ?åå?ùº?ùÑ Ïß??ö∞?äî ?èô?ûë?ùÑ ?ûë?Ñ±?ï¥?ïº?ïú?ã§.!
+	// Review Update API
 	@CrossOrigin(origins = "*", allowedHeaders = "*")  
     @RequestMapping(
   		  value = "/reviews/{reviewsNumber}",method = RequestMethod.POST,produces = "application/json; charset=utf8"
@@ -127,15 +134,34 @@ public class ReviewsController {
     		@PathVariable("reviewsNumber") String reviewsNumber,
     		@RequestParam("content") String content,
     		@RequestParam("title") String title,
-    		@RequestParam("image") List<MultipartFile> imageReview	
+    		@RequestParam(value="image",required=false) List<MultipartFile> imageReview	
     	) throws IOException
     {
+		
 		JSONObject json = new JSONObject();
 		ReviewVO vo = new ReviewVO();
+		if(imageReview.size()==0)
+		{
+			vo.setContent(content);
+			vo.setTitle(title);
+			vo.setRegDate(new Date());
+			vo.setImage("noData");
+			vo.setReviewsNumber(Long.valueOf(reviewsNumber));
+			boolean insert = reService.insertReview(vo);
+			String result = (insert==true)?"update":"fail";
+			json.put("result",result);
+			return json.toString();
+		}
+		String url="";
+    	for(int i=0;i<imageReview.size();i++)
+    	{
+    		url += s3Uploader.upload(imageReview.get(i), "review");
+    		url +=",";
+    	}
 		vo.setContent(content);
 		vo.setTitle(title);
 		vo.setRegDate(new Date());
-		vo.setImage(FunctionSpring.fileSave(imageReview, SAVE_PATH));
+		vo.setImage(url);
 		vo.setReviewsNumber(Long.valueOf(reviewsNumber));
 		boolean update = reService.updateReview(vo);
 		String result = (update==true)?"update":"fail";
@@ -143,8 +169,8 @@ public class ReviewsController {
 		return json.toString();
 	
     }
-	// Î¶¨Î∑∞?ùÑ ?Ç≠?†ú?ïò?äî API
-	// ?åå?ùº?èÑ Í∞ôÏù¥ ?Ç≠?†ú?ï¥Ï§??ã§.!
+	// Review Delete API
+	// TODO: jwt
 	@CrossOrigin(origins = "*", allowedHeaders = "*")  
     @RequestMapping(
   		  value = "/reviews/{reviewsNumber}",method = RequestMethod.DELETE,produces = "application/json; charset=utf8"
@@ -155,7 +181,7 @@ public class ReviewsController {
     {
 		JSONObject json = new JSONObject();
 		ReviewVO vo = new ReviewVO();
-		try { //?à´?ûê ?ô∏ ?ûÖ?†•?óê ???ï¥?Ñú ?óê?ü¨?†Ñ?Ü°
+		try { 
 			vo.setReviewsNumber(Long.valueOf(reviewsNumber));
     	}catch(Exception e)
     	{
@@ -166,7 +192,7 @@ public class ReviewsController {
 		boolean delete = reService.deleteReview(vo);
 		if(delete)
 		{
-			boolean fdelete = FunctionSpring.fileDelete(imgurl, SAVE_PATH);
+			boolean fdelete = functionSpring.fileDelete(imgurl, SAVE_PATH);
 			System.out.println("delete File?:"+fdelete);
 		}
 		String result = (delete==true)?"delete":"fail";
@@ -175,31 +201,99 @@ public class ReviewsController {
 		
     }
 	
-	//reviewNumber?ç†?èô?òô ?ç†?èô?òô?ç†?èô?òô ?ç†?èô?òô?ç†?ã£?ö∏?òô ?ç†?ãúÎ™åÏòô?ç†?èô?òô
+	// TODO : ∫∏∑˘
+	// ¿⁄±‚∞° ¿€º∫«— ∏µÁ ∏Æ∫‰ ∫∏±‚ (By JWT cookie)
 	@CrossOrigin(origins = "*", allowedHeaders = "*")  
     @RequestMapping(
-  		  value = "/com/review/{reviewNumber}",method = RequestMethod.GET
+  		  value = "/reviews/user",method = RequestMethod.GET,produces = "application/json; charset=utf8"
   		  )
-    @ResponseBody 
-    public JSONObject reviewContent(@PathVariable("reviewNumber") String reviewNumber)
+    @ResponseBody
+    public String reviewMyReviews()
     {
-	 	return null;
+		JSONObject json = new JSONObject();
+		
+		return json.toString();
+    }
+	// ¡¶«∞¿« ∏Æ∫‰ ¡¶«∞≈∞∂˚ ø¨∞·«Â ∏µÁ ∏Æ∫‰ ∫∏±‚ 
+	@CrossOrigin(origins = "*", allowedHeaders = "*")
+    @RequestMapping(value="/product-reviews/{reviewsNumber}",method = RequestMethod.GET,produces = "application/json; charset=utf8")
+    @ResponseBody
+    public String productReviewList(
+    		@PathVariable("reviewsNumber") String reviewsNumber)
+    {
+		System.out.println("reviews.GET");
+		JSONObject jsonObject = new JSONObject();
+    	JSONArray jsonArarry = new JSONArray();
+    	ReviewVO vo = new ReviewVO();
+    	vo.setProductsNumber(Long.valueOf(reviewsNumber));
+    	List<ReviewVO> sql = reService.selectProductReviews(vo);
+    	
+    	for(int i=0;i<sql.size();i++)
+    	{
+    		String[] image = sql.get(i).getImage().split(",");    
+			JSONObject list = new JSONObject();
+			JSONObject imgJ = new JSONObject();
+			JSONArray jsonimg = new JSONArray();
+			list.put("index", i);
+			list.put("content", sql.get(i).getContent());
+			list.put("title", sql.get(i).getTitle());
+//			list.put("indate", sql.get(i).getInDate());
+			for(String img:image)
+			{
+				if(img!="") 
+					jsonimg.add(URL_PATH+img);
+			}
+			
+			list.put("userId", sql.get(i).getId());
+			imgJ.put("image", jsonimg);
+			list.put("images", imgJ);
+			list.put("userName",sql.get(i).getName());
+			list.put("product", sql.get(i).getProduct());
+			list.put("reviewsNumber", sql.get(i).getReviewsNumber());
+			jsonArarry.add(list);		
+    	}
+    	jsonObject.put("reviews", jsonArarry);
+		System.out.println(jsonArarry.toString());
+    	return jsonObject.toString();
     }
 	
-	// Î¶¨Î∑∞?ùò Ï¢ãÏïÑ?öî ?ò¨Î¶¨Îäî API
-	
+	// reviewNumber ºˆ¡§øÎ µ•¿Ã≈Õ ∫“∑Ø∞°±‚ 
 	@CrossOrigin(origins = "*", allowedHeaders = "*")  
     @RequestMapping(
-  		  value = "/reviewsqweqwe",method = RequestMethod.GET
+  		  value = "/reviews/{reviewsNumber}",method = RequestMethod.GET,produces = "application/json; charset=utf8"
   		  )
-    @ResponseBody 
-    public String reviewsLike()
+    @ResponseBody
+    public String reviewOne(
+    		@PathVariable("reviewsNumber") String reviewsNumber)
     {
-	 	return null;
+		JSONObject json = new JSONObject();
+		ReviewVO vo = new ReviewVO();
+		System.out.println(reviewsNumber);
+		vo.setReviewsNumber(Long.valueOf(reviewsNumber));
+		ReviewVO sql=reService.selectOne(vo);
+		
+		String[] image = sql.getImage().split(",");    
+		JSONObject imgJ = new JSONObject();
+		JSONArray jsonimg = new JSONArray();
+		json.put("content", sql.getContent());
+		json.put("title", sql.getTitle());
+//		list.put("indate", sql.get(i).getInDate());
+		for(String img:image)
+		{
+			if(img!="") 
+				jsonimg.add(URL_PATH+img);
+		}
+		
+		json.put("userId", sql.getId());
+		imgJ.put("image", jsonimg);
+		json.put("images", imgJ);
+		json.put("userName",sql.getName());
+		json.put("product", sql.getProduct());
+		json.put("reviewsNumber", sql.getReviewsNumber());
+		return json.toString();
     }
-	
-	
-	// Î¶¨Î∑∞?ùò ?ù¥ÎØ∏Ï?Î•? Î≥¥ÎÇ¥Ï£ºÎäî API
+		
+	// ªÁ¡¯∏∏ ∫∏≥ª¡÷¥¬ API
     @CrossOrigin(origins = "*", allowedHeaders = "*")  
     @RequestMapping(
   		  value = "/com/review-image/{img}",method = RequestMethod.GET
@@ -211,7 +305,9 @@ public class ReviewsController {
     	System.out.println(url);
 	    InputStream in = getClass().getResourceAsStream(url);
 	    System.out.println(img+".png");
-	    return IOUtils.toByteArray(in);
+	    byte[] data = IOUtils.toByteArray(in);
+	    in.close();
+	    return data;
 	}
 	
 	

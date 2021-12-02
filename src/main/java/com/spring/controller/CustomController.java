@@ -25,16 +25,17 @@ import org.springframework.web.multipart.MultipartFile;
 import com.spring.dto.CustomVO;
 import com.spring.function.FunctionSpring;
 import com.spring.service.CustomServiceImpl;
+import com.spring.service.S3Uploader;
 
 @Controller
+@CrossOrigin(allowCredentials = "false")
 public class CustomController {
-	private static String URL_PATH="http://pvpvpvpvp.gonetis.com:8080/sample/com/custom-image/";
-	private static final Logger logger = LoggerFactory.getLogger(ProductsController.class);
-	private static String SAVE_PATH="c:/Users/kim/Desktop/project/ShoppingMall/src/main/java/com/image/custom/";
-
+	private static String URL_PATH="https://shoppingmal.s3.ap-northeast-2.amazonaws.com/";
+	private static final Logger logger = LoggerFactory.getLogger(CustomController.class);
+	@Inject
+	private S3Uploader s3Uploader;
 	@Inject
 	private CustomServiceImpl cusService;
-	
 	// custom한 제품을 등록하는  API
 	@CrossOrigin(origins = "*", allowedHeaders = "*")
     @RequestMapping(value="/customs",method = RequestMethod.POST,produces = "application/json; charset=utf8")
@@ -47,6 +48,7 @@ public class CustomController {
     		@RequestParam("color") String color
     		) throws IOException 
     {
+		System.out.println(System.getProperty("user.dir"));
 		JSONObject jsonObject = new JSONObject();
 		CustomVO vo = new CustomVO();
 		vo.setProductNumber(Long.valueOf(productNumber));
@@ -54,15 +56,21 @@ public class CustomController {
 		vo.setUserNumber(Long.valueOf(userNumber));
 		vo.setSize(size);
 		vo.setColor(color);
-		vo.setImage(FunctionSpring.fileSave(image, SAVE_PATH));
+		String url="";
+    	for(int i=0;i<image.size();i++)
+    	{
+    		url += s3Uploader.upload(image.get(i), "custom");
+    		url +=",";
+    	}
+    	vo.setImage(url);
 		vo.setInDate(new Date());
 		vo.setRegDate(new Date());
 		boolean insert = cusService.insertCustom(vo);
 		String result =(insert==true)?"insert":"fail";
 		jsonObject.put("result", result);
 		// 쿼리가 실패한다면 저장된 파일을 삭제한다
-		if(result.equals("fail"))
-			FunctionSpring.fileDelete(vo.getImage(), SAVE_PATH);
+//		if(result.equals("fail"))
+//			functionSpring.fileDelete(vo.getImage(), ".");
 		return jsonObject.toString();
     }
 	// 커스텀 제품의 목록을 불러옴!
@@ -74,23 +82,66 @@ public class CustomController {
 		JSONObject jsonObject = new JSONObject();
 		JSONArray jsonArarry = new JSONArray();
 		List<CustomVO> sql=cusService.selecCustomList();
+		
 		for(int i=0;i<sql.size();i++)
 		{
 			JSONObject list = new JSONObject();
+			
 			String image[] = sql.get(i).getImage().split(",");
+			JSONObject imgJ = new JSONObject();
+			JSONArray jsonimg = new JSONArray();
+			for(String img:image)
+			{
+				if(img!="") 
+					jsonimg.add(URL_PATH+img);
+			}	
+			imgJ.put("image", jsonimg);
+			list.put("images", imgJ);
 			list.put("index", i);
 			list.put("inDate", sql.get(i).getInDate());
 			list.put("regDate", sql.get(i).getRegDate());
-			list.put("image", URL_PATH+image[0]);
 			list.put("size", sql.get(i).getSize());
 			list.put("color", sql.get(i).getColor());
 			list.put("user_number", sql.get(i).getUserNumber());
 			list.put("product", sql.get(i).getProduct());
+			list.put("customNumber", sql.get(i).getCustomNumber());
 			jsonArarry.add(list);
 		}
 		jsonObject.put("customs", jsonArarry);
 		return jsonObject.toString();
 	}
+	//커스텀 이미지만 (유저용)
+	@CrossOrigin(origins = "*", allowedHeaders = "*")
+    @RequestMapping(value="/customs-user",method = RequestMethod.GET,produces = "application/json; charset=utf8")
+    @ResponseBody
+    public String customUserImage(@RequestParam("userNumber") String  userNumber)
+    {
+		JSONObject jsonObject = new JSONObject();
+		JSONArray jsonArarry = new JSONArray();
+		CustomVO vo = new CustomVO();
+		vo.setUserNumber(Long.valueOf(userNumber));
+		List<CustomVO> sql = cusService.selectImage(vo);
+		for(int i=0;i<sql.size();i++)
+		{
+			JSONObject list = new JSONObject();
+			String image[] = sql.get(i).getImage().split(",");
+			JSONObject imgJ = new JSONObject();
+			JSONArray jsonimg = new JSONArray();
+			for(String img:image)
+			{
+				if(img!="") 
+					jsonimg.add(URL_PATH+img);
+			}	
+			imgJ.put("image", jsonimg);
+			list.put("images", imgJ);
+			list.put("index", i);
+			jsonArarry.add(list);
+		}
+		jsonObject.put("customs", jsonArarry);
+		
+		return jsonObject.toString();
+    }
+	
 	// 커스텀 제품의 업데이트
 	@CrossOrigin(origins = "*", allowedHeaders = "*")
     @RequestMapping(value="/customs/{customNumber}",method = RequestMethod.POST,produces = "application/json; charset=utf8")
@@ -108,13 +159,19 @@ public class CustomController {
 		vo.setSize(size);
 		vo.setColor(color);
 		vo.setCustomNumber(Long.valueOf(customNumber));
-		vo.setImage(FunctionSpring.fileSave(image, SAVE_PATH));
+		String url="";
+    	for(int i=0;i<image.size();i++)
+    	{
+    		url += s3Uploader.upload(image.get(i), "custom");
+    		url +=",";
+    	}
+    	vo.setImage(url);
 		boolean update = cusService.updateCustom(vo);
 		String result =(update==true)?"update":"fail";
 		jsonObject.put("result", result);
 		// 쿼리가 실패한다면 저장된 파일을 삭제한다
-		if(result.equals("fail"))
-			FunctionSpring.fileDelete(vo.getImage(), SAVE_PATH);
+//		if(result.equals("fail"))
+//			functionSpring.fileDelete(vo.getImage(), ".");
 		return jsonObject.toString();
     }
 	
@@ -150,7 +207,9 @@ public class CustomController {
     	System.out.println(url);
 	    InputStream in = getClass().getResourceAsStream(url);
 	    System.out.println(img+".png");
-	    return IOUtils.toByteArray(in);
+	    byte[] data = IOUtils.toByteArray(in);
+	    in.close();
+	    return data;
 	}
 	
 	

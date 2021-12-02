@@ -1,0 +1,5 @@
+spring:
+  datasource:
+    url: jdbc:log4jdbc:mysql://database-1.czrx92xp9fx8.ap-northeast-2.rds.amazonaws.com:3306/shoppingmall?useSSL=false&amp;serverTimezone=UTC
+    username: root
+    password: 4959dks!

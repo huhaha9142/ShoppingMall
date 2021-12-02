@@ -42,4 +42,34 @@ public class UsersServiceImpl implements UsersService {
 		return 1==dao.updatePassword(vo);
 	}
 
+	@Override
+	public UsersVO selectUserPrivacy(UsersVO vo) {
+		// TODO Auto-generated method stub
+		return dao.selectUserPrivacy(vo);
+	}
+
+	@Override
+	public boolean updateRuleByEmail(UsersVO vo) {
+		// TODO Auto-generated method stub
+		return 1==dao.updateRuleByEmail(vo);
+	}
+
+	@Override
+	public boolean updateRulePassword(UsersVO vo) {
+		// TODO Auto-generated method stub
+		return 1==dao.updateRulePassword(vo);
+	}
+
+	@Override
+	public boolean updatePasswordByEmail(UsersVO vo) {
+		// TODO Auto-generated method stub
+		return 1==dao.updatePasswordByEmail(vo);
+	}
+
+	@Override
+	public UsersVO selectUserRule(UsersVO vo) {
+		// TODO Auto-generated method stub
+		return dao.selectUserRule(vo);
+	}
+
 }

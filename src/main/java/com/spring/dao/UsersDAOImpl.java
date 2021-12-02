@@ -44,4 +44,34 @@ public class UsersDAOImpl implements UsersDAO {
 		return sqlSession.update(Namespace+".updatePassword", vo);
 	}
 
+	@Override
+	public UsersVO selectUserPrivacy(UsersVO vo) {
+		// TODO Auto-generated method stub
+		return sqlSession.selectOne(Namespace+".selectUserPrivacy", vo);
+	}
+
+	@Override
+	public int updateRuleByEmail(UsersVO vo) {
+		// TODO Auto-generated method stub
+		return sqlSession.update(Namespace+".updateRuleByEmail", vo);
+	}
+
+	@Override
+	public int updateRulePassword(UsersVO vo) {
+		// TODO Auto-generated method stub
+		return sqlSession.update(Namespace+".updateRulePassword", vo);
+	}
+
+	@Override
+	public int updatePasswordByEmail(UsersVO vo) {
+		// TODO Auto-generated method stub
+		return sqlSession.update(Namespace+".updatePasswordByEmail", vo);
+	}
+
+	@Override
+	public UsersVO selectUserRule(UsersVO vo) {
+		// TODO Auto-generated method stub
+		return sqlSession.selectOne(Namespace+".selectUserRule", vo);
+	}
+
 }

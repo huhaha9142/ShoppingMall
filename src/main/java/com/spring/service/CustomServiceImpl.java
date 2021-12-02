@@ -33,5 +33,10 @@ public class CustomServiceImpl implements CustomService {
 		// TODO Auto-generated method stub
 		return 1==dao.deleteCustom(vo);
 	}
+	@Override
+	public List<CustomVO> selectImage(CustomVO vo) {
+		// TODO Auto-generated method stub
+		return dao.selectImage(vo);
+	}
 
 }

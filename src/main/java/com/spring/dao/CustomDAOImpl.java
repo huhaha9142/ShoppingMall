@@ -33,5 +33,10 @@ public class CustomDAOImpl implements CustomDAO {
 		// TODO Auto-generated method stub
 		return sqlSession.delete(Namespace+".deleteCustom", vo);
 	}
+	@Override
+	public List<CustomVO> selectImage(CustomVO vo) {
+		// TODO Auto-generated method stub
+		return sqlSession.selectList(Namespace+".selectImage", vo);
+	}
 
 }

@@ -25,7 +25,8 @@ const LoginForm = () =>
                 method:'POST',
                 url:`http://pvpvpvpvp.gonetis.com:8080/sample/user-login`,
                 data:formdata,
-                // withCredentials: "true",
+                withCredentials: "true",
+               
             });
             console.log(send);
             console.log(send.data);
@@ -44,7 +45,7 @@ const LoginForm = () =>
             //비동기 통신 POST
             const send = await axios({
                 method:'GET',
-                url:`http://pvpvpvpvp.gonetis.com:8080/sample/user-login/jwt`,
+                url:`http://pvpvpvpvp.gonetis.com:8080/sample/user`,
                 withCredentials: "true",
             });
             console.log(send.data);
