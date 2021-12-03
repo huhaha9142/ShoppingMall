@@ -97,7 +97,7 @@ public class ProductsController {
     		{   
     			index++;
     			// 페이지 값과 카운트 값에 띠라서 데이터를 넣어준다. 
-    			if((pageP*countP>index)&&(pageP-1)*countP<=index)
+    			if((pageP*countP>=index)&&(pageP-1)*countP<index)
     			{	
 	    			JSONObject list = new JSONObject();
 					JSONObject colorJ = new JSONObject();
