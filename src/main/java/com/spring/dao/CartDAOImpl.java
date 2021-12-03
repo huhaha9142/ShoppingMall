@@ -23,18 +23,6 @@ public class CartDAOImpl implements CartDAO {
 	}
 
 	@Override
-	public List<CartVO> selectUserOneCart() {
-		
-		return sqlSession.selectList(Namespace+".selectUserOneCart");
-	}
-
-	@Override
-	public List<CartVO> selectUserQuanCart() {
-		
-		return sqlSession.selectList(Namespace+".selectUserQuanCart");
-	}
-
-	@Override
 	public int insertCart(CartVO vo) {
 		
 		return sqlSession.insert(Namespace+".insertCart", vo);

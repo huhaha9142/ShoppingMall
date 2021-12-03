@@ -21,18 +21,6 @@ public class CartServiceImpl implements CartService {
 	}
 
 	@Override
-	public List<CartVO> selectUserOneCart() {
-		
-		return dao.selectUserOneCart();
-	}
-
-	@Override
-	public List<CartVO> selectUserQuanCart() {
-		
-		return dao.selectUserQuanCart();
-	}
-
-	@Override
 	public boolean insertCart(CartVO vo) {
 		
 		return 1==dao.insertCart(vo);

@@ -23,37 +23,6 @@
   			AND ca.products_productnumber = pr.product_number
   		ORDER BY cart_number
   	</select>
-  	<select id ="selectUserOneCart" resultType="cartVO">
-  		SELECT
-  			ca.quantity,
-  			ca.users_usernumber AS usersNumber,
-  			ca.products_productnumber AS productsNumber,
-  			ca.cart_number AS cartNumber,
-  			pr.product,
-  			pr.price,
-  			pr.title_image
-  		FROM cart ca
-  			INNER JOIN users us
-  			INNER JOIN products pr
-  		ON ca.users_usernumber = us.user_number
-  			AND ca.products_productnumber = pr.product_number
-  		ORDER BY cart_number
-  		WHERE (users_number = #{usersNumber})
-  	</select>
-  
-  <!-- 수량 select -->
-  	<select id ="selectUserQuanCart" resultType="cartVO">
-  		SELECT
-  			ca.quantity
-  		FROM cart ca
-  			INNER JOIN users us
-  			INNER JOIN products pr
-  		ON ca.users_usernumber = us.user_number
-  			AND ca.products_productnumber = pr.product_number
-  		ORDER BY cart_number
-  		WHERE (users_number = #{usersNumber})
-  	</select>
-  	
   	<insert id ="insertCart" parameterType="cartVO" >
   		INSERT INTO cart
 			(quantity, users_usernumber, 
