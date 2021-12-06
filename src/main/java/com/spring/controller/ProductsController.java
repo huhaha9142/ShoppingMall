@@ -56,11 +56,13 @@ public class ProductsController {
     		@RequestParam(value="kind",required=false) String kindP,
     		@RequestParam(value="color",required=false) String colorP,
     		@RequestParam(value="size",required=false) String sizeP,
-    		@RequestParam(value="price",required=false) String priceP
+    		@RequestParam(value="price",required=false) String priceP,
+    		@RequestParam(value="page",required=false) int pageP,
+    		@RequestParam(value="count",defaultValue = "20") int countP
     		) throws IOException {
-    	
-    	if(AllJson.get(kindP+colorP+sizeP+priceP)!=null)
-			return AllJson.get(kindP+colorP+sizeP+priceP).toString();
+    		
+    	if(AllJson.get(kindP+colorP+sizeP+priceP+pageP+countP)!=null)
+			return AllJson.get(kindP+colorP+sizeP+priceP+pageP+countP).toString();
     	JSONObject JSONObPro = new JSONObject();
     	if(Prosql==null)
     	{
@@ -74,9 +76,12 @@ public class ProductsController {
     		Prosql.clear();
     		Allsql.clear();
     	}
-		JSONArray jsonArarry = new JSONArray();  	
+		JSONArray jsonArarry = new JSONArray();  
+		// 페이지 제어용 인덱스
+		int index = 0;
     	for(int i=0;i<Prosql.size();i++)
     	{
+    		// Allsql 이 없다면 데이터를 넣는다 라는식임.
     		try {
     			if(Allsql.get(Long.valueOf(i)).isEmpty());
     		}
@@ -86,37 +91,45 @@ public class ProductsController {
     		Map<String,String> colorData = functionSpring.anyArray(Allsql.get(Long.valueOf(i)) , "color");
 			Map<String,String> sizeData = functionSpring.anyArray(Allsql.get(Long.valueOf(i)), "size");
 
-    		if((kindP==null||kindP.equals(Prosql.get(i).getKind()))&&(sizeP==null||sizeData.toString().contains("="+sizeP)))   	
+			//필터링 1순위 걸고 2순위로 페이지
+    		if((kindP==null||kindP.equals(Prosql.get(i).getKind()))
+    				&&(sizeP==null||sizeData.toString().contains("="+sizeP)))   	
     		{   
-//    			List<ProductVO> sql2 = proService.selectListColorAndSize(sql.get(i));
-    			
-    			JSONObject list = new JSONObject();
-				JSONObject colorJ = new JSONObject();
-				JSONArray jsoncolors = new JSONArray();
-    			for(String colorA:colorData.values())
-    			{
-    				jsoncolors.add(colorA);
-    			}   			
-    			String size = functionSpring.sizeString(sizeData);			
-				String[] image = Prosql.get(i).getTitleImage().split(",");    
-				colorJ.put("color",jsoncolors);
-				list.put("colors", colorJ);									
-				list.put("size", size);				
-				list.put("index", i);
-				list.put("kind", Prosql.get(i).getKind());				
-				list.put("price", Prosql.get(i).getPrice());
-				list.put("product", Prosql.get(i).getProduct());
-				list.put("productNumber", Prosql.get(i).getProductNumber());			
-				list.put("image", URL_PATH+image[0]);
-				jsonArarry.add(list);				
+    			index++;
+    			// 페이지 값과 카운트 값에 띠라서 데이터를 넣어준다. 
+    			if((pageP*countP>=index)&&(pageP-1)*countP<index)
+    			{	
+	    			JSONObject list = new JSONObject();
+					JSONObject colorJ = new JSONObject();
+					JSONArray jsoncolors = new JSONArray();
+	    			for(String colorA:colorData.values())
+	    			{
+	    				jsoncolors.add(colorA);
+	    			}   			
+	    			String size = functionSpring.sizeString(sizeData);			
+					String[] image = Prosql.get(i).getTitleImage().split(",");    
+					colorJ.put("color",jsoncolors);
+					list.put("colors", colorJ);									
+					list.put("size", size);				
+					list.put("index", index);
+					list.put("kind", Prosql.get(i).getKind());				
+					list.put("price", Prosql.get(i).getPrice());
+					list.put("product", Prosql.get(i).getProduct());
+					list.put("productNumber", Prosql.get(i).getProductNumber());			
+					list.put("image", URL_PATH+image[0]);
+					jsonArarry.add(list);		
+    			}
     		}
     	}	
     	JSONObPro.put("products", jsonArarry);
-		AllJson.put(kindP+colorP+sizeP+priceP, JSONObPro);
+    	JSONObPro.put("endPage", index/countP+1);
+		AllJson.put(kindP+colorP+sizeP+priceP+pageP+countP, JSONObPro);
     	System.out.println("kind:"+kindP);
     	System.out.println("color:"+colorP);
     	System.out.println("size:"+sizeP);
     	System.out.println("price:"+priceP);
+    	System.out.println("page:"+pageP);
+    	System.out.println("count:"+countP);
 //    	System.out.println(Allsql.get(1l).toString());
     	return JSONObPro.toString();
     }
