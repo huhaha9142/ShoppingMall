@@ -5,13 +5,20 @@
   <mapper namespace="com.example.mapper.usersMapper">
   
   <select id="selectLogin" resultType="usersVO">
- 	SELECT 
- 		id,
- 		password,
- 		name,
- 		rule
- 	FROM users
- 	WHERE id = #{id}
+	 	SELECT 
+	 		id,
+	 		password,
+	 		name,
+	 		rule
+	 	FROM users
+	 	WHERE id = #{id}
+  </select>
+  <select id="selectLoginKakao" resultType="usersVO" parameterType="usersVO">
+  		SELECT
+  			kakao,
+  			id
+  		FROM users
+  		WHERE kakao = #{kakao}
   </select>
   <insert id="insertUser">
   		INSERT INTO users(id,
@@ -94,8 +101,4 @@
   		FROM users
   		WHERE id = #{id}
   </select>
-  
-  
-  
-  
   </mapper>
