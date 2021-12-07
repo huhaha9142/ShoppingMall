@@ -44,7 +44,6 @@ import io.jsonwebtoken.UnsupportedJwtException;
 @CrossOrigin(allowCredentials = "false")
 public class UsersController {
 	private static final Logger logger = LoggerFactory.getLogger(ProductsController.class);
-	private static final int String = 0;
 	@Inject
 	    private UsersServiceImpl usersService;
 	@Inject
@@ -145,7 +144,8 @@ public class UsersController {
 			map.add("grant_type", "authorization_code");
 			//TODO: 해당값은 보안이 필요한 REST API KEY 값으로 추가적인 yaml 작성하여 제외시킬것.
 			map.add("client_id", "8c2835e5881d60b38a8561176852e4e2");
-			map.add("redirect_uri", "http://localhost:3001");
+			//TODO: 리다이렉트   URL
+			map.add("redirect_uri", "http://localhost:3000");
 			HttpEntity<MultiValueMap<String, String>> entity = new HttpEntity(map,headers);
 			String answer = restTemplate.postForObject(url, entity, String.class);
 			System.out.println(answer);	

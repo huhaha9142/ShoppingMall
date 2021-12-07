@@ -1,7 +1,6 @@
 import axios from "axios";
 import React, { useState,useEffect } from "react"; 
 
-
 const LoginForm = () =>
 { //파일 미리볼 url을 저장해줄 state 
     
@@ -52,7 +51,10 @@ const LoginForm = () =>
 
     }
     useEffect(() => {
+        console.log("code is "+code);
         setCode(new URL(window.location.href).searchParams.get('code'));
+    });
+    useEffect(() => {  
         const fetchUsers = async () => {
           try {
             const response = await axios({
@@ -62,25 +64,19 @@ const LoginForm = () =>
             setAuthorization(response.headers.authorization);   
             console.log("set kakao Auth",authorization);   
             console.log(code);
-          } catch (e) {
-          }
+          } catch (e) {  
         };
         fetchUsers();
+    }
     },[code]);
     
-    const setCode1 = () =>{
-        setCode("C");
-    }
-
     return (<><input type="text" onChange={saveId}/>
             <button onClick={sendId}>보내기</button>
             <button onClick={aaa}>토큰 검증 보내기</button>
             
-            <a type="button" href="https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=8c2835e5881d60b38a8561176852e4e2&redirect_uri=http://localhost:3001"
-            onClick={setCode1}>
+            {<a type="button" href="https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=8c2835e5881d60b38a8561176852e4e2&redirect_uri=http://localhost:3000">
                 카카오 로그인
-            </a>
-            
+            </a>}
 
            </>)
 } 

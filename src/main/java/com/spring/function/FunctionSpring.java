@@ -92,7 +92,7 @@ public class FunctionSpring {
 			if(type == "color")
 				anyData.put(sql.get(j).getColor(), sql.get(j).getColor());
 			if(type == "quantity")
-				anyData.put(sql.get(j).getQuantity(), sql.get(j).getQuantity());			
+				anyData.put(""+j, sql.get(j).getQuantity());			
 		}
 		return anyData;
     }  
