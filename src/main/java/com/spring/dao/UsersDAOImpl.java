@@ -74,4 +74,16 @@ public class UsersDAOImpl implements UsersDAO {
 		return sqlSession.selectOne(Namespace+".selectUserRule", vo);
 	}
 
+	@Override
+	public UsersVO selectLoginKakao(UsersVO vo) {
+		// TODO Auto-generated method stub
+		return sqlSession.selectOne(Namespace+".selectLoginKakao",vo);
+	}
+
+	@Override
+	public int insertUserSocial(UsersVO vo) {
+		// TODO Auto-generated method stub
+		return sqlSession.insert(Namespace+".insertUserSocial", vo);
+	}
+
 }

@@ -211,11 +211,19 @@ public class ProductsController {
     	List<ProductVO> volist = proService.selectProduct(vo);
     	Map<String,String> colorData = functionSpring.anyArray(volist, "color");
 		Map<String,String> sizeData = functionSpring.anyArray(volist, "size");
+		Map<String,String> quantityData = functionSpring.anyArray(volist, "quantity");
 		JSONObject colorJ = new JSONObject();
 		JSONArray jsoncolors = new JSONArray();
 		JSONObject sizeJ = new JSONObject();
 		JSONArray jsonsizes = new JSONArray();
 		
+		JSONObject quantityJ = new JSONObject();
+		JSONArray jsonquantitys = new JSONArray();
+		
+		for(String quantityA:quantityData.values())
+		{
+			jsonquantitys.add(quantityA);
+		}		
 		for(String colorA:colorData.values())
 		{
 			jsoncolors.add(colorA);
@@ -227,14 +235,14 @@ public class ProductsController {
 
 		colorJ.put("color",jsoncolors);
 		sizeJ.put("size", jsonsizes);
-    	
+		quantityJ.put("quantity", jsonquantitys);
     	
     	jsonObject.put("product", volist.get(0).getProduct());
     	
 		jsonObject.put("id",volist.get(0).getProductNumber());
 		jsonObject.put("sizes", sizeJ);
 		jsonObject.put("colors", colorJ);
-//    	jsonObject.put("quantity", vo.getQuantity());
+//    	jsonObject.put("quantity", quantityJ);
     	jsonObject.put("price", volist.get(0).getPrice());
     	jsonObject.put("kind", volist.get(0).getKind());
     	jsonObject.put("content", volist.get(0).getContent());

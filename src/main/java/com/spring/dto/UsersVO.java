@@ -16,7 +16,16 @@ public class UsersVO {
 	private Date inDate;
 	private String nickName;
 	private String rule;
+	private String kakao;
 	
+	public String getKakao() {
+		return kakao;
+	}
+
+	public void setKakao(String kakao) {
+		this.kakao = kakao;
+	}
+
 	public String getRule() {
 		return rule;
 	}

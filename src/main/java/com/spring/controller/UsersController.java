@@ -1,30 +1,35 @@
 package com.spring.controller;
 
 import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
 import java.util.Date;
+import java.util.UUID;
 
 import javax.inject.Inject;
 import javax.mail.Message.RecipientType;
 import javax.mail.MessagingException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.util.UrlPathHelper;
+import org.springframework.web.client.RestTemplate;
 
 import com.spring.dto.UsersVO;
 import com.spring.function.FunctionSpring;
@@ -36,7 +41,7 @@ import io.jsonwebtoken.SignatureException;
 import io.jsonwebtoken.UnsupportedJwtException;
 
 @Controller
-//@CrossOrigin(allowCredentials = "false")
+@CrossOrigin(allowCredentials = "false")
 public class UsersController {
 	private static final Logger logger = LoggerFactory.getLogger(ProductsController.class);
 	@Inject
@@ -46,32 +51,22 @@ public class UsersController {
 	@Inject 
 	    private FunctionSpring functionSpring;
 
-//	@CrossOrigin(exposedHeaders = "Set-Cookie,Authorization")
+	@CrossOrigin(origins = "*", exposedHeaders = "Authorization", allowedHeaders = "*")
 	@RequestMapping(value="/user-login",method = RequestMethod.POST,produces = "application/json; charset=utf8")
 	@ResponseBody
 	public String userLogin(@RequestParam("id") String id,
 			@RequestParam("password") String password,
-			HttpServletResponse response,
-			HttpServletRequest request) {
+			HttpServletResponse response) {
 		
 		JSONObject jsonObject = new JSONObject();
 		BCryptPasswordEncoder scpwd = new BCryptPasswordEncoder();
 		UsersVO vo = new UsersVO(id,password);
-		System.out.println("====================="+vo.toString());
-		System.out.println(request.getRequestURI()+"=="+request.getServletPath());
-		System.out.println(request.getServerName());
-		System.out.println(request.getRemoteAddr());
-		System.out.println(request.getLocales().getClass());
-		System.out.println(request.getSession());
-		
-	
-//			response.addHeader("Access-Control-Allow-Origin", "http://pvpvpvpvp.gonetis.com:3000");	
-		
-		response.addHeader("Access-Control-Allow-Origin", "http://localhost:3000");	
-		response.addHeader("Access-Control-Allow-Methods", "POST, GET, DELETE, PUT"); 
-		response.addHeader("Access-Control-Max-Age", "1890"); 
-		response.addHeader("Access-Control-Allow-Credentials", "true");
-		response.addHeader("Access-Control-Allow-Headers", "x-requested-with, origin, content-type, accept, Authorization"); 
+//		response.addHeader("Access-Control-Allow-Origin", "http://pvpvpvpvp.gonetis.com:3000");		
+//		response.addHeader("Access-Control-Allow-Origin", "http://localhost:3000");	
+//		response.addHeader("Access-Control-Allow-Methods", "POST, GET, DELETE, PUT"); 
+//		response.addHeader("Access-Control-Max-Age", "1890"); 
+//		response.addHeader("Access-Control-Allow-Credentials", "true");
+//		response.addHeader("Access-Control-Allow-Headers", "x-requested-with, origin, content-type, accept, Authorization"); 
 		UsersVO vo1 = usersService.selectLogin(vo);
 		
 		try {
@@ -94,36 +89,32 @@ public class UsersController {
 			return jsonObject.toString();
 		}
 		
-		Cookie cookie = new Cookie("tokenCookie", functionSpring.makeJwtToken(id,password));
-		cookie.setMaxAge(60*30);
-		cookie.setPath("/");
+//		Cookie cookie = new Cookie("tokenCookie", functionSpring.makeJwtToken(id,password));
+//		cookie.setMaxAge(60*30);
+//		cookie.setPath("/");
 //		cookie.setSecure(true);
 //	    cookie.setHttpOnly(true);	 
-		response.addCookie(cookie);
-//		response.setHeader("Authorization", FunctionSpring.makeJwtToken(id,password));
-//	
+//		response.addCookie(cookie);
+		
+		response.setHeader("Authorization","jwt "+functionSpring.makeJwtToken(id));
 		jsonObject.put("result", "Success");
 		return jsonObject.toString();
 	}
-//	@CrossOrigin(origins = "*", allowedHeaders = "*")
+	@CrossOrigin(origins = "*", allowedHeaders = "*")
 	@RequestMapping(value="/user",method = RequestMethod.GET,produces = "application/json; charset=utf8")
 	@ResponseBody
-	public String userJwtTokenCheck(HttpServletResponse response,@CookieValue(value = "tokenCookie", defaultValue = "token is null") String token) throws ExpiredJwtException, UnsupportedJwtException, MalformedJwtException, SignatureException, IllegalArgumentException, UnsupportedEncodingException
+	public String userJwtTokenCheck(@RequestHeader("authorization") String token) throws ExpiredJwtException, UnsupportedJwtException, MalformedJwtException, SignatureException, IllegalArgumentException, UnsupportedEncodingException
 	{
-		response.addHeader("Access-Control-Allow-Origin", "http://localhost:3000");		
-		response.addHeader("Access-Control-Allow-Methods", "POST, GET, DELETE, PUT"); 
-		response.addHeader("Access-Control-Max-Age", "3600"); 
-		response.addHeader("Access-Control-Allow-Credentials", "true");
-		response.addHeader("Access-Control-Allow-Headers", "x-requested-with, origin, content-type, accept, Authorization"); 
 		JSONObject jsonObject = new JSONObject();
 		System.out.println(token);
-		if(token.equals("token is null"))
+		String[] tokenA = token.split(" ");
+		if(tokenA[1].equals("token is null"))
 		{
 			jsonObject.put("tokenNull", "...");
 			return jsonObject.toString();
 		}
 		try {
-			String userId =functionSpring.parseringJwtToken(token).get("id", String.class);
+			String userId =functionSpring.parseringJwtToken(tokenA[1]).get("id", String.class);
 			jsonObject.put("id",userId);
 		}
 		catch (Exception e) {
@@ -131,6 +122,68 @@ public class UsersController {
 		}	
 		return jsonObject.toString();
 		
+	}
+	@CrossOrigin(origins = "*", exposedHeaders = "Authorization", allowedHeaders = "*")
+	@RequestMapping(value="/user-kakao",method = RequestMethod.GET,produces = "application/json; charset=utf8")
+	@ResponseBody
+	public String userLoginWithKakao(@RequestParam("code") String code,
+			HttpServletResponse response) {
+		System.out.println(code);
+		JSONObject jsonObject = new JSONObject();
+		JSONParser jsonParser = new JSONParser();
+		String accessToken = null;
+		String kakaoIdNumber = null;
+		Long userNumber;
+		UsersVO vo = new UsersVO();
+		HttpHeaders headers = new HttpHeaders();
+		RestTemplate restTemplate = new RestTemplate();
+		// 전달받은 코드를 카카오 서버에 전달해서 엑세스 토큰 발급받기!
+		try {			
+			String url = "https://kauth.kakao.com/oauth/token";
+			MultiValueMap<String, String> map= new LinkedMultiValueMap<>();
+			map.add("code", code);
+			map.add("grant_type", "authorization_code");
+			//TODO: 해당값은 보안이 필요한 REST API KEY 값으로 추가적인 yaml 작성하여 제외시킬것.
+			map.add("client_id", "8c2835e5881d60b38a8561176852e4e2");
+			//TODO: 리다이렉트   URL
+			map.add("redirect_uri", "http://localhost:3000/loading");
+			HttpEntity<MultiValueMap<String, String>> entity = new HttpEntity(map,headers);
+			String answer = restTemplate.postForObject(url, entity, String.class);
+			System.out.println(answer);	
+			JSONObject token = (JSONObject) jsonParser.parse(answer);
+			accessToken = token.get("token_type")+" "+token.get("access_token");
+		}catch (Exception e) {
+			System.err.println(e);
+		}
+		// 전달 받은 엑세스 토큰을 이용해 카카오 id(회원번호) 받아오기!
+		try {	
+			String url = "https://kapi.kakao.com/v2/user/me";
+			headers.add("Authorization", accessToken);
+			MultiValueMap<String, String> map= new LinkedMultiValueMap<>();
+			HttpEntity<MultiValueMap<String, String>> entity = new HttpEntity(map,headers);
+			String answer = restTemplate.postForObject(url, entity, String.class);
+			System.out.println(answer);	
+			JSONObject token = (JSONObject) jsonParser.parse(answer);	
+			kakaoIdNumber = token.get("id")+"";
+			System.out.println(kakaoIdNumber);
+			vo.setKakao(kakaoIdNumber);
+			System.out.println(vo.getKakao());
+		}catch (Exception e) {
+			System.err.println(e);
+		}
+		try {
+			userNumber = usersService.selectLoginKakao(vo).getUserNumber();
+		} catch (Exception e) {
+			System.out.println("회원가입 필요");
+			jsonObject.put("result", "Redirect Social Join");
+			jsonObject.put("kakaoNumber", kakaoIdNumber);
+			return jsonObject.toString();
+		}
+		
+		System.out.println(userNumber);
+		response.setHeader("Authorization","jwt "+functionSpring.makeJwtToken(String.valueOf(userNumber)));
+		jsonObject.put("result", "Success");
+		return jsonObject.toString();
 	}
 	@CrossOrigin(origins = "*", allowedHeaders = "*")
 	@RequestMapping(value="/user-join",method = RequestMethod.POST,produces = "application/json; charset=utf8")
@@ -146,7 +199,7 @@ public class UsersController {
 		vo.setName(name);
 		vo.setRegDate(new Date());
 		vo.setInDate(new Date());
-		String key= "uncertified"+functionSpring.init(false, 20);
+		String key= "uncertified"+UUID.randomUUID();
 		vo.setRule(key);
 		boolean join = usersService.insertUser(vo);
 		String result = (join==true)?"Join":"Fail";
@@ -169,6 +222,30 @@ public class UsersController {
 
 		}
 		jsonObject.put("result", result);
+		return jsonObject.toString();
+	}
+	@CrossOrigin(origins = "*", exposedHeaders = "Authorization",allowedHeaders = "*")
+	@RequestMapping(value="/user-join-social",method = RequestMethod.POST,produces = "application/json; charset=utf8")
+	@ResponseBody
+	public String userSocialJoin(
+			@RequestParam("name") String name,
+			@RequestParam("kakaoNumber") String kakaoNumber,
+			HttpServletResponse response) {
+		UsersVO vo = new UsersVO();
+		vo.setName(name);
+		vo.setKakao(kakaoNumber);
+		vo.setRegDate(new Date());
+		vo.setInDate(new Date());
+		vo.setRule("socialUser");
+		String result = (true==usersService.insertUserSocial(vo))?"Success":"Fail";
+		
+		JSONObject jsonObject = new JSONObject();
+		jsonObject.put("result", result);
+		if(result.equals("Success"))
+		{
+			Long userNumber = usersService.selectLoginKakao(vo).getUserNumber();
+			response.setHeader("Authorization","jwt "+functionSpring.makeJwtToken(String.valueOf(userNumber)));
+		}
 		return jsonObject.toString();
 	}
 	@CrossOrigin(origins = "*", allowedHeaders = "*")
@@ -197,7 +274,7 @@ public class UsersController {
 		String key = null;
 		if(!sql.getRule().contains("uncertified"))
 		{
-			key= "user"+functionSpring.init(false, 20);
+			key= "user"+UUID.randomUUID();
 			vo.setRule(key);
 		}
 		boolean update = usersService.updateRulePassword(vo);
