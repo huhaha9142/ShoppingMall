@@ -21,7 +21,7 @@ ReactDOM.render(
       <LoginForm/> 
 
       <AddressApiController/>
-      <ImageLodingwithdataEx/>
+      {/* <ImageLodingwithdataEx/> */}
        {/* <ImageLodingEx/>  */}
       <ImageUploadingEx/>   
     </React.StrictMode>,

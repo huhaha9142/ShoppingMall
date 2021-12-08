@@ -72,4 +72,16 @@ public class UsersServiceImpl implements UsersService {
 		return dao.selectUserRule(vo);
 	}
 
+	@Override
+	public UsersVO selectLoginKakao(UsersVO vo) {
+		// TODO Auto-generated method stub
+		return dao.selectLoginKakao(vo);
+	}
+
+	@Override
+	public boolean insertUserSocial(UsersVO vo) {
+		// TODO Auto-generated method stub
+		return 1==dao.insertUserSocial(vo);
+	}
+
 }

@@ -42,10 +42,10 @@ public class CustomController {
     @ResponseBody
     public String customInsert(
     		@RequestParam("image") List <MultipartFile> image,
-    		@RequestParam("productNumber") Long productNumber,
+    		@RequestParam(value="productNumber",defaultValue = "0") Long productNumber,
     		@RequestParam("userNumber") Long userNumber,
-    		@RequestParam("size") String size,
-    		@RequestParam("color") String color
+    		@RequestParam(value="size",required=false) String size,
+    		@RequestParam(value="color",required=false) String color
     		) throws IOException 
     {
 		System.out.println(System.getProperty("user.dir"));
@@ -135,6 +135,7 @@ public class CustomController {
 			imgJ.put("image", jsonimg);
 			list.put("images", imgJ);
 			list.put("index", i);
+			list.put("customNumber", sql.get(i).getCustomNumber());
 			jsonArarry.add(list);
 		}
 		jsonObject.put("customs", jsonArarry);

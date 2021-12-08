@@ -44,9 +44,10 @@
   		WHERE products_custom_number = #{customNumber}
   </delete>
   <select id="selectImage" resultType="customVO" parameterType="customVO">
-  		SELECT image 
+  		SELECT image,
+  			products_custom_number AS customNumber
   		FROM products_custom 
-  		WHERE users_user_number = #{userNumber}
+  		WHERE users_user_number = #{userNumber} AND products_productnumber=0
   </select>
 	  	
   </mapper>

@@ -92,7 +92,7 @@ public class FunctionSpring {
 			if(type == "color")
 				anyData.put(sql.get(j).getColor(), sql.get(j).getColor());
 			if(type == "quantity")
-				anyData.put(sql.get(j).getQuantity(), sql.get(j).getQuantity());			
+				anyData.put(""+j, sql.get(j).getQuantity());			
 		}
 		return anyData;
     }  
@@ -193,7 +193,7 @@ public class FunctionSpring {
     }
     
     public String key ="11";  // 따로 저장하고 .gitignore에 제외항목에 등록시킬것.!
-    public String makeJwtToken(String id, String password) {
+    public String makeJwtToken(String id) {
         Date now = new Date();
         return Jwts.builder()
             .setHeaderParam(Header.TYPE, Header.JWT_TYPE) // (1)

@@ -20,6 +20,7 @@
     		title_image AS titleImage,
     		product_number AS productNumber
          FROM products
+         WHERE product_number>0
     </select>
     <select id="selectListColorAndSize" resultType="productVo" parameterType="productVO">
     	SELECT
