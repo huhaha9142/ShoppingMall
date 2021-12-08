@@ -9,6 +9,7 @@ public interface UsersDAO {
 	public UsersVO selectUserPrivacy(UsersVO vo);
 	public UsersVO selectUserRule(UsersVO vo);
 	public int insertUser(UsersVO vo);
+	public int insertUserSocial(UsersVO vo);
 	public int updateUserPrivacy(UsersVO vo);
 	public int updatePassword(UsersVO vo);
 	public int updateRuleByEmail(UsersVO vo);

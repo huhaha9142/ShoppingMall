@@ -9,6 +9,7 @@ public interface UsersService {
 	public UsersVO selectUserPrivacy(UsersVO vo);
 	public UsersVO selectUserRule(UsersVO vo);
 	public boolean insertUser(UsersVO vo);
+	public boolean insertUserSocial(UsersVO vo);
 	public boolean updateUserPrivacy(UsersVO vo);
 	public boolean updatePassword(UsersVO vo);
 	public boolean updateRuleByEmail(UsersVO vo);

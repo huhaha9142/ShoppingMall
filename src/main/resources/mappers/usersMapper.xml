@@ -9,14 +9,17 @@
 	 		id,
 	 		password,
 	 		name,
-	 		rule
+	 		rule,
+	 		user_number AS userNumber
 	 	FROM users
 	 	WHERE id = #{id}
   </select>
   <select id="selectLoginKakao" resultType="usersVO" parameterType="usersVO">
   		SELECT
   			kakao,
-  			id
+  			id,
+  			name,
+	 		user_number AS userNumber
   		FROM users
   		WHERE kakao = #{kakao}
   </select>
@@ -36,6 +39,20 @@
   			#{address1},
   			#{address2},
   			#{phone},
+  			#{regDate},
+  			#{inDate},
+  			#{rule})
+  </insert>
+  <insert id="insertUserSocial">
+  		INSERT INTO users(
+  						name,
+  						kakao,
+  						regdate,
+  						indate,
+  						rule)
+  		VALUE(
+  			#{name},
+  			#{kakao},
   			#{regDate},
   			#{inDate},
   			#{rule})

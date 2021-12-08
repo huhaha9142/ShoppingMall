@@ -133,8 +133,9 @@ public class UsersController {
 		JSONParser jsonParser = new JSONParser();
 		String accessToken = null;
 		String kakaoIdNumber = null;
-		UsersVO vo =new UsersVO();
-		HttpHeaders headers =new HttpHeaders();
+		Long userNumber;
+		UsersVO vo = new UsersVO();
+		HttpHeaders headers = new HttpHeaders();
 		RestTemplate restTemplate = new RestTemplate();
 		// 전달받은 코드를 카카오 서버에 전달해서 엑세스 토큰 발급받기!
 		try {			
@@ -145,7 +146,7 @@ public class UsersController {
 			//TODO: 해당값은 보안이 필요한 REST API KEY 값으로 추가적인 yaml 작성하여 제외시킬것.
 			map.add("client_id", "8c2835e5881d60b38a8561176852e4e2");
 			//TODO: 리다이렉트   URL
-			map.add("redirect_uri", "http://localhost:3000");
+			map.add("redirect_uri", "http://localhost:3000/loading");
 			HttpEntity<MultiValueMap<String, String>> entity = new HttpEntity(map,headers);
 			String answer = restTemplate.postForObject(url, entity, String.class);
 			System.out.println(answer);	
@@ -171,14 +172,17 @@ public class UsersController {
 			System.err.println(e);
 		}
 		try {
-			if(usersService.selectLoginKakao(vo).getId().isEmpty());
+			userNumber = usersService.selectLoginKakao(vo).getUserNumber();
 		} catch (Exception e) {
 			System.out.println("회원가입 필요");
-			return "";
+			jsonObject.put("result", "Redirect Social Join");
+			jsonObject.put("kakaoNumber", kakaoIdNumber);
+			return jsonObject.toString();
 		}
 		
-		System.out.println(usersService.selectLoginKakao(vo).getId());
-		response.setHeader("Authorization","jwt "+functionSpring.makeJwtToken(usersService.selectLoginKakao(vo).getId()));
+		System.out.println(userNumber);
+		response.setHeader("Authorization","jwt "+functionSpring.makeJwtToken(String.valueOf(userNumber)));
+		jsonObject.put("result", "Success");
 		return jsonObject.toString();
 	}
 	@CrossOrigin(origins = "*", allowedHeaders = "*")
@@ -220,13 +224,28 @@ public class UsersController {
 		jsonObject.put("result", result);
 		return jsonObject.toString();
 	}
-	@CrossOrigin(origins = "*", allowedHeaders = "*")
-	@RequestMapping(value="/user-join-kakao",method = RequestMethod.POST,produces = "application/json; charset=utf8")
+	@CrossOrigin(origins = "*", exposedHeaders = "Authorization",allowedHeaders = "*")
+	@RequestMapping(value="/user-join-social",method = RequestMethod.POST,produces = "application/json; charset=utf8")
 	@ResponseBody
-	public String userJoin(@RequestParam("name") String name)
-	{
+	public String userSocialJoin(
+			@RequestParam("name") String name,
+			@RequestParam("kakaoNumber") String kakaoNumber,
+			HttpServletResponse response) {
+		UsersVO vo = new UsersVO();
+		vo.setName(name);
+		vo.setKakao(kakaoNumber);
+		vo.setRegDate(new Date());
+		vo.setInDate(new Date());
+		vo.setRule("socialUser");
+		String result = (true==usersService.insertUserSocial(vo))?"Success":"Fail";
+		
 		JSONObject jsonObject = new JSONObject();
-		jsonObject.put("result", "");
+		jsonObject.put("result", result);
+		if(result.equals("Success"))
+		{
+			Long userNumber = usersService.selectLoginKakao(vo).getUserNumber();
+			response.setHeader("Authorization","jwt "+functionSpring.makeJwtToken(String.valueOf(userNumber)));
+		}
 		return jsonObject.toString();
 	}
 	@CrossOrigin(origins = "*", allowedHeaders = "*")
