@@ -50,7 +50,8 @@ public class UsersController {
 		private JavaMailSender mailSender;
 	@Inject 
 	    private FunctionSpring functionSpring;
-
+	// 변경시 카카오 디벨로퍼에서도 변경점 등록해줘야 함.!
+	private static String REDIRECT_URL = "http://localhost:3000/loading";
 	@CrossOrigin(origins = "*", exposedHeaders = "Authorization", allowedHeaders = "*")
 	@RequestMapping(value="/user-login",method = RequestMethod.POST,produces = "application/json; charset=utf8")
 	@ResponseBody
@@ -143,10 +144,9 @@ public class UsersController {
 			MultiValueMap<String, String> map= new LinkedMultiValueMap<>();
 			map.add("code", code);
 			map.add("grant_type", "authorization_code");
-			//TODO: 해당값은 보안이 필요한 REST API KEY 값으로 추가적인 yaml 작성하여 제외시킬것.
 			map.add("client_id", "8c2835e5881d60b38a8561176852e4e2");
 			//TODO: 리다이렉트   URL
-			map.add("redirect_uri", "http://localhost:3000/loading");
+			map.add("redirect_uri", REDIRECT_URL);
 			HttpEntity<MultiValueMap<String, String>> entity = new HttpEntity(map,headers);
 			String answer = restTemplate.postForObject(url, entity, String.class);
 			System.out.println(answer);	
