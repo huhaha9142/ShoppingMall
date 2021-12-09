@@ -65,7 +65,7 @@ public class OrdersServiceImpl implements OrdersService {
 	@Override
 	public boolean updateOrderResultByUuid(OrderVO vo) {
 		// TODO Auto-generated method stub
-		return 1==dao.updateOrderResultByUuid(vo);
+		return 0<dao.updateOrderResultByUuid(vo);
 	}
 
 }

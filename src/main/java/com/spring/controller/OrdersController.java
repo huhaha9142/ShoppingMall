@@ -1,5 +1,6 @@
 package com.spring.controller;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -167,8 +168,8 @@ public class OrdersController {
     @ResponseBody
     public String orderInsert(
     		@RequestParam(value="price") String price,
-    		@RequestParam(value="quantity") String quantity,
-    		@RequestParam(value ="product") String product,
+    		@RequestParam(value="product") String product,
+    		@RequestParam(value="quantity") String quantity,  		
     		@RequestParam(value="usersNumber") String usersNumber,
     		@RequestParam(value="productsNumber") String productsNumber,
     		@RequestParam(value="productCustomNumber") String productCustomNumber,
@@ -181,61 +182,74 @@ public class OrdersController {
 		String tid = null;
 		String paymentUrl = null;
 		String orderNumber = null;
-		OrderVO vo = new OrderVO();
-		vo.setUuid(uuId);
-		vo.setPrice(Long.valueOf(price));
-		vo.setQuantity(Long.valueOf(quantity));
-		vo.setUsersNumber(Long.valueOf(usersNumber));
-		vo.setProductsNumber(Long.valueOf(productsNumber));
-		vo.setProductCustomNumber(Long.valueOf(productCustomNumber));
-		vo.setProduct(product);
-		vo.setResult(0l);
-		
-		vo.setInDate(time);
-		vo.setRegDate(time);
+		String result = null;
+		int totalPrice = 0;
+		List<OrderVO> vo = new ArrayList<OrderVO>();
+		for(int i = 0;i<productCount;i++)
+		{
+			vo.add(new OrderVO());
+			String[] priceA = price.split(",");
+			if(i==0)
+			{
+				for(String pp:priceA)
+				{
+					totalPrice +=Integer.valueOf(pp);
+				}
+			}
+			String[] quantityA = quantity.split(",");
+			String[] productA = product.split(",");
+			String[] productsNumberA = productsNumber.split(",");
+			String[] productCustomNumberA = productCustomNumber.split(",");
+			vo.get(i).setUuid(uuId);
+			vo.get(i).setPrice(Long.valueOf(priceA[i]));
+			vo.get(i).setQuantity(Long.valueOf(quantityA[i]));
+			vo.get(i).setUsersNumber(Long.valueOf(usersNumber));
+			vo.get(i).setProductsNumber(Long.valueOf(productsNumberA[i]));
+			vo.get(i).setProductCustomNumber(Long.valueOf(productCustomNumberA[i]));
+			vo.get(i).setProduct(productA[i]);
+			vo.get(i).setResult(0l);
+			vo.get(i).setInDate(time);
+			vo.get(i).setRegDate(time);
+			orderService.insertOrder(vo.get(i));
+		}
 		String itemName = "";
 		String itemCode = "";
-		String partnerOrder = "";
 		if(productCount!=1)
 		{
 			itemName= " ¿Ü "+(productCount-1)+"°Ç";
 			itemCode= "+";
-			partnerOrder = "+";
+
 		}
-		String result =  (true==orderService.insertOrder(vo))?"insert":"fail";
-		orderNumber = String.valueOf(vo.getOrdersNumber());
-		if(result.equals("insert"))
-		{
-//			List<OrderVO> sql = orderService.selectOrderNumber(vo);
-			HttpHeaders headers = new HttpHeaders();
-			RestTemplate restTemplate = new RestTemplate();
-			try {
-				MultiValueMap<String, String> map= new LinkedMultiValueMap<>();
-				map.add("cid", "TC0ONETIME");
-				map.add("partner_order_id", orderNumber+partnerOrder);
-				map.add("partner_user_id", usersNumber);
-				map.add("item_name", vo.getProduct()+itemName);
-				map.add("item_code", vo.getProductsNumber()+itemCode);
-				map.add("quantity", String.valueOf(vo.getQuantity()));
-				map.add("total_amount", price);
-				map.add("tax_free_amount", price);
-				map.add("approval_url", KAKAO_APPROVAL_URL+"?uuid="+vo.getUuid()+"&orderNumber="+orderNumber+partnerOrder);
-				map.add("cancel_url", KAKAO_CANCEL_URL+"?uuid="+vo.getUuid());
-				map.add("fail_url", KAKAO_FAIL_URL+"?uuid="+vo.getUuid());
-				//TODO: ¾îµå¹ÎÅ°´Â ¼û°Ü¾ßµÊ!
-				headers.add("Authorization", "KakaoAK 808e27a6a5ec182559cd3332439f68fd");
-				HttpEntity<MultiValueMap<String, String>> entity = new HttpEntity(map,headers);
-				String answer = restTemplate.postForObject(KAKAO_PAYMENT_URL_PATH+KAKAO_READY, entity, String.class);
-				System.out.println(answer);
-				JSONObject token = (JSONObject) jsonParser.parse(answer);
-				tid = (String)token.get("tid");
-				paymentUrl = (String)token.get("next_redirect_pc_url");
-				vo.setTid(tid);
-//				vo.setOrdersNumber(sql.get(0).getOrdersNumber());
-				result = (true==orderService.updateOrderTid(vo))?"PaymentDone":"PaymentFail";
-			} catch (Exception e) {
-				System.err.println(e);
-			}
+		orderNumber = String.valueOf(vo.get(0).getOrdersNumber());
+		
+		HttpHeaders headers = new HttpHeaders();
+		RestTemplate restTemplate = new RestTemplate();
+		try {
+			MultiValueMap<String, String> map= new LinkedMultiValueMap<>();
+			map.add("cid", "TC0ONETIME");
+			map.add("partner_order_id", orderNumber);
+			map.add("partner_user_id", usersNumber);
+			map.add("item_name", vo.get(0).getProduct()+itemName);
+			map.add("item_code", vo.get(0).getProductsNumber()+itemCode);
+			map.add("quantity", String.valueOf(vo.get(0).getQuantity()));
+			map.add("total_amount", String.valueOf(totalPrice));
+			map.add("tax_free_amount", String.valueOf(totalPrice/10));
+			map.add("approval_url", KAKAO_APPROVAL_URL+"?uuid="+uuId+"&orderNumber="+orderNumber);
+			map.add("cancel_url", KAKAO_CANCEL_URL+"?uuid="+uuId);
+			map.add("fail_url", KAKAO_FAIL_URL+"?uuid="+uuId);
+			//TODO: ¾îµå¹ÎÅ°´Â ¼û°Ü¾ßµÊ!
+			headers.add("Authorization", "KakaoAK 808e27a6a5ec182559cd3332439f68fd");
+			HttpEntity<MultiValueMap<String, String>> entity = new HttpEntity(map,headers);
+			String answer = restTemplate.postForObject(KAKAO_PAYMENT_URL_PATH+KAKAO_READY, entity, String.class);
+			System.out.println(answer);
+			JSONObject token = (JSONObject) jsonParser.parse(answer);
+			tid = (String)token.get("tid");
+			paymentUrl = (String)token.get("next_redirect_pc_url");
+			vo.get(0).setTid(tid);
+
+			result = (true==orderService.updateOrderTid(vo.get(0)))?"PaymentDone":"PaymentFail";
+		} catch (Exception e) {
+			System.err.println(e);
 		}
 		jsonObject.put("result", result);
 		jsonObject.put("paymentURL", paymentUrl);
@@ -260,6 +274,7 @@ public class OrdersController {
 		vo.setUuid(uuId);
 		vo.setRegDate(new Date());
 		List<OrderVO> sql = orderService.selectOrderTid(vo);
+
 		try {
 			MultiValueMap<String, String> map= new LinkedMultiValueMap<>();
 			map.add("cid", cid);
@@ -276,6 +291,7 @@ public class OrdersController {
 			JSONObject token = (JSONObject) jsonParser.parse(answer);
 			vo.setResult(2L);
 			result = (true == orderService.updateOrderResultByUuid(vo))?"Success":"Fail";
+			System.out.println(result);
 			jsonObject.put("result", result);
 			
 		} catch (Exception e) {

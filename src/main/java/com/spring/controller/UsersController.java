@@ -98,6 +98,7 @@ public class UsersController {
 //		response.addCookie(cookie);
 		
 		response.setHeader("Authorization","jwt "+functionSpring.makeJwtToken(id));
+		jsonObject.put("nickName",vo1.getName());
 		jsonObject.put("result", "Success");
 		return jsonObject.toString();
 	}
@@ -136,6 +137,7 @@ public class UsersController {
 		String kakaoIdNumber = null;
 		Long userNumber;
 		UsersVO vo = new UsersVO();
+		UsersVO sql = new UsersVO();
 		HttpHeaders headers = new HttpHeaders();
 		RestTemplate restTemplate = new RestTemplate();
 		// 전달받은 코드를 카카오 서버에 전달해서 엑세스 토큰 발급받기!
@@ -172,7 +174,8 @@ public class UsersController {
 			System.err.println(e);
 		}
 		try {
-			userNumber = usersService.selectLoginKakao(vo).getUserNumber();
+			sql = usersService.selectLoginKakao(vo);
+			userNumber = sql.getUserNumber();
 		} catch (Exception e) {
 			System.out.println("회원가입 필요");
 			jsonObject.put("result", "Redirect Social Join");
@@ -183,6 +186,7 @@ public class UsersController {
 		System.out.println(userNumber);
 		response.setHeader("Authorization","jwt "+functionSpring.makeJwtToken(String.valueOf(userNumber)));
 		jsonObject.put("result", "Success");
+		jsonObject.put("nickName",sql.getName());
 		return jsonObject.toString();
 	}
 	@CrossOrigin(origins = "*", allowedHeaders = "*")
