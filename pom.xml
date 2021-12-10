@@ -15,11 +15,6 @@
 	</properties>
 	
 	<dependencies>
-	<dependency>
-		<groupId>org.springframework.restdocs</groupId>
-		<artifactId>spring-restdocs-mockmvc</artifactId>
-		<scope>test</scope>
-	</dependency>
 	<!-- https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-starter-aws -->
 	<dependency>
 	    <groupId>org.springframework.cloud</groupId>

@@ -43,9 +43,9 @@ public class OrdersController {
 	private static String PRODUCT_URL_PATH="http://ec2-3-37-117-153.ap-northeast-2.compute.amazonaws.com:8080/shoppingmall/com/product-image/";
 	private static String CUSTOM_URL_PATH="https://shoppingmal.s3.ap-northeast-2.amazonaws.com/";
 	private static final Logger logger = LoggerFactory.getLogger(OrdersController.class);
-	String[] orResult = {"???? ???","??? ???","??? ???","??? ???","??? ??",
-            "??? ???","??? ??","??? ???","??? ??","??? ???",
-            "??? ????"};
+	String[] orResult = {"결제 대기","입금 대기","주문 확인","상품 준비","배송 중",
+            "배송 완료","반품 중","반품 완료","환불 중","환불 완료",
+            "재고 부족"};
 	@CrossOrigin(origins = "*", allowedHeaders = "*")
 	@RequestMapping(value="/orders",method = RequestMethod.GET,produces = "application/json; charset=utf8")
     @ResponseBody
