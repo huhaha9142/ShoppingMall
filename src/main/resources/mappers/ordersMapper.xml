@@ -66,7 +66,14 @@
   		AND ord.p_c_products_custom_number = cu.products_custom_number
   		WHERE orders_number = #{ordersNumber}
   </select>
-  <insert id="insertOrder" parameterType="orderVO">
+   <select id="selectOrderNumber" resultType="orderVO" parameterType="orderVO">
+  		SELECT 
+  			orders_number
+  		FROM orders
+  		WHERE users_usernumber = #{usersNumber}
+  		 	AND uuid = #{uuid}
+  </select>
+  <insert id="insertOrder" parameterType="orderVO" useGeneratedKeys="true" keyProperty="ordersNumber">
   		INSERT INTO orders(
   			price,
   			quantity,
@@ -75,7 +82,8 @@
   			products_productnumber,
   			p_c_products_custom_number,
   			indate,
-  			regdate)
+  			regdate,
+  			uuid)
   		VALUE(#{price},
   			#{quantity},
   			#{result},
@@ -83,7 +91,8 @@
   			#{productsNumber},
   			#{productCustomNumber},
   			#{inDate},
-  			#{regDate})
+  			#{regDate},
+  			#{uuid})
   </insert>
   <update id="updateOrderResult" parameterType="orderVO">
   		UPDATE orders
@@ -95,6 +104,22 @@
   		FROM orders
   		WHERE orders_number = #{ordersNumber}
   </delete>
+  <update id="updateOrderTid" parameterType="orderVO">
+  		UPDATE orders
+  		SET tid = #{tid}
+  		WHERE orders_number = #{ordersNumber}
+  </update>
+  <update id="updateOrderResultByUuid" parameterType="orderVO">
+  		UPDATE orders
+  		SET result = #{result},
+  		regdate = #{regDate}
+  		WHERE uuid = #{uuid}
+  </update>
+  <select id="selectOrderTid" resultType="orderVO" parameterType="orderVO">
+  		SELECT tid
+  		FROM orders
+  		WHERE uuid = #{uuid}
+  </select>
   
   
   </mapper>

@@ -16,6 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -57,12 +58,19 @@ public class ProductsController {
     		@RequestParam(value="color",required=false) String colorP,
     		@RequestParam(value="size",required=false) String sizeP,
     		@RequestParam(value="price",required=false) String priceP,
-    		@RequestParam(value="page",required=false) int pageP,
+    		@RequestParam(value="product", defaultValue = "") String productP,
+    		@RequestParam(value="page",defaultValue = "0") int pageP,
     		@RequestParam(value="count",defaultValue = "20") int countP
     		) throws IOException {
     		
-    	if(AllJson.get(kindP+colorP+sizeP+priceP+pageP+countP)!=null)
-			return AllJson.get(kindP+colorP+sizeP+priceP+pageP+countP).toString();
+    	boolean all = pageP==0;
+    	if(all)
+    	{
+    		countP=99999;
+    	}
+    	
+    	if(AllJson.get(kindP+colorP+sizeP+priceP+pageP+countP+productP)!=null)
+			return AllJson.get(kindP+colorP+sizeP+priceP+pageP+countP+productP).toString();
     	JSONObject JSONObPro = new JSONObject();
     	if(Prosql==null)
     	{
@@ -92,12 +100,13 @@ public class ProductsController {
 			Map<String,String> sizeData = functionSpring.anyArray(Allsql.get(Long.valueOf(i)), "size");
 
 			//필터링 1순위 걸고 2순위로 페이지
-    		if((kindP==null||kindP.equals(Prosql.get(i).getKind()))
-    				&&(sizeP==null||sizeData.toString().contains("="+sizeP)))   	
+    		if((kindP==null||(Prosql.get(i).getKind()).contains(kindP))
+    				&&(sizeP==null||sizeData.toString().contains("="+sizeP))
+    				&&Prosql.get(i).getProduct().contains(productP))   	
     		{   
     			index++;
     			// 페이지 값과 카운트 값에 띠라서 데이터를 넣어준다. 
-    			if((pageP*countP>=index)&&(pageP-1)*countP<index)
+    			if((pageP*countP>=index)&&(pageP-1)*countP<index||all)
     			{	
 	    			JSONObject list = new JSONObject();
 					JSONObject colorJ = new JSONObject();

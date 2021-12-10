@@ -50,7 +50,8 @@ public class UsersController {
 		private JavaMailSender mailSender;
 	@Inject 
 	    private FunctionSpring functionSpring;
-
+	// 변경시 카카오 디벨로퍼에서도 변경점 등록해줘야 함.!
+	private static String REDIRECT_URL = "http://localhost:3000/loading";
 	@CrossOrigin(origins = "*", exposedHeaders = "Authorization", allowedHeaders = "*")
 	@RequestMapping(value="/user-login",method = RequestMethod.POST,produces = "application/json; charset=utf8")
 	@ResponseBody
@@ -97,6 +98,7 @@ public class UsersController {
 //		response.addCookie(cookie);
 		
 		response.setHeader("Authorization","jwt "+functionSpring.makeJwtToken(id));
+		jsonObject.put("nickName",vo1.getName());
 		jsonObject.put("result", "Success");
 		return jsonObject.toString();
 	}
@@ -135,6 +137,7 @@ public class UsersController {
 		String kakaoIdNumber = null;
 		Long userNumber;
 		UsersVO vo = new UsersVO();
+		UsersVO sql = new UsersVO();
 		HttpHeaders headers = new HttpHeaders();
 		RestTemplate restTemplate = new RestTemplate();
 		// 전달받은 코드를 카카오 서버에 전달해서 엑세스 토큰 발급받기!
@@ -143,10 +146,9 @@ public class UsersController {
 			MultiValueMap<String, String> map= new LinkedMultiValueMap<>();
 			map.add("code", code);
 			map.add("grant_type", "authorization_code");
-			//TODO: 해당값은 보안이 필요한 REST API KEY 값으로 추가적인 yaml 작성하여 제외시킬것.
 			map.add("client_id", "8c2835e5881d60b38a8561176852e4e2");
 			//TODO: 리다이렉트   URL
-			map.add("redirect_uri", "http://localhost:3000/loading");
+			map.add("redirect_uri", REDIRECT_URL);
 			HttpEntity<MultiValueMap<String, String>> entity = new HttpEntity(map,headers);
 			String answer = restTemplate.postForObject(url, entity, String.class);
 			System.out.println(answer);	
@@ -172,7 +174,8 @@ public class UsersController {
 			System.err.println(e);
 		}
 		try {
-			userNumber = usersService.selectLoginKakao(vo).getUserNumber();
+			sql = usersService.selectLoginKakao(vo);
+			userNumber = sql.getUserNumber();
 		} catch (Exception e) {
 			System.out.println("회원가입 필요");
 			jsonObject.put("result", "Redirect Social Join");
@@ -183,6 +186,7 @@ public class UsersController {
 		System.out.println(userNumber);
 		response.setHeader("Authorization","jwt "+functionSpring.makeJwtToken(String.valueOf(userNumber)));
 		jsonObject.put("result", "Success");
+		jsonObject.put("nickName",sql.getName());
 		return jsonObject.toString();
 	}
 	@CrossOrigin(origins = "*", allowedHeaders = "*")

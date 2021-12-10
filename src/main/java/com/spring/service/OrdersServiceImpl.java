@@ -50,4 +50,22 @@ public class OrdersServiceImpl implements OrdersService {
 		return 1==dao.deleteOrder(vo);
 	}
 
+	@Override
+	public boolean updateOrderTid(OrderVO vo) {
+		// TODO Auto-generated method stub
+		return 1==dao.updateOrderTid(vo);
+	}
+
+	@Override
+	public List<OrderVO> selectOrderTid(OrderVO vo) {
+		// TODO Auto-generated method stub
+		return dao.selectOrderTid(vo);
+	}
+
+	@Override
+	public boolean updateOrderResultByUuid(OrderVO vo) {
+		// TODO Auto-generated method stub
+		return 0<dao.updateOrderResultByUuid(vo);
+	}
+
 }

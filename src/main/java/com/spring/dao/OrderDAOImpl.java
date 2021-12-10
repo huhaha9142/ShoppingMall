@@ -52,4 +52,23 @@ public class OrderDAOImpl implements OrdersDAO {
 		return sqlSession.delete(Namespace+".deleteOrder", vo);
 	}
 
+
+	@Override
+	public int updateOrderTid(OrderVO vo) {
+		// TODO Auto-generated method stub
+		return sqlSession.update(Namespace+".updateOrderTid", vo);
+	}
+
+	@Override
+	public List<OrderVO> selectOrderTid(OrderVO vo) {
+		// TODO Auto-generated method stub
+		return sqlSession.selectList(Namespace+".selectOrderTid", vo);
+	}
+
+	@Override
+	public int updateOrderResultByUuid(OrderVO vo) {
+		// TODO Auto-generated method stub
+		return sqlSession.update(Namespace+".updateOrderResultByUuid", vo);
+	}
+
 }
