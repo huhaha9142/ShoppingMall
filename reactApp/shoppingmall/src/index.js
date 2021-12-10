@@ -17,13 +17,13 @@ import { CookiesProvider } from 'react-cookie';
 ReactDOM.render(
 
     <React.StrictMode>  
-      {/* {/* <SearchBarController/> */}
-      <LoginForm/> 
+      <SearchBarController/>
+      {/* <LoginForm/>  */}
 
-      <AddressApiController/>
+      {/* <AddressApiController/> */}
       {/* <ImageLodingwithdataEx/> */}
        {/* <ImageLodingEx/>  */}
-      <ImageUploadingEx/>   
+      {/* <ImageUploadingEx/>    */}
     </React.StrictMode>,
   document.getElementById('root')
 );

@@ -17,7 +17,22 @@ public class OrderVO {
 	private String color;
 	private String titleImage;
 	private String customImage;
+	private String uuid;
+	private String tid;
 	
+	
+	public String getTid() {
+		return tid;
+	}
+	public void setTid(String tid) {
+		this.tid = tid;
+	}
+	public String getUuid() {
+		return uuid;
+	}
+	public void setUuid(String uuid) {
+		this.uuid = uuid;
+	}
 	public Long getProductCustomNumber() {
 		return productCustomNumber;
 	}
