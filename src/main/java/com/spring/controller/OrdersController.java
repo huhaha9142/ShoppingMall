@@ -216,7 +216,7 @@ public class OrdersController {
 		String itemCode = "";
 		if(productCount!=1)
 		{
-			itemName= " ?? "+(productCount-1)+"??";
+			itemName= " ¿Ü "+(productCount-1)+"°Ç";
 			itemCode= "+";
 
 		}
