@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
   PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
@@ -49,3 +50,126 @@
 	
 </mapper>
     
+=======
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  <mapper namespace="com.example.mapper.usersMapper">
+  
+  <select id="selectLogin" resultType="usersVO">
+	 	SELECT 
+	 		id,
+	 		password,
+	 		name,
+	 		rule,
+	 		user_number AS userNumber
+	 	FROM users
+	 	WHERE id = #{id}
+  </select>
+  <select id="selectLoginKakao" resultType="usersVO" parameterType="usersVO">
+  		SELECT
+  			kakao,
+  			id,
+  			name,
+	 		user_number AS userNumber
+  		FROM users
+  		WHERE kakao = #{kakao}
+  </select>
+  <insert id="insertUser">
+  		INSERT INTO users(id,
+  						password,
+  						name,
+  						address1,
+  						address2,
+  						phone,
+  						regdate,
+  						indate,
+  						rule)
+  		VALUE(#{id},
+  			#{password},
+  			#{name},
+  			#{address1},
+  			#{address2},
+  			#{phone},
+  			#{regDate},
+  			#{inDate},
+  			#{rule})
+  </insert>
+  <insert id="insertUserSocial">
+  		INSERT INTO users(
+  						name,
+  						kakao,
+  						regdate,
+  						indate,
+  						rule)
+  		VALUE(
+  			#{name},
+  			#{kakao},
+  			#{regDate},
+  			#{inDate},
+  			#{rule})
+  </insert>
+  <select id="selectIdCheck" resultType="int" parameterType="usersVO">
+  		SELECT COUNT(id)
+  		FROM users
+  		WHERE id = #{id}
+  </select>
+  <update id="updateUserPrivacy">
+  		UPDATE users
+  		SET name = #{name},
+  			address1 = #{address1},
+  			address2 = #{address2},
+  			nick_name = #{nickName},
+  			regdate = #{regDate},
+  			phone = #{phone}
+  		WHERE user_number = #{userNumber}		
+  </update>
+  <delete id="deleteUser" parameterType="usersVO">
+  		DELETE
+  		FROM users
+  		WHERE user_number = #{userNumber}
+  </delete>
+  <select id="selectUserNumber">
+  		SELECT user_number
+  		FROM users
+  		WHERE id = #{id}
+  </select>
+  <select id="selectUserPrivacy" parameterType="usersVO" resultType="usersVO">
+  		SELECT id,
+  			nick_name,
+  			address,
+  			phone,
+  			indate
+  		FROM users
+  		WHERE user_number = #{userNumber}
+  </select>
+  <update id="updateRuleByEmail" parameterType="usersVO"> 
+  		UPDATE users
+  		SET rule = "user"
+  		WHERE id = #{id} AND rule = #{rule} 
+  </update>
+  <update id="updateRulePassword" parameterType="usersVO">
+  		UPDATE users
+  		SET rule = #{rule}
+  		WHERE id = #{id}
+  </update>
+  <update id="updatePassword" parameterType="usersVO">
+  		UPDATE users
+  		SET password = #{password}
+  		WHERE user_number = #{user Number}
+  </update>
+  <update id="updatePasswordByEmail" parameterType="usersVO" >
+  		UPDATE users
+  		SET rule = "user",
+  			password = #{password}
+  		WHERE id = #{id} AND rule = #{rule}
+  </update>
+  <select id="selectUserRule" parameterType="usersVO" resultType="usersVO">
+  		SELECT 
+  			rule
+  		FROM users
+  		WHERE id = #{id}
+  </select>
+  </mapper>
+>>>>>>> main

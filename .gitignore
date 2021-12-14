@@ -181,6 +181,10 @@ $RECYCLE.BIN/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+# aws 중요정보 제외
+*credentials.yml
+# 빌드파일 ? 기타 제외
+target/*
 # End of https://www.toptal.com/developers/gitignore/api/eclipse,git,java,windows,maven
 
 target/m2e-wtp/web-resources/META-INF/maven/com.spring/sample/pom.properties

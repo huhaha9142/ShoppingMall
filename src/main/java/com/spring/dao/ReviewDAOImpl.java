@@ -35,5 +35,20 @@ public class ReviewDAOImpl implements ReviewDAO {
 	public String selectImage(ReviewVO vo) {
 		return sqlSession.selectOne(Namespace+".selectImage", vo);
 	}
+	@Override
+	public List<ReviewVO> selectMyReviews(ReviewVO vo) {
+		// TODO Auto-generated method stub
+		return sqlSession.selectList(Namespace+".selectMyReviews", vo);
+	}
+	@Override
+	public List<ReviewVO> selectProductReviews(ReviewVO vo) {
+		// TODO Auto-generated method stub
+		return sqlSession.selectList(Namespace+".selectProductReviews", vo);
+	}
+	@Override
+	public ReviewVO selectOne(ReviewVO vo) {
+		// TODO Auto-generated method stub
+		return sqlSession.selectOne(Namespace+".selectOne", vo);
+	}
 
 }

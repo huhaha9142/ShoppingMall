@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  <mapper namespace="com.example.mapper.customMapper">
+  
+  <insert id="insertCustom" parameterType="customVO">
+  		INSERT INTO products_custom
+  		(image,products_productnumber,users_user_number,size,color,indate,regdate)
+  			VALUE (#{image},
+  					#{productNumber},
+  					#{userNumber},
+  					#{size},
+  					#{color},
+  					#{inDate},
+  					#{regDate}
+  				)
+  </insert>
+  <select id="selectCustomList" parameterType="customVO" resultType="customVO">
+  		SELECT 
+	  		c.image,
+	  		c.size,
+	  		c.color,
+	  		c.users_user_number AS userNumber,
+	  		c.products_custom_number AS customNumber,
+	  		p.product,
+	  		c.indate AS inDate,
+	  		c.regdate AS regDate
+	  	FROM products_custom c INNER JOIN products p
+        ON c.products_productnumber = p.product_number
+  </select>
+  <update id="updateCustom" parameterType="customVO">
+  		UPDATE products_custom 
+  		SET
+  			image = #{image},
+  			size = #{size},
+  			color = #{color},
+  			regdate = #{regDate}
+  		WHERE products_custom_number = #{customNumber}
+  </update>
+  <!-- WHERE에 userNumber 추가를 해야겠음! 업데이트도 마찬가지 -->
+  <delete id="deleteCustom" parameterType="customVO">
+  		DELETE FROM products_custom
+  		WHERE products_custom_number = #{customNumber}
+  </delete>
+  <select id="selectImage" resultType="customVO" parameterType="customVO">
+  		SELECT image,
+  			products_custom_number AS customNumber
+  		FROM products_custom 
+  		WHERE users_user_number = #{userNumber} AND products_productnumber=0
+  </select>
+	  	
+  </mapper>
+  

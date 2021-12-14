@@ -7,25 +7,17 @@ public class ProductVO {
 	private String color;
 	private String kind;
 	private String quantity;
-	public String getQuantity() {
-		return quantity;
-	}
-
-	public void setQuantity(String quantity) {
-		this.quantity = quantity;
-	}
 	private Long price;
 	private String content;
-	private String imageSmall;
-	private String imageLazy;
+	private String titleImage;
+	private String contentImage;
 	private String productImage;
 	private String product;
 	private Long productNumber;
 	private Date regDate;
-	
-	public ProductVO() {
-		
-	}
+	private Date inDate;
+
+	public ProductVO() {}
 	
 	public ProductVO(String size, String color,String kind, Long price,String product)
 	{
@@ -42,8 +34,8 @@ public class ProductVO {
 		this(size, color, kind, price, product);
 		this.quantity=quantity;
 		this.content=content;
-		this.imageSmall=imageSmall;
-		this.imageLazy=imageLazy;
+		this.titleImage=imageSmall;
+		this.contentImage=imageLazy;
 		this.productImage=productImage;
 		this.productNumber=productNumber;
 		this.regDate= regDate;
@@ -60,76 +52,115 @@ public class ProductVO {
 	public String getSize() {
 		return size;
 	}
+
 	public void setSize(String size) {
 		this.size = size;
 	}
-	@Override
-	public String toString() {
-		return "ProductVO [size=" + size + ", color=" + color + ", kind=" + kind + ", quqntity=" + quantity + ", price="
-				+ price + ", content=" + content + ", imageSmall=" + imageSmall + ", imageLazy=" + imageLazy
-				+ ", productImage=" + productImage + ", product=" + product + ", productNumber=" + productNumber
-				+ ", regDate=" + regDate + "]";
-	}
+
 	public String getColor() {
 		return color;
 	}
+
 	public void setColor(String color) {
 		this.color = color;
 	}
+
 	public String getKind() {
 		return kind;
 	}
+
 	public void setKind(String kind) {
 		this.kind = kind;
 	}
+
+	public String getQuantity() {
+		return quantity;
+	}
+
+	public void setQuantity(String quantity) {
+		this.quantity = quantity;
+	}
+
 	public Long getPrice() {
 		return price;
 	}
+
 	public void setPrice(Long price) {
 		this.price = price;
 	}
+
 	public String getContent() {
 		return content;
 	}
+
 	public void setContent(String content) {
 		this.content = content;
 	}
-	public String getImageSmall() {
-		return imageSmall;
+
+	public String getTitleImage() {
+		return titleImage;
 	}
-	public void setImageSmall(String imageSmall) {
-		this.imageSmall = imageSmall;
+
+	public void setTitleImage(String titleImage) {
+		this.titleImage = titleImage;
 	}
-	public String getImageLazy() {
-		return imageLazy;
+
+	public String getContentImage() {
+		return contentImage;
 	}
-	public void setImageLazy(String imageLazy) {
-		this.imageLazy = imageLazy;
+
+	public void setContentImage(String contentImage) {
+		this.contentImage = contentImage;
 	}
+
 	public String getProductImage() {
 		return productImage;
 	}
+
 	public void setProductImage(String productImage) {
 		this.productImage = productImage;
 	}
+
 	public String getProduct() {
 		return product;
 	}
+
 	public void setProduct(String product) {
 		this.product = product;
 	}
+
 	public Long getProductNumber() {
 		return productNumber;
 	}
+
 	public void setProductNumber(Long productNumber) {
 		this.productNumber = productNumber;
 	}
+
 	public Date getRegDate() {
 		return regDate;
 	}
+
 	public void setRegDate(Date regDate) {
 		this.regDate = regDate;
 	}
+
+	public Date getInDate() {
+		return inDate;
+	}
+
+	public void setInDate(Date inDate) {
+		this.inDate = inDate;
+	}
+
+	@Override
+	public String toString() {
+		return "ProductVO [size=" + size + ", color=" + color + ", kind=" + kind + ", quantity=" + quantity + ", price="
+				+ price + ", content=" + content + ", titleImage=" + titleImage + ", contentImage=" + contentImage
+				+ ", productImage=" + productImage + ", product=" + product + ", productNumber=" + productNumber
+				+ ", regDate=" + regDate + ", inDate=" + inDate + "]";
+	}
+
 	
 	
 }
