@@ -4,6 +4,7 @@
 
 ### Eclipse ###
 .metadata
+.class
 bin/
 target/*
 tmp/
