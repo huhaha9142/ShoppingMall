@@ -189,3 +189,8 @@ yarn-error.log*
 target/*
 # End of https://www.toptal.com/developers/gitignore/api/eclipse,git,java,windows,maven
 
+target/classes/com/spring/Controller/HomeController.class
+target/classes/com/spring/dao/MemberDAOImpl.class
+target/classes/com/spring/dto/MemberVO.class
+target/classes/com/spring/service/MemberServiceImpl.class
+target/m2e-wtp/web-resources/META-INF/maven/com.spring/sample/pom.properties
