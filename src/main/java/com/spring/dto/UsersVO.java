@@ -3,22 +3,6 @@ package com.spring.dto;
 import java.util.Date;
 
 public class UsersVO {
-<<<<<<< HEAD
-	private Long usersNumber;
-	private String id;
-	private String password;
-	private String name;
-	private String address;
-	private String phone;
-	private Date regDate;
-	
-	
-	public Long getUsersNumber() {
-		return usersNumber;
-	}
-	public void setUsersNumber(Long usersNumber) {
-		this.usersNumber = usersNumber;
-=======
 	private Long userNumber;
 	private String id;
 	private String password;
@@ -110,7 +94,6 @@ public class UsersVO {
 	}
 	public void setUserNumber(Long userNumber) {
 		this.userNumber = userNumber;
->>>>>>> main
 	}
 	public String getId() {
 		return id;
@@ -130,15 +113,6 @@ public class UsersVO {
 	public void setName(String name) {
 		this.name = name;
 	}
-<<<<<<< HEAD
-	public String getAddress() {
-		return address;
-	}
-	public void setAddress(String address) {
-		this.address = address;
-	}
-=======
->>>>>>> main
 	public String getPhone() {
 		return phone;
 	}
@@ -151,15 +125,5 @@ public class UsersVO {
 	public void setRegDate(Date regDate) {
 		this.regDate = regDate;
 	}
-<<<<<<< HEAD
-	@Override
-	public String toString() {
-		return "UserVO [usersNumber=" + usersNumber + ", id=" + id + ", password=" + password + ", name=" + name
-				+ ", address=" + address + ", phone=" + phone + ", regDate=" + regDate + "]";
-	}
 	
 }
-=======
-	
-}
->>>>>>> main

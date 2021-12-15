@@ -43,9 +43,9 @@ public class OrdersController {
 	private static String PRODUCT_URL_PATH="http://pvpvpvpvp.gonetis.com:8080/sample/com/product-image/";
 	private static String CUSTOM_URL_PATH="https://shoppingmal.s3.ap-northeast-2.amazonaws.com/";
 	private static final Logger logger = LoggerFactory.getLogger(OrdersController.class);
-	String[] orResult = {"°áÁ¦ ´ë±â","ÀÔ±İ ´ë±â","ÁÖ¹® È®ÀÎ","»óÇ° ÁØºñ","¹è¼Û Áß",
-            "¹è¼Û ¿Ï·á","¹İÇ° Áß","¹İÇ° ¿Ï·á","È¯ºÒ Áß","È¯ºÒ ¿Ï·á",
-            "Àç°í ºÎÁ·"};
+	String[] orResult = {"ê²°ì œ ëŒ€ê¸°","ì…ê¸ˆ ëŒ€ê¸°","ì£¼ë¬¸ í™•ì¸","ìƒí’ˆ ì¤€ë¹„","ë°°ì†¡ ì¤‘",
+            "ë°°ì†¡ ì™„ë£Œ","ë°˜í’ˆ ì¤‘","ë°˜í’ˆ ì™„ë£Œ","í™˜ë¶ˆ ì¤‘","í™˜ë¶ˆ ì™„ë£Œ",
+            "ì¬ê³  ë¶€ì¡±"};
 	@CrossOrigin(origins = "*", allowedHeaders = "*")
 	@RequestMapping(value="/orders",method = RequestMethod.GET,produces = "application/json; charset=utf8")
     @ResponseBody
@@ -216,7 +216,7 @@ public class OrdersController {
 		String itemCode = "";
 		if(productCount!=1)
 		{
-			itemName= " ¿Ü "+(productCount-1)+"°Ç";
+			itemName= " ï¿½ï¿½ "+(productCount-1)+"ï¿½ï¿½";
 			itemCode= "+";
 
 		}
@@ -237,7 +237,7 @@ public class OrdersController {
 			map.add("approval_url", KAKAO_APPROVAL_URL+"?uuid="+uuId+"&orderNumber="+orderNumber);
 			map.add("cancel_url", KAKAO_CANCEL_URL+"?uuid="+uuId);
 			map.add("fail_url", KAKAO_FAIL_URL+"?uuid="+uuId);
-			//TODO: ¾îµå¹ÎÅ°´Â ¼û°Ü¾ßµÊ!
+			// TODO: ì–´ë“œë¯¼í‚¤ëŠ” ìˆ¨ê²¨ì•¼ë¨!
 			headers.add("Authorization", "KakaoAK 808e27a6a5ec182559cd3332439f68fd");
 			HttpEntity<MultiValueMap<String, String>> entity = new HttpEntity(map,headers);
 			String answer = restTemplate.postForObject(KAKAO_PAYMENT_URL_PATH+KAKAO_READY, entity, String.class);
@@ -283,7 +283,7 @@ public class OrdersController {
 			map.add("pg_token", pgToken);
 			map.add("tid", sql.get(0).getTid());
 		
-			//TODO: ¾îµå¹ÎÅ°´Â ¼û°Ü¾ßµÊ!
+			// TODO: ì–´ë“œë¯¼í‚¤ëŠ” ìˆ¨ê²¨ì•¼ë¨!
 			headers.add("Authorization", "KakaoAK 808e27a6a5ec182559cd3332439f68fd");
 			HttpEntity<MultiValueMap<String, String>> entity = new HttpEntity(map,headers);
 			String answer = restTemplate.postForObject(KAKAO_PAYMENT_URL_PATH+KAKAO_APPROVE, entity, String.class);

@@ -39,7 +39,7 @@ public class ProductsController {
     
     
     private static boolean ProductsChange = true;
-    //ÃÖ¼ÒÀÀ´äÀ» À§ÇÑ ÀúÀåÀå¼Ò
+    //ìµœì†Œì‘ë‹µì„ ìœ„í•œ ì €ì¥ì¥ì†Œ
     private static Map<String,JSONObject> AllJson = new HashMap<String, JSONObject>();
     private static Map<Long,List<ProductVO>> Allsql = new HashMap<Long, List<ProductVO>>();
     private static List<ProductVO> Prosql = null;
@@ -85,11 +85,11 @@ public class ProductsController {
     		Allsql.clear();
     	}
 		JSONArray jsonArarry = new JSONArray();  
-		// ÆäÀÌÁö Á¦¾î¿ë ÀÎµ¦½º
+		// í˜ì´ì§€ ì œì–´ìš© ì¸ë±ìŠ¤
 		int index = 0;
     	for(int i=0;i<Prosql.size();i++)
     	{
-    		// Allsql ÀÌ ¾ø´Ù¸é µ¥ÀÌÅÍ¸¦ ³Ö´Â´Ù ¶ó´Â½ÄÀÓ.
+    		// Allsql ì´ ì—†ë‹¤ë©´ ë°ì´í„°ë¥¼ ë„£ëŠ”ë‹¤ ë¼ëŠ”ì‹ì„.
     		try {
     			if(Allsql.get(Long.valueOf(i)).isEmpty());
     		}
@@ -99,13 +99,13 @@ public class ProductsController {
     		Map<String,String> colorData = functionSpring.anyArray(Allsql.get(Long.valueOf(i)) , "color");
 			Map<String,String> sizeData = functionSpring.anyArray(Allsql.get(Long.valueOf(i)), "size");
 
-			//ÇÊÅÍ¸µ 1¼øÀ§ °É°í 2¼øÀ§·Î ÆäÀÌÁö
+			//í•„í„°ë§ 1ìˆœìœ„ ê±¸ê³  2ìˆœìœ„ë¡œ í˜ì´ì§€
     		if((kindP==null||(Prosql.get(i).getKind()).contains(kindP))
     				&&(sizeP==null||sizeData.toString().contains("="+sizeP))
     				&&Prosql.get(i).getProduct().contains(productP))   	
     		{   
     			index++;
-    			// ÆäÀÌÁö °ª°ú Ä«¿îÆ® °ª¿¡ ¶ì¶ó¼­ µ¥ÀÌÅÍ¸¦ ³Ö¾îÁØ´Ù. 
+    			// í˜ì´ì§€ ê°’ê³¼ ì¹´ìš´íŠ¸ ê°’ì— ë ë¼ì„œ ë°ì´í„°ë¥¼ ë„£ì–´ì¤€ë‹¤.
     			if((pageP*countP>=index)&&(pageP-1)*countP<index||all)
     			{	
 	    			JSONObject list = new JSONObject();
@@ -143,7 +143,7 @@ public class ProductsController {
     	return JSONObPro.toString();
     }
     
-    // Á¦Ç°Ãß°¡ API
+    // ì œí’ˆì¶”ê°€ API
     @CrossOrigin(origins = "*", allowedHeaders = "*")
     @RequestMapping(value="/products",method = RequestMethod.POST,produces = "application/json; charset=utf8")
     @ResponseBody
@@ -171,7 +171,7 @@ public class ProductsController {
     	vo = new ProductVO(size, color, kind, quantity, price, content, product, productNumber);
     	JSONObject json = new JSONObject();
     	String result ="fail";
-    	if(productNumber!=0)// ? œ?’ˆë²ˆí˜¸ ì¡´ì¬ ?œ ë¬´ì— ?”°?¼?„œ UPDATE INSERT ê°? ?‚˜?‰˜?–´ ?™?‘?•œ?‹¤.
+    	if(productNumber!=0)// ?ï¿½ï¿½?ï¿½ï¿½ë²ˆí˜¸ ì¡´ì¬ ?ï¿½ï¿½ë¬´ì— ?ï¿½ï¿½?ï¿½ï¿½?ï¿½ï¿½ UPDATE INSERT ï¿½? ?ï¿½ï¿½?ï¿½ï¿½?ï¿½ï¿½ ?ï¿½ï¿½?ï¿½ï¿½?ï¿½ï¿½?ï¿½ï¿½.
     	{
     		vo.setRegDate(new Date());
     		vo.setProductImage(functionSpring.fileSave(productImage,SAVE_PATH,"ec2"));
@@ -197,7 +197,7 @@ public class ProductsController {
     	
     }
     
-    // Á¦Ç°ÀÇ »ó¼¼ Á¤º¸! API
+    // ì œí’ˆì˜ ìƒì„¸ ì •ë³´! API
     @CrossOrigin(origins = "*", allowedHeaders = "*")  
     @RequestMapping(
   		  value = "/products/{productNumber}",method = RequestMethod.GET,produces = "application/json; charset=utf8"
@@ -267,7 +267,7 @@ public class ProductsController {
     	return jsonObject.toString();
     }
    
-    // ? œ?’ˆ?˜ ?´ë¯¸ì?ë¥? ë³´ë‚´ì£¼ëŠ” API
+    // ?ï¿½ï¿½?ï¿½ï¿½?ï¿½ï¿½ ?ï¿½ï¿½ë¯¸ï¿½?ï¿½? ë³´ë‚´ì£¼ëŠ” API
     @CrossOrigin(origins = "*", allowedHeaders = "*")  
     @RequestMapping(
   		  value = "/com/product-image/{img}",method = RequestMethod.GET

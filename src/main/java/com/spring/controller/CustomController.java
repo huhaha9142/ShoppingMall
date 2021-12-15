@@ -36,7 +36,7 @@ public class CustomController {
 	private S3Uploader s3Uploader;
 	@Inject
 	private CustomServiceImpl cusService;
-	// customÇÑ Á¦Ç°À» µî·ÏÇÏ´Â  API
+	// customí•œ ì œí’ˆì„ ë“±ë¡í•˜ëŠ”  API
 	@CrossOrigin(origins = "*", allowedHeaders = "*")
     @RequestMapping(value="/customs",method = RequestMethod.POST,produces = "application/json; charset=utf8")
     @ResponseBody
@@ -52,7 +52,7 @@ public class CustomController {
 		JSONObject jsonObject = new JSONObject();
 		CustomVO vo = new CustomVO();
 		vo.setProductNumber(Long.valueOf(productNumber));
-		// ·Î±×ÀÎ ÀÌ¶û ¿¬°è
+		// ë¡œê·¸ì¸ ì´ë‘ ì—°ê³„
 		vo.setUserNumber(Long.valueOf(userNumber));
 		vo.setSize(size);
 		vo.setColor(color);
@@ -68,12 +68,12 @@ public class CustomController {
 		boolean insert = cusService.insertCustom(vo);
 		String result =(insert==true)?"insert":"fail";
 		jsonObject.put("result", result);
-		// Äõ¸®°¡ ½ÇÆĞÇÑ´Ù¸é ÀúÀåµÈ ÆÄÀÏÀ» »èÁ¦ÇÑ´Ù
+		// ì¿¼ë¦¬ê°€ ì‹¤íŒ¨í•œë‹¤ë©´ ì €ì¥ëœ íŒŒì¼ì„ ì‚­ì œí•œë‹¤
 //		if(result.equals("fail"))
 //			functionSpring.fileDelete(vo.getImage(), ".");
 		return jsonObject.toString();
     }
-	// Ä¿½ºÅÒ Á¦Ç°ÀÇ ¸ñ·ÏÀ» ºÒ·¯¿È!
+	// ì»¤ìŠ¤í…€ ì œí’ˆì˜ ëª©ë¡ì„ ë¶ˆëŸ¬ì˜´!
 	@CrossOrigin(origins = "*", allowedHeaders = "*")
     @RequestMapping(value="/customs",method = RequestMethod.GET,produces = "application/json; charset=utf8")
     @ResponseBody
@@ -110,7 +110,7 @@ public class CustomController {
 		jsonObject.put("customs", jsonArarry);
 		return jsonObject.toString();
 	}
-	//Ä¿½ºÅÒ ÀÌ¹ÌÁö¸¸ (À¯Àú¿ë)
+	//ì»¤ìŠ¤í…€ ì´ë¯¸ì§€ë§Œ (ìœ ì €ìš©)
 	@CrossOrigin(origins = "*", allowedHeaders = "*")
     @RequestMapping(value="/customs-user",method = RequestMethod.GET,produces = "application/json; charset=utf8")
     @ResponseBody
@@ -143,7 +143,7 @@ public class CustomController {
 		return jsonObject.toString();
     }
 	
-	// Ä¿½ºÅÒ Á¦Ç°ÀÇ ¾÷µ¥ÀÌÆ®
+	// ì»¤ìŠ¤í…€ ì œí’ˆì˜ ì—…ë°ì´íŠ¸
 	@CrossOrigin(origins = "*", allowedHeaders = "*")
     @RequestMapping(value="/customs/{customNumber}",method = RequestMethod.POST,produces = "application/json; charset=utf8")
     @ResponseBody
@@ -170,13 +170,13 @@ public class CustomController {
 		boolean update = cusService.updateCustom(vo);
 		String result =(update==true)?"update":"fail";
 		jsonObject.put("result", result);
-		// Äõ¸®°¡ ½ÇÆĞÇÑ´Ù¸é ÀúÀåµÈ ÆÄÀÏÀ» »èÁ¦ÇÑ´Ù
+		// ì¿¼ë¦¬ê°€ ì‹¤íŒ¨í•œë‹¤ë©´ ì €ì¥ëœ íŒŒì¼ì„ ì‚­ì œí•œë‹¤
 //		if(result.equals("fail"))
 //			functionSpring.fileDelete(vo.getImage(), ".");
 		return jsonObject.toString();
     }
 	
-	// Ä¿½ºÅÒ Á¦Ç°ÀÇ »èÁ¦
+	// ì»¤ìŠ¤í…€ ì œí’ˆì˜ ì‚­ì œ
 	@CrossOrigin(origins = "*", allowedHeaders = "*")
     @RequestMapping(value="/customs/{customNumber}",method = RequestMethod.DELETE,produces = "application/json; charset=utf8")
     @ResponseBody
@@ -195,8 +195,8 @@ public class CustomController {
 	
 	
 	
-	// TODO: ¾Æ¹«³ª Ä¿½ºÅÒ ÀÌ¹ÌÁö¿¡ Á¢±Ù ÇÒ ¼ö ¾øµµ·Ï ·Î±×ÀÎ Á¶°ÇÀ» Ãß°¡ÇØ ºÁ¾ß°ÚÀ½.!
-	// Ä¿½ºÅÒ Á¦Ç°ÀÇ ÀÌ¹ÌÁö¸¦ º¸³»ÁÖ´Â API
+	// TODO: ì•„ë¬´ë‚˜ ì»¤ìŠ¤í…€ ì´ë¯¸ì§€ì— ì ‘ê·¼ í•  ìˆ˜ ì—†ë„ë¡ ë¡œê·¸ì¸ ì¡°ê±´ì„ ì¶”ê°€í•´ ë´ì•¼ê² ìŒ.!
+	// ì»¤ìŠ¤í…€ ì œí’ˆì˜ ì´ë¯¸ì§€ë¥¼ ë³´ë‚´ì£¼ëŠ” API
     @CrossOrigin(origins = "*", allowedHeaders = "*")  
     @RequestMapping(
   		  value = "/com/custom-image/{img}",method = RequestMethod.GET

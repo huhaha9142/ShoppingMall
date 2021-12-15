@@ -3,39 +3,15 @@ package com.spring.dao;
 import javax.inject.Inject;
 
 import org.apache.ibatis.session.SqlSession;
-<<<<<<< HEAD
-
-import com.spring.dto.UsersVO;
-
-=======
 import org.springframework.stereotype.Repository;
 
 import com.spring.dto.UsersVO;
 
 @Repository
->>>>>>> main
 public class UsersDAOImpl implements UsersDAO {
 
 	@Inject
 	private SqlSession sqlSession;
-<<<<<<< HEAD
-	
-	// 매퍼
-	private static final String namespace = "com.example.mappers.userMapper";
-	
-	//	회원가입
-	@Override
-	public void userJoin(UsersVO vo) throws Exception {
-		sqlSession.insert(namespace + ".userJoin", vo);
-		
-	}
-
-	//	로그인
-	@Override
-	public UsersVO userLogin(UsersVO vo) throws Exception {
-		
-		return sqlSession.selectOne(namespace + ".userLogin", vo);
-=======
 	private static final String Namespace = "com.example.mapper.usersMapper";
 	
 	@Override
@@ -108,7 +84,6 @@ public class UsersDAOImpl implements UsersDAO {
 	public int insertUserSocial(UsersVO vo) {
 		// TODO Auto-generated method stub
 		return sqlSession.insert(Namespace+".insertUserSocial", vo);
->>>>>>> main
 	}
 
 }

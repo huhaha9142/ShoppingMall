@@ -34,10 +34,10 @@ import io.jsonwebtoken.UnsupportedJwtException;
 @Service
 public class FunctionSpring {
 	
-	// ÆÄÀÏÀ» ÀúÀåÇØÁÖ´Â ÇÔ¼ö 
-    // ¹ŞÀº ÆÄÀÏÀ» SAVE_PATHÀ§Ä¡¿¡ ÀÓÀÇÀÇ ÀÌ¸§À¸·Î ÀúÀåÇÏ°í
-    // ÀúÀåµÈ ÀÌ¸§À» ¸®ÅÏÇÑ´Ù.
-    // TODO: Áßº¹ÀÌ ¾Æ¿¹ ÀÏ¾î³¯ ¼ö ¾ø°Ô ¼³°èµÇ°Å³ª Áßº¹½Ã ´Ù½Ã ½Ãµµ ÇÒ ¼ö ÀÖ°Ô Â¥¾ßÇÔ(Àç±Í)
+	// íŒŒì¼ì„ ì €ì¥í•´ì£¼ëŠ” í•¨ìˆ˜ 
+    // ë°›ì€ íŒŒì¼ì„ SAVE_PATHìœ„ì¹˜ì— ì„ì˜ì˜ ì´ë¦„ìœ¼ë¡œ ì €ì¥í•˜ê³ 
+    // ì €ì¥ëœ ì´ë¦„ì„ ë¦¬í„´í•œë‹¤.
+    // TODO: ì¤‘ë³µì´ ì•„ì˜ˆ ì¼ì–´ë‚  ìˆ˜ ì—†ê²Œ ì„¤ê³„ë˜ê±°ë‚˜ ì¤‘ë³µì‹œ ë‹¤ì‹œ ì‹œë„ í•  ìˆ˜ ìˆê²Œ ì§œì•¼í•¨(ì¬ê·€)
     public String fileSave(List<MultipartFile> files ,String SAVE_PATH,String where) throws IOException
     {
     	FileOutputStream fos = null;
@@ -81,7 +81,7 @@ public class FunctionSpring {
     	}
     	return result;
     }
-    //Áßº¹Á¦°Å »çÀÌÁî ÄÃ·¯ ¼ö·®
+    //ì¤‘ë³µì œê±° ì‚¬ì´ì¦ˆ ì»¬ëŸ¬ ìˆ˜ëŸ‰
     public Map<String,String> anyArray(List<ProductVO> sql,String type)
     {
 		Map<String,String> anyData = new HashMap<String,String>();
@@ -96,7 +96,7 @@ public class FunctionSpring {
 		}
 		return anyData;
     }  
-    //»çÀÌÁî º¯È¯ ¹è¿­
+    //ì‚¬ì´ì¦ˆ ë³€í™˜ ë°°ì—´
     public String sizes[] = {"XS","S","M","L","XL","2XL","3XL","4XL","5XL","6XL","7XL",
     								"XS(80)","S(85)","M(90)","L(95)","XL(100)","2XL(105)","3XL(110)","4XL(115)","5XL(120)",
     								"XS(85)","S(90)","M(95)","L(100)","XL(105)","2XL(110)","3XL(115)","4XL(120)","5XL(125)",
@@ -132,20 +132,20 @@ public class FunctionSpring {
     	boolean addSize = false;
     	for(String s : sizes)
     	{
-    		//½ÃÀÛ ÁöÁ¡ Ã£±â
+    		//ì‹œì‘ ì§€ì  ì°¾ê¸°
     		if(size.contains(s+" ~"))
     		{
 //    			System.out.println("contains:"+s);
     			addSize=!addSize;
     		}
-    		//¹üÀ§ µ¥ÀÌÅÍ µî·Ï
+    		//ë²”ìœ„ ë°ì´í„° ë“±ë¡
     		if(addSize)
     		{
 //    			System.out.println(s);
     			Jarr.add(s);
     			
     		}
-    		//³¡ ÁöÁ¡ Ã£±â
+    		//ë ì§€ì  ì°¾ê¸°
     		if(addSize&&size.contains("~ "+s))
     		{
 //    			System.out.println("contains:"+s);
@@ -165,19 +165,19 @@ public class FunctionSpring {
     	ArrayList<String> size1 = new ArrayList<String>();
     	for(String s : sizes)
     	{
-    		//½ÃÀÛ ÁöÁ¡ Ã£±â
+    		//ì‹œì‘ ì§€ì  ì°¾ê¸°
     		if(size.contains(s+" ~"))
     		{
 //    			System.out.println("contains:"+s);
     			addSize=!addSize;
     		}
-    		//¹üÀ§ µ¥ÀÌÅÍ µî·Ï
+    		//ë²”ìœ„ ë°ì´í„° ë“±ë¡
     		if(addSize)
     		{
 //    			System.out.println(s);
     			size1.add(s);		
     		}
-    		//³¡ ÁöÁ¡ Ã£±â
+    		//ë ì§€ì  ì°¾ê¸°
     		if(addSize&&size.contains("~ "+s))
     		{
 //    			System.out.println("contains:"+s);
@@ -192,16 +192,16 @@ public class FunctionSpring {
 		return size1;
     }
     
-    public String key ="11";  // µû·Î ÀúÀåÇÏ°í .gitignore¿¡ Á¦¿ÜÇ×¸ñ¿¡ µî·Ï½ÃÅ³°Í.!
+    public String key ="11";  // ë”°ë¡œ ì €ì¥í•˜ê³  .gitignoreì— ì œì™¸í•­ëª©ì— ë“±ë¡ì‹œí‚¬ ê²ƒ 
     public String makeJwtToken(String id) {
         Date now = new Date();
         return Jwts.builder()
             .setHeaderParam(Header.TYPE, Header.JWT_TYPE) // (1)
-            .setIssuer("kim") // (2) ¹ß±ŞÀÚ
+            .setIssuer("kim") // (2) ë°œê¸‰ì
             .setIssuedAt(now) // (3) 
-            .setExpiration(new Date(now.getTime() + Duration.ofMinutes(30).toMillis())) // (4) ¸¸·á½Ã°£
+            .setExpiration(new Date(now.getTime() + Duration.ofMinutes(30).toMillis())) // (4) ë§Œë£Œì‹œê°„
             .claim("id", id) // (5)
-            .signWith(SignatureAlgorithm.HS256, key.getBytes()) // (6) ¾ÏÈ£È­ Å° (³ëÃâµÇ¸é ¾ÈµÈ´Ù.!)
+            .signWith(SignatureAlgorithm.HS256, key.getBytes()) // (6) ì•”í˜¸í™” í‚¤ (ë…¸ì¶œë˜ë©´ ì•ˆëœë‹¤.)
             .compact();
       }
     public Claims parseringJwtToken(String jwtToken) throws ExpiredJwtException, UnsupportedJwtException, MalformedJwtException, SignatureException, IllegalArgumentException, UnsupportedEncodingException
@@ -211,7 +211,7 @@ public class FunctionSpring {
     		.parseClaimsJws(jwtToken)
     		.getBody();
     }
- // ÀÌ¸ŞÀÏ ³­¼ö ¸¸µå´Â ¸Ş¼­µå
+ // ì´ë©”ì¼ ë‚œìˆ˜ ë§Œë“œëŠ” ë©”ì„œë“œ
  	public String init(boolean lowerCheck,int size) {
  		Random ran = new Random();
  		StringBuffer sb = new StringBuffer();

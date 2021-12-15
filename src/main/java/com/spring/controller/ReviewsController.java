@@ -94,7 +94,7 @@ public class ReviewsController {
 		System.out.println(content);
 		System.out.println(imageReview);
 		//content title image indate hit(0), usersNumber, productsNumber
-		System.out.println("»çÀÌÁî"+imageReview.size());
+		System.out.println("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½"+imageReview.size());
 		ReviewVO vo = new ReviewVO();
 		if(imageReview.size()==0)
 		{
@@ -201,8 +201,8 @@ public class ReviewsController {
 		
     }
 	
-	// TODO : º¸·ù
-	// ÀÚ±â°¡ ÀÛ¼ºÇÑ ¸ğµç ¸®ºä º¸±â (By JWT cookie)
+	// TODO : ë³´ë¥˜
+	// ìê¸°ê°€ ì‘ì„±í•œ ëª¨ë“  ë¦¬ë·° ë³´ê¸°(By JWT cookie)
 	@CrossOrigin(origins = "*", allowedHeaders = "*")  
     @RequestMapping(
   		  value = "/reviews/user",method = RequestMethod.GET,produces = "application/json; charset=utf8"
@@ -214,7 +214,7 @@ public class ReviewsController {
 		
 		return json.toString();
     }
-	// Á¦Ç°ÀÇ ¸®ºä Á¦Ç°Å°¶û ¿¬°áÇå ¸ğµç ¸®ºä º¸±â 
+	// ì œí’ˆì˜ ë¦¬ë·° ì œí’ˆí‚¤ë‘ ì—°ê²°í•œ ëª¨ë“  ë¦¬ë·° ë³´ê¸°
 	@CrossOrigin(origins = "*", allowedHeaders = "*")
     @RequestMapping(value="/product-reviews/{reviewsNumber}",method = RequestMethod.GET,produces = "application/json; charset=utf8")
     @ResponseBody
@@ -257,7 +257,7 @@ public class ReviewsController {
     	return jsonObject.toString();
     }
 	
-	// reviewNumber ¼öÁ¤¿ë µ¥ÀÌÅÍ ºÒ·¯°¡±â 
+	// reviewNumber ìˆ˜ì •ìš© ë°ì´í„° ë¶ˆëŸ¬ê°€ê¸° 
 	@CrossOrigin(origins = "*", allowedHeaders = "*")  
     @RequestMapping(
   		  value = "/reviews/{reviewsNumber}",method = RequestMethod.GET,produces = "application/json; charset=utf8"
@@ -293,7 +293,7 @@ public class ReviewsController {
 		return json.toString();
     }
 		
-	// »çÁø¸¸ º¸³»ÁÖ´Â API
+	// ì‚¬ì§„ë§Œ ë³´ë‚´ì£¼ëŠ” API
     @CrossOrigin(origins = "*", allowedHeaders = "*")  
     @RequestMapping(
   		  value = "/com/review-image/{img}",method = RequestMethod.GET

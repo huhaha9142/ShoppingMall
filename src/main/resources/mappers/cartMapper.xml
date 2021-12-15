@@ -3,10 +3,8 @@
   PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
   <mapper namespace="com.example.mapper.cartMapper">
-  
-  <!-- cart_number로 ORDER BY 추가 해줘야함(오름차순) -->
+ 
    <!-- qna select 최소 3개 (전체, user, 관리자) -->
-   <!-- ex)  WHERE (users_number) -->
   	<select id ="selectListCart" resultType="cartVO">
   		SELECT
   			ca.quantity,
@@ -21,7 +19,8 @@
   			INNER JOIN products pr
   		ON ca.users_usernumber = us.user_number
   			AND ca.products_productnumber = pr.product_number
-  		ORDER BY cart_number
+  		WHERE (user_number = #{usersNumber})
+  		ORDER BY cart_number 		
   	</select>
   	<insert id ="insertCart" parameterType="cartVO" >
   		INSERT INTO cart
