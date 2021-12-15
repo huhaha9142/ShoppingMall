@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.UUID;
 
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -64,7 +65,7 @@ public class OrdersController {
 			list.put("price", sql.get(i).getPrice());
 			list.put("quantity", sql.get(i).getQuantity());
 			list.put("userNumber", sql.get(i).getUsersNumber());
-			list.put("productNumbet",sql.get(i).getProductsNumber());
+			list.put("productNumber",sql.get(i).getProductsNumber());
 			list.put("orderNumber", sql.get(i).getOrdersNumber());
 			list.put("productCustomNumber", sql.get(i).getProductCustomNumber());
 			list.put("indate", sql.get(i).getInDate());
@@ -82,12 +83,12 @@ public class OrdersController {
 	@CrossOrigin(origins = "*", allowedHeaders = "*")
 	@RequestMapping(value="/orders/user",method = RequestMethod.GET,produces = "application/json; charset=utf8")
     @ResponseBody
-    public String orderUserList()
+    public String orderUserList(HttpServletRequest httpServletRequest)
     {
 		JSONObject jsonObject = new JSONObject();
 		JSONArray jsonArarry = new JSONArray();
 		OrderVO vo = new OrderVO();
-		vo.setUsersNumber(1l);
+		vo.setUsersNumber(Long.valueOf((String)httpServletRequest.getAttribute("userNumber")));
 		List<OrderVO> sql = orderService.selectUserOrderList(vo);
 		for(int i=0;i<sql.size();i++)
     	{		
@@ -97,13 +98,13 @@ public class OrdersController {
 			list.put("price", sql.get(i).getPrice());
 			list.put("quantity", sql.get(i).getQuantity());
 			list.put("userNumber", sql.get(i).getUsersNumber());
-			list.put("productNumbet",sql.get(i).getProductsNumber());
+			list.put("productNumber",sql.get(i).getProductsNumber());
 			list.put("orderNumber", sql.get(i).getOrdersNumber());
 			list.put("productCustomNumber", sql.get(i).getProductCustomNumber());
 			list.put("indate", sql.get(i).getInDate());
 			list.put("regdate", sql.get(i).getRegDate());
 			list.put("product", sql.get(i).getProduct());
-			list.put("titleImage",sql.get(i).getTitleImage());
+			list.put("titleImage",PRODUCT_URL_PATH+sql.get(i).getTitleImage());
 			list.put("size", sql.get(i).getSize());
 			list.put("color", sql.get(i).getColor());
 			list.put("image", sql.get(i).getCustomImage());
@@ -127,13 +128,13 @@ public class OrdersController {
 		jsonObject.put("price", sql.getPrice());
 		jsonObject.put("quantity", sql.getQuantity());
 		jsonObject.put("userNumber", sql.getUsersNumber());
-		jsonObject.put("productNumbet",sql.getProductsNumber());
+		jsonObject.put("productNumber",sql.getProductsNumber());
 		jsonObject.put("orderNumber", sql.getOrdersNumber());
 		jsonObject.put("productCustomNumber", sql.getProductCustomNumber());
 		jsonObject.put("indate", sql.getInDate());
 		jsonObject.put("regdate", sql.getRegDate());
 		jsonObject.put("product", sql.getProduct());
-		jsonObject.put("titleImage",sql.getTitleImage());
+		jsonObject.put("titleImage",PRODUCT_URL_PATH+sql.getTitleImage());
 		jsonObject.put("size", sql.getSize());
 		jsonObject.put("color", sql.getColor());
 		jsonObject.put("image", sql.getCustomImage());
@@ -170,11 +171,12 @@ public class OrdersController {
     		@RequestParam(value="price") String price,
     		@RequestParam(value="product") String product,
     		@RequestParam(value="quantity") String quantity,  		
-    		@RequestParam(value="usersNumber") String usersNumber,
+    		HttpServletRequest httpServletRequest,
     		@RequestParam(value="productsNumber") String productsNumber,
     		@RequestParam(value="productCustomNumber") String productCustomNumber,
     		@RequestParam(value="productCount", defaultValue = "1") int productCount
     		) {
+		String usersNumber = (String) httpServletRequest.getAttribute("userNumber");
 		Date time = new Date();
 		String uuId = "buy"+UUID.randomUUID();
 		JSONObject jsonObject = new JSONObject();
@@ -216,7 +218,7 @@ public class OrdersController {
 		String itemCode = "";
 		if(productCount!=1)
 		{
-			itemName= "외 "+(productCount-1)+"건";
+			itemName= " 외 "+(productCount-1)+"건";
 			itemCode= "+";
 
 		}
@@ -261,10 +263,11 @@ public class OrdersController {
     @ResponseBody
     public String orderApprove(
     		@RequestParam(value="cid", defaultValue = "TC0ONETIME") String cid,
-    		@RequestParam(value="userNumber") String usersNumber,
+    		HttpServletRequest httpServletRequest,
     		@RequestParam(value="orderNumber") String orderNumber,
     		@RequestParam(value="pgToken") String pgToken,
     		@RequestParam(value="uuid") String uuId) {
+		String usersNumber = (String) httpServletRequest.getAttribute("userNumber");
 		JSONObject jsonObject = new JSONObject();
 		JSONParser jsonParser = new JSONParser();
 		HttpHeaders headers = new HttpHeaders();

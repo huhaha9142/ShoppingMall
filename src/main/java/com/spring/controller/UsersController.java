@@ -1,7 +1,6 @@
 package com.spring.controller;
 
 import java.io.UnsupportedEncodingException;
-import java.net.HttpURLConnection;
 import java.util.Date;
 import java.util.UUID;
 
@@ -10,6 +9,7 @@ import javax.mail.Message.RecipientType;
 import javax.mail.MessagingException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.json.simple.JSONObject;
@@ -43,7 +43,7 @@ import io.jsonwebtoken.UnsupportedJwtException;
 @Controller
 @CrossOrigin(allowCredentials = "false")
 public class UsersController {
-	private static final Logger logger = LoggerFactory.getLogger(ProductsController.class);
+	private static final Logger logger = LoggerFactory.getLogger(UsersController.class);
 	@Inject
 	    private UsersServiceImpl usersService;
 	@Inject
@@ -98,7 +98,7 @@ public class UsersController {
 //	    cookie.setHttpOnly(true);	 
 //		response.addCookie(cookie);
 		
-		response.setHeader("Authorization","jwt "+functionSpring.makeJwtToken(id));
+		response.setHeader("Authorization","jwt "+functionSpring.makeJwtToken(String.valueOf(vo1.getUserNumber())));
 		jsonObject.put("nickName",vo1.getName());
 		jsonObject.put("result", "Success");
 		return jsonObject.toString();
@@ -343,7 +343,8 @@ public class UsersController {
 			@RequestParam(value = "address3",required=false) String address3,
 			@RequestParam(value = "address4",required=false) String address4,
 			@RequestParam(value = "phone",required=false) String phone,
-			@RequestParam("userNumber") String userNumber) {
+			HttpServletRequest httpServletRequest) {
+		String userNumber = (String) httpServletRequest.getAttribute("userNumber");
 		JSONObject jsonObject = new JSONObject();
 		UsersVO vo = new UsersVO();
 		vo.setAddress1(address1);
@@ -367,7 +368,8 @@ public class UsersController {
 	@RequestMapping(value="/user-password",method = RequestMethod.POST,produces = "application/json; charset=utf8")
 	@ResponseBody
 	public String userPassword(@RequestParam("password") String password,
-			@RequestParam("userNumber") String userNumber) {
+			HttpServletRequest httpServletRequest) {
+		String userNumber = (String) httpServletRequest.getAttribute("userNumber");
 		JSONObject jsonObject = new JSONObject();
 		BCryptPasswordEncoder scpwd = new BCryptPasswordEncoder();
 		UsersVO vo = new UsersVO();
@@ -382,10 +384,12 @@ public class UsersController {
 	@RequestMapping(value="/user",method = RequestMethod.DELETE,produces = "application/json; charset=utf8")
 	@ResponseBody
 	public String userDelete(@RequestParam("password") String password,
-			@RequestParam("userNumber") String userNumber) {
+			HttpServletRequest httpServletRequest) {
+		String userNumber = (String) httpServletRequest.getAttribute("userNumber");
 		JSONObject jsonObject = new JSONObject();
 		UsersVO vo = new UsersVO();
 		vo.setUserNumber(Long.valueOf(userNumber));
+		//TODO:: 스케줄러로 지연삭제 시키기 룰 바꾸기 적용하기
 		String result = (usersService.updatePassword(vo)==true)?"update":"fail";
 		jsonObject.put("result", result);
 		return jsonObject.toString();
@@ -393,10 +397,11 @@ public class UsersController {
 	@CrossOrigin(origins = "*", allowedHeaders = "*")
 	@RequestMapping(value="/user-privacy",method = RequestMethod.GET,produces = "application/json; charset=utf8")
 	@ResponseBody
-	public String userPrivacy() {
+	public String userPrivacy(HttpServletRequest httpServletRequest) {
+		String userNumber = (String) httpServletRequest.getAttribute("userNumber");
 		JSONObject jsonObject = new JSONObject();
 		UsersVO vo = new UsersVO();
-		vo.setUserNumber(1l);
+		vo.setUserNumber(Long.valueOf(userNumber));
 		UsersVO sql = usersService.selectUserPrivacy(vo);
 		jsonObject.put("id", sql.getId());
 		jsonObject.put("nickName", sql.getNickName());

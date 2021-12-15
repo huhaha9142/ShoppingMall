@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.io.IOUtils;
 import org.json.simple.JSONArray;
@@ -23,7 +24,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.spring.dto.CustomVO;
-import com.spring.function.FunctionSpring;
 import com.spring.service.CustomServiceImpl;
 import com.spring.service.S3Uploader;
 
@@ -36,23 +36,24 @@ public class CustomController {
 	private S3Uploader s3Uploader;
 	@Inject
 	private CustomServiceImpl cusService;
-	// customÇÑ Á¦Ç°À» µî·ÏÇÏ´Â  API
+	// customí•œ ì œí’ˆì„ ë“±ë¡í•˜ëŠ”  API
 	@CrossOrigin(origins = "*", allowedHeaders = "*")
     @RequestMapping(value="/customs",method = RequestMethod.POST,produces = "application/json; charset=utf8")
     @ResponseBody
     public String customInsert(
     		@RequestParam("image") List <MultipartFile> image,
     		@RequestParam(value="productNumber",defaultValue = "0") Long productNumber,
-    		@RequestParam("userNumber") Long userNumber,
+    		HttpServletRequest httpServletRequest,
     		@RequestParam(value="size",required=false) String size,
     		@RequestParam(value="color",required=false) String color
     		) throws IOException 
     {
+		String userNumber = (String) httpServletRequest.getAttribute("userNumber");
 		System.out.println(System.getProperty("user.dir"));
 		JSONObject jsonObject = new JSONObject();
 		CustomVO vo = new CustomVO();
 		vo.setProductNumber(Long.valueOf(productNumber));
-		// ·Î±×ÀÎ ÀÌ¶û ¿¬°è
+		// ë¡œê·¸ì¸ ì´ë‘ ì—°ê³„
 		vo.setUserNumber(Long.valueOf(userNumber));
 		vo.setSize(size);
 		vo.setColor(color);
@@ -68,12 +69,12 @@ public class CustomController {
 		boolean insert = cusService.insertCustom(vo);
 		String result =(insert==true)?"insert":"fail";
 		jsonObject.put("result", result);
-		// Äõ¸®°¡ ½ÇÆĞÇÑ´Ù¸é ÀúÀåµÈ ÆÄÀÏÀ» »èÁ¦ÇÑ´Ù
+		// ì¿¼ë¦¬ê°€ ì‹¤íŒ¨í•œë‹¤ë©´ ì €ì¥ëœ íŒŒì¼ì„ ì‚­ì œí•œë‹¤
 //		if(result.equals("fail"))
 //			functionSpring.fileDelete(vo.getImage(), ".");
 		return jsonObject.toString();
     }
-	// Ä¿½ºÅÒ Á¦Ç°ÀÇ ¸ñ·ÏÀ» ºÒ·¯¿È!
+	// ì»¤ìŠ¤í…€ ì œí’ˆì˜ ëª©ë¡ì„ ë¶ˆëŸ¬ì˜´!
 	@CrossOrigin(origins = "*", allowedHeaders = "*")
     @RequestMapping(value="/customs",method = RequestMethod.GET,produces = "application/json; charset=utf8")
     @ResponseBody
@@ -110,12 +111,13 @@ public class CustomController {
 		jsonObject.put("customs", jsonArarry);
 		return jsonObject.toString();
 	}
-	//Ä¿½ºÅÒ ÀÌ¹ÌÁö¸¸ (À¯Àú¿ë)
+	//ì»¤ìŠ¤í…€ ì´ë¯¸ì§€ë§Œ (ìœ ì €ìš©)
 	@CrossOrigin(origins = "*", allowedHeaders = "*")
     @RequestMapping(value="/customs-user",method = RequestMethod.GET,produces = "application/json; charset=utf8")
     @ResponseBody
-    public String customUserImage(@RequestParam("userNumber") String  userNumber)
+    public String customUserImage(HttpServletRequest httpServletRequest)
     {
+		String userNumber = (String) httpServletRequest.getAttribute("userNumber");
 		JSONObject jsonObject = new JSONObject();
 		JSONArray jsonArarry = new JSONArray();
 		CustomVO vo = new CustomVO();
@@ -143,7 +145,7 @@ public class CustomController {
 		return jsonObject.toString();
     }
 	
-	// Ä¿½ºÅÒ Á¦Ç°ÀÇ ¾÷µ¥ÀÌÆ®
+	// ì»¤ìŠ¤í…€ ì œí’ˆì˜ ì—…ë°ì´íŠ¸
 	@CrossOrigin(origins = "*", allowedHeaders = "*")
     @RequestMapping(value="/customs/{customNumber}",method = RequestMethod.POST,produces = "application/json; charset=utf8")
     @ResponseBody
@@ -170,13 +172,13 @@ public class CustomController {
 		boolean update = cusService.updateCustom(vo);
 		String result =(update==true)?"update":"fail";
 		jsonObject.put("result", result);
-		// Äõ¸®°¡ ½ÇÆĞÇÑ´Ù¸é ÀúÀåµÈ ÆÄÀÏÀ» »èÁ¦ÇÑ´Ù
+		// ì¿¼ë¦¬ê°€ ì‹¤íŒ¨í•œë‹¤ë©´ ì €ì¥ëœ íŒŒì¼ì„ ì‚­ì œí•œë‹¤
 //		if(result.equals("fail"))
 //			functionSpring.fileDelete(vo.getImage(), ".");
 		return jsonObject.toString();
     }
 	
-	// Ä¿½ºÅÒ Á¦Ç°ÀÇ »èÁ¦
+	// ì»¤ìŠ¤í…€ ì œí’ˆì˜ ì‚­ì œ
 	@CrossOrigin(origins = "*", allowedHeaders = "*")
     @RequestMapping(value="/customs/{customNumber}",method = RequestMethod.DELETE,produces = "application/json; charset=utf8")
     @ResponseBody
@@ -194,9 +196,8 @@ public class CustomController {
 	}
 	
 	
-	
-	// TODO: ¾Æ¹«³ª Ä¿½ºÅÒ ÀÌ¹ÌÁö¿¡ Á¢±Ù ÇÒ ¼ö ¾øµµ·Ï ·Î±×ÀÎ Á¶°ÇÀ» Ãß°¡ÇØ ºÁ¾ß°ÚÀ½.!
-	// Ä¿½ºÅÒ Á¦Ç°ÀÇ ÀÌ¹ÌÁö¸¦ º¸³»ÁÖ´Â API
+	// TODO: ì•„ë¬´ë‚˜ ì»¤ìŠ¤í…€ ì´ë¯¸ì§€ì— ì ‘ê·¼ í•  ìˆ˜ ì—†ë„ë¡ ë¡œê·¸ì¸ ì¡°ê±´ì„ ì¶”ê°€í•´ ë´ì•¼ê² ìŒ.!
+		// ì»¤ìŠ¤í…€ ì œí’ˆì˜ ì´ë¯¸ì§€ë¥¼ ë³´ë‚´ì£¼ëŠ” API
     @CrossOrigin(origins = "*", allowedHeaders = "*")  
     @RequestMapping(
   		  value = "/com/custom-image/{img}",method = RequestMethod.GET

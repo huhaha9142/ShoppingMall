@@ -96,12 +96,14 @@
 				title = #{title},
 				image = #{image},
 				indate = #{inDate}
-		WHERE (reviews_number = #{reviewsNumber})	
+		WHERE (reviews_number = #{reviewsNumber})
+		AND users_usernumber = #{usersNumber}
 	</update>
 	<delete id="deleteReview" parameterType="reviewVO">
 		DELETE 
 		FROM reviews
 		WHERE (reviews_number = #{reviewsNumber})
+		AND users_usernumber = #{usersNumber}
 	</delete>
 	<select id="selectImage" parameterType="reviewVO" resultType="String">
 		SELECT
