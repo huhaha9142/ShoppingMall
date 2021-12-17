@@ -52,7 +52,7 @@ public class UsersController {
 	    private FunctionSpring functionSpring;
 	// 변경시 카카오 디벨로퍼에서도 변경점 등록해줘야 함.!
 	private static String EMAIL_URL = "/";
-	private static String REDIRECT_URL = "http://localhost:3000/loading";
+	private static String REDIRECT_URL = "http://customshoppingmall.kro.kr/loading";
 	@CrossOrigin(origins = "*", exposedHeaders = "Authorization", allowedHeaders = "*")
 	@RequestMapping(value="/user-login",method = RequestMethod.POST,produces = "application/json; charset=utf8")
 	@ResponseBody
@@ -213,7 +213,7 @@ public class UsersController {
 			MimeMessage mail = mailSender.createMimeMessage();
 			String htmlStr = "<h2>안녕하세요 MS :p CUSTOM SHOPPINGMALL 입니다!</h2><br><br>" 
 					+ "<h3>" + id + "님</h3>" + "<p>인증하기 버튼을 누르시면 로그인을 하실 수 있습니다 : " 
-					+ "<a href='http://localhost:3000"+"/email-cerified?id="+ id +"&key="+key+"'>인증하기</a></p>"
+					+ "<a href='http://customshoppingmall.kro.kr/"+"/email-cerified?id="+ id +"&key="+key+"'>인증하기</a></p>"
 					+ "(혹시 잘못 전달된 메일이라면 이 이메일을 무시하셔도 됩니다)";
 			try {
 				mail.setSubject("[본인인증] MS :p CUSTOM SHOPPINGMALL의 인증메일입니다", "utf-8");
@@ -290,7 +290,7 @@ public class UsersController {
 			MimeMessage mail = mailSender.createMimeMessage();
 			String htmlStr = "<h2>안녕하세요 MS :p CUSTOM SHOPPINGMALL 입니다!</h2><br><br>" 
 					+ "<h3>" + id + "님</h3>" + "<p>비밀번호 재설정 버튼을 누르시면 비밀번호를 재설정 하실 수 있습니다.: " 
-					+ "<a href='http://ec2-3-37-117-153.ap-northeast-2.compute.amazonaws.com:8080/shoppingmall"+"/user/reset?id="+ id +"&key="+key+"'>인증하기</a></p>"
+					+ "<a href='http://customshoppingmall.kro.kr/passwordreset"+"?id="+ id +"&key="+key+"'>인증하기</a></p>"
 					+ "(혹시 잘못 전달된 메일이라면 이 이메일을 무시하셔도 됩니다)";
 			try {
 				mail.setSubject("[본인인증] MS :p CUSTOM SHOPPINGMALL의 비밀번호 재설정 메일입니다", "utf-8");

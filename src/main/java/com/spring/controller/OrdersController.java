@@ -38,9 +38,9 @@ public class OrdersController {
 	private static String KAKAO_PAYMENT_URL_PATH="https://kapi.kakao.com/v1/payment";
 	private static String KAKAO_READY="/ready";
 	private static String KAKAO_APPROVE="/approve";
-	private static String KAKAO_APPROVAL_URL="http://localhost:3000/approval";
-	private static String KAKAO_CANCEL_URL="http://localhost:3000/cancel";
-	private static String KAKAO_FAIL_URL="http://localhost:3000/fail";	
+	private static String KAKAO_APPROVAL_URL="http://customshoppingmall.kro.kr/approval";
+	private static String KAKAO_CANCEL_URL="http://customshoppingmall.kro.kr/cancel";
+	private static String KAKAO_FAIL_URL="http://customshoppingmall.kro.kr/fail";	
 	private static String PRODUCT_URL_PATH="http://ec2-3-37-117-153.ap-northeast-2.compute.amazonaws.com:8080/shoppingmall/com/product-image/";
 	private static String CUSTOM_URL_PATH="https://shoppingmal.s3.ap-northeast-2.amazonaws.com/";
 	private static final Logger logger = LoggerFactory.getLogger(OrdersController.class);
