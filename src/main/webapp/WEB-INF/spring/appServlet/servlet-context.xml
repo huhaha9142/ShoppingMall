@@ -40,6 +40,36 @@
 	
 	<context:component-scan base-package="com.spring.controller" />
 	
+	<beans:bean id="JwtAuthInterceptor" class="com.spring.config.interceptor.JwtAuthInterceptor"></beans:bean>
+	<beans:bean id="JwtAuthInterceptor2" class="com.spring.config.interceptor.JwtAuthInterceptor2"></beans:bean>
 	
+	<!-- 인터셉터 -->
+	<interceptors>
+		<!-- 로그인/쿠키설정 -->
+		<interceptor>
+			<mapping path="/**"/>
+			<exclude-mapping path="/products"/>
+			<exclude-mapping path="/user-login"/>
+			<exclude-mapping path="/user-kakao"/>
+			<exclude-mapping path="/user-join*"/>
+			<exclude-mapping path="/user/reset"/>
+			<exclude-mapping path="/user-id"/>
+			<exclude-mapping path="/product-reviews/*"/>
+			<exclude-mapping path="/reviews/*"/>
+			<exclude-mapping path="/reviews"/>
+			<exclude-mapping path="/products/*"/>
+			<exclude-mapping path="/products"/>
+			<exclude-mapping path="/com/**"/>
+			<exclude-mapping path="/"/>
+			
+			<beans:ref bean="JwtAuthInterceptor" />
+		</interceptor>
+		<interceptor>
+			<mapping path="/reviews/*"/>
+			<mapping path="/reviews"/>
+			<mapping path="/products"/>		
+			<beans:ref bean="JwtAuthInterceptor2" />
+		</interceptor>
+	</interceptors>
 	
 </beans:beans>

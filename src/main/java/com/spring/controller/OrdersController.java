@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.UUID;
 
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -37,15 +38,15 @@ public class OrdersController {
 	private static String KAKAO_PAYMENT_URL_PATH="https://kapi.kakao.com/v1/payment";
 	private static String KAKAO_READY="/ready";
 	private static String KAKAO_APPROVE="/approve";
-	private static String KAKAO_APPROVAL_URL="http://localhost:3000/approval";
-	private static String KAKAO_CANCEL_URL="http://localhost:3000/cancel";
-	private static String KAKAO_FAIL_URL="http://localhost:3000/fail";	
-	private static String PRODUCT_URL_PATH="http://pvpvpvpvp.gonetis.com:8080/sample/com/product-image/";
+	private static String KAKAO_APPROVAL_URL="http://customshoppingmall.kro.kr/approval";
+	private static String KAKAO_CANCEL_URL="http://customshoppingmall.kro.kr/cancel";
+	private static String KAKAO_FAIL_URL="http://customshoppingmall.kro.kr/fail";	
+	private static String PRODUCT_URL_PATH="http://ec2-3-37-117-153.ap-northeast-2.compute.amazonaws.com:8080/shoppingmall/com/product-image/";
 	private static String CUSTOM_URL_PATH="https://shoppingmal.s3.ap-northeast-2.amazonaws.com/";
 	private static final Logger logger = LoggerFactory.getLogger(OrdersController.class);
-	String[] orResult = {"∞·¡¶ ¥Î±‚","¿‘±› ¥Î±‚","¡÷πÆ »Æ¿Œ","ªÛ«∞ ¡ÿ∫Ò","πËº€ ¡ﬂ",
-            "πËº€ øœ∑·","π›«∞ ¡ﬂ","π›«∞ øœ∑·","»Ø∫“ ¡ﬂ","»Ø∫“ øœ∑·",
-            "¿Á∞Ì ∫Œ¡∑"};
+	String[] orResult = {"Í≤∞Ï†ú ÎåÄÍ∏∞","ÏûÖÍ∏à ÎåÄÍ∏∞","Ï£ºÎ¨∏ ÌôïÏù∏","ÏÉÅÌíà Ï§ÄÎπÑ","Î∞∞ÏÜ° Ï§ë",
+            "Î∞∞ÏÜ° ÏôÑÎ£å","Î∞òÌíà Ï§ë","Î∞òÌíà ÏôÑÎ£å","ÌôòÎ∂à Ï§ë","ÌôòÎ∂à ÏôÑÎ£å",
+            "Ïû¨Í≥† Î∂ÄÏ°±"};
 	@CrossOrigin(origins = "*", allowedHeaders = "*")
 	@RequestMapping(value="/orders",method = RequestMethod.GET,produces = "application/json; charset=utf8")
     @ResponseBody
@@ -64,7 +65,7 @@ public class OrdersController {
 			list.put("price", sql.get(i).getPrice());
 			list.put("quantity", sql.get(i).getQuantity());
 			list.put("userNumber", sql.get(i).getUsersNumber());
-			list.put("productNumbet",sql.get(i).getProductsNumber());
+			list.put("productNumber",sql.get(i).getProductsNumber());
 			list.put("orderNumber", sql.get(i).getOrdersNumber());
 			list.put("productCustomNumber", sql.get(i).getProductCustomNumber());
 			list.put("indate", sql.get(i).getInDate());
@@ -82,12 +83,12 @@ public class OrdersController {
 	@CrossOrigin(origins = "*", allowedHeaders = "*")
 	@RequestMapping(value="/orders/user",method = RequestMethod.GET,produces = "application/json; charset=utf8")
     @ResponseBody
-    public String orderUserList()
+    public String orderUserList(HttpServletRequest httpServletRequest)
     {
 		JSONObject jsonObject = new JSONObject();
 		JSONArray jsonArarry = new JSONArray();
 		OrderVO vo = new OrderVO();
-		vo.setUsersNumber(1l);
+		vo.setUsersNumber(Long.valueOf((String)httpServletRequest.getAttribute("userNumber")));
 		List<OrderVO> sql = orderService.selectUserOrderList(vo);
 		for(int i=0;i<sql.size();i++)
     	{		
@@ -97,13 +98,13 @@ public class OrdersController {
 			list.put("price", sql.get(i).getPrice());
 			list.put("quantity", sql.get(i).getQuantity());
 			list.put("userNumber", sql.get(i).getUsersNumber());
-			list.put("productNumbet",sql.get(i).getProductsNumber());
+			list.put("productNumber",sql.get(i).getProductsNumber());
 			list.put("orderNumber", sql.get(i).getOrdersNumber());
 			list.put("productCustomNumber", sql.get(i).getProductCustomNumber());
 			list.put("indate", sql.get(i).getInDate());
 			list.put("regdate", sql.get(i).getRegDate());
 			list.put("product", sql.get(i).getProduct());
-			list.put("titleImage",sql.get(i).getTitleImage());
+			list.put("titleImage",PRODUCT_URL_PATH+sql.get(i).getTitleImage());
 			list.put("size", sql.get(i).getSize());
 			list.put("color", sql.get(i).getColor());
 			list.put("image", sql.get(i).getCustomImage());
@@ -127,13 +128,13 @@ public class OrdersController {
 		jsonObject.put("price", sql.getPrice());
 		jsonObject.put("quantity", sql.getQuantity());
 		jsonObject.put("userNumber", sql.getUsersNumber());
-		jsonObject.put("productNumbet",sql.getProductsNumber());
+		jsonObject.put("productNumber",sql.getProductsNumber());
 		jsonObject.put("orderNumber", sql.getOrdersNumber());
 		jsonObject.put("productCustomNumber", sql.getProductCustomNumber());
 		jsonObject.put("indate", sql.getInDate());
 		jsonObject.put("regdate", sql.getRegDate());
 		jsonObject.put("product", sql.getProduct());
-		jsonObject.put("titleImage",sql.getTitleImage());
+		jsonObject.put("titleImage",PRODUCT_URL_PATH+sql.getTitleImage());
 		jsonObject.put("size", sql.getSize());
 		jsonObject.put("color", sql.getColor());
 		jsonObject.put("image", sql.getCustomImage());
@@ -170,11 +171,12 @@ public class OrdersController {
     		@RequestParam(value="price") String price,
     		@RequestParam(value="product") String product,
     		@RequestParam(value="quantity") String quantity,  		
-    		@RequestParam(value="usersNumber") String usersNumber,
+    		HttpServletRequest httpServletRequest,
     		@RequestParam(value="productsNumber") String productsNumber,
     		@RequestParam(value="productCustomNumber") String productCustomNumber,
     		@RequestParam(value="productCount", defaultValue = "1") int productCount
     		) {
+		String usersNumber = (String) httpServletRequest.getAttribute("userNumber");
 		Date time = new Date();
 		String uuId = "buy"+UUID.randomUUID();
 		JSONObject jsonObject = new JSONObject();
@@ -216,7 +218,7 @@ public class OrdersController {
 		String itemCode = "";
 		if(productCount!=1)
 		{
-			itemName= " ø‹ "+(productCount-1)+"∞«";
+			itemName= " Ïô∏ "+(productCount-1)+"Í±¥";
 			itemCode= "+";
 
 		}
@@ -237,7 +239,7 @@ public class OrdersController {
 			map.add("approval_url", KAKAO_APPROVAL_URL+"?uuid="+uuId+"&orderNumber="+orderNumber);
 			map.add("cancel_url", KAKAO_CANCEL_URL+"?uuid="+uuId);
 			map.add("fail_url", KAKAO_FAIL_URL+"?uuid="+uuId);
-			//TODO: æÓµÂπŒ≈∞¥¬ º˚∞‹æﬂµ !
+			//TODO: ??????? ??????!
 			headers.add("Authorization", "KakaoAK 808e27a6a5ec182559cd3332439f68fd");
 			HttpEntity<MultiValueMap<String, String>> entity = new HttpEntity(map,headers);
 			String answer = restTemplate.postForObject(KAKAO_PAYMENT_URL_PATH+KAKAO_READY, entity, String.class);
@@ -261,10 +263,11 @@ public class OrdersController {
     @ResponseBody
     public String orderApprove(
     		@RequestParam(value="cid", defaultValue = "TC0ONETIME") String cid,
-    		@RequestParam(value="userNumber") String usersNumber,
+    		HttpServletRequest httpServletRequest,
     		@RequestParam(value="orderNumber") String orderNumber,
     		@RequestParam(value="pgToken") String pgToken,
     		@RequestParam(value="uuid") String uuId) {
+		String usersNumber = (String) httpServletRequest.getAttribute("userNumber");
 		JSONObject jsonObject = new JSONObject();
 		JSONParser jsonParser = new JSONParser();
 		HttpHeaders headers = new HttpHeaders();
@@ -283,7 +286,7 @@ public class OrdersController {
 			map.add("pg_token", pgToken);
 			map.add("tid", sql.get(0).getTid());
 		
-			//TODO: æÓµÂπŒ≈∞¥¬ º˚∞‹æﬂµ !
+			//TODO: ??????? ??????!
 			headers.add("Authorization", "KakaoAK 808e27a6a5ec182559cd3332439f68fd");
 			HttpEntity<MultiValueMap<String, String>> entity = new HttpEntity(map,headers);
 			String answer = restTemplate.postForObject(KAKAO_PAYMENT_URL_PATH+KAKAO_APPROVE, entity, String.class);

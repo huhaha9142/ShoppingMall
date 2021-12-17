@@ -1,7 +1,6 @@
 package com.spring.controller;
 
 import java.io.UnsupportedEncodingException;
-import java.net.HttpURLConnection;
 import java.util.Date;
 import java.util.UUID;
 
@@ -10,6 +9,7 @@ import javax.mail.Message.RecipientType;
 import javax.mail.MessagingException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.json.simple.JSONObject;
@@ -43,7 +43,7 @@ import io.jsonwebtoken.UnsupportedJwtException;
 @Controller
 @CrossOrigin(allowCredentials = "false")
 public class UsersController {
-	private static final Logger logger = LoggerFactory.getLogger(ProductsController.class);
+	private static final Logger logger = LoggerFactory.getLogger(UsersController.class);
 	@Inject
 	    private UsersServiceImpl usersService;
 	@Inject
@@ -51,7 +51,8 @@ public class UsersController {
 	@Inject 
 	    private FunctionSpring functionSpring;
 	// 변경시 카카오 디벨로퍼에서도 변경점 등록해줘야 함.!
-	private static String REDIRECT_URL = "http://localhost:3000/loading";
+	private static String EMAIL_URL = "/";
+	private static String REDIRECT_URL = "http://customshoppingmall.kro.kr/loading";
 	@CrossOrigin(origins = "*", exposedHeaders = "Authorization", allowedHeaders = "*")
 	@RequestMapping(value="/user-login",method = RequestMethod.POST,produces = "application/json; charset=utf8")
 	@ResponseBody
@@ -97,7 +98,7 @@ public class UsersController {
 //	    cookie.setHttpOnly(true);	 
 //		response.addCookie(cookie);
 		
-		response.setHeader("Authorization","jwt "+functionSpring.makeJwtToken(id));
+		response.setHeader("Authorization","jwt "+functionSpring.makeJwtToken(String.valueOf(vo1.getUserNumber())));
 		jsonObject.put("nickName",vo1.getName());
 		jsonObject.put("result", "Success");
 		return jsonObject.toString();
@@ -212,7 +213,7 @@ public class UsersController {
 			MimeMessage mail = mailSender.createMimeMessage();
 			String htmlStr = "<h2>안녕하세요 MS :p CUSTOM SHOPPINGMALL 입니다!</h2><br><br>" 
 					+ "<h3>" + id + "님</h3>" + "<p>인증하기 버튼을 누르시면 로그인을 하실 수 있습니다 : " 
-					+ "<a href='http://pvpvpvpvp.gonetis.com:8080/sample"+"/user-join-email?id="+ id +"&key="+key+"'>인증하기</a></p>"
+					+ "<a href='http://customshoppingmall.kro.kr/"+"/email-cerified?id="+ id +"&key="+key+"'>인증하기</a></p>"
 					+ "(혹시 잘못 전달된 메일이라면 이 이메일을 무시하셔도 됩니다)";
 			try {
 				mail.setSubject("[본인인증] MS :p CUSTOM SHOPPINGMALL의 인증메일입니다", "utf-8");
@@ -222,7 +223,6 @@ public class UsersController {
 			} catch (MessagingException e) {
 				e.printStackTrace();
 			}
-
 
 		}
 		jsonObject.put("result", result);
@@ -266,6 +266,8 @@ public class UsersController {
 		jsonObject.put("result", result);
 		return jsonObject.toString();
 	}
+	
+	//TODO:: URL CHECK
 	@CrossOrigin(origins = "*", allowedHeaders = "*")
 	@RequestMapping(value="/user/reset",method = RequestMethod.GET,produces = "application/json; charset=utf8")
 	@ResponseBody
@@ -288,7 +290,7 @@ public class UsersController {
 			MimeMessage mail = mailSender.createMimeMessage();
 			String htmlStr = "<h2>안녕하세요 MS :p CUSTOM SHOPPINGMALL 입니다!</h2><br><br>" 
 					+ "<h3>" + id + "님</h3>" + "<p>비밀번호 재설정 버튼을 누르시면 비밀번호를 재설정 하실 수 있습니다.: " 
-					+ "<a href='http://pvpvpvpvp.gonetis.com:8080/sample"+"/user/reset?id="+ id +"&key="+key+"'>인증하기</a></p>"
+					+ "<a href='http://customshoppingmall.kro.kr/passwordreset"+"?id="+ id +"&key="+key+"'>인증하기</a></p>"
 					+ "(혹시 잘못 전달된 메일이라면 이 이메일을 무시하셔도 됩니다)";
 			try {
 				mail.setSubject("[본인인증] MS :p CUSTOM SHOPPINGMALL의 비밀번호 재설정 메일입니다", "utf-8");
@@ -342,7 +344,8 @@ public class UsersController {
 			@RequestParam(value = "address3",required=false) String address3,
 			@RequestParam(value = "address4",required=false) String address4,
 			@RequestParam(value = "phone",required=false) String phone,
-			@RequestParam("userNumber") String userNumber) {
+			HttpServletRequest httpServletRequest) {
+		Long userNumber  = Long.valueOf((String)httpServletRequest.getAttribute("userNumber"));
 		JSONObject jsonObject = new JSONObject();
 		UsersVO vo = new UsersVO();
 		vo.setAddress1(address1);
@@ -353,7 +356,7 @@ public class UsersController {
 		vo.setNickName(nickName);
 		vo.setPhone(phone);
 		vo.setRegDate(new Date());
-		vo.setUserNumber(Long.valueOf(userNumber));
+		vo.setUserNumber(userNumber);
 		
 		String result = (usersService.updateUserPrivacy(vo)==true)?"update":"fail";
 		
@@ -366,12 +369,13 @@ public class UsersController {
 	@RequestMapping(value="/user-password",method = RequestMethod.POST,produces = "application/json; charset=utf8")
 	@ResponseBody
 	public String userPassword(@RequestParam("password") String password,
-			@RequestParam("userNumber") String userNumber) {
+			HttpServletRequest httpServletRequest) {
+		Long userNumber  = Long.valueOf((String)httpServletRequest.getAttribute("userNumber"));
 		JSONObject jsonObject = new JSONObject();
 		BCryptPasswordEncoder scpwd = new BCryptPasswordEncoder();
 		UsersVO vo = new UsersVO();
 		vo.setPassword(scpwd.encode(password));
-		vo.setUserNumber(Long.valueOf(userNumber));
+		vo.setUserNumber(userNumber);
 		String result = (usersService.updatePassword(vo)==true)?"update":"fail";
 		jsonObject.put("result", result);
 		return jsonObject.toString();
@@ -381,10 +385,12 @@ public class UsersController {
 	@RequestMapping(value="/user",method = RequestMethod.DELETE,produces = "application/json; charset=utf8")
 	@ResponseBody
 	public String userDelete(@RequestParam("password") String password,
-			@RequestParam("userNumber") String userNumber) {
+			HttpServletRequest httpServletRequest) {
+		String userNumber = (String) httpServletRequest.getAttribute("userNumber");
 		JSONObject jsonObject = new JSONObject();
 		UsersVO vo = new UsersVO();
 		vo.setUserNumber(Long.valueOf(userNumber));
+		//TODO:: 스케줄러로 지연삭제 시키기 룰 바꾸기 적용하기
 		String result = (usersService.updatePassword(vo)==true)?"update":"fail";
 		jsonObject.put("result", result);
 		return jsonObject.toString();
@@ -392,10 +398,11 @@ public class UsersController {
 	@CrossOrigin(origins = "*", allowedHeaders = "*")
 	@RequestMapping(value="/user-privacy",method = RequestMethod.GET,produces = "application/json; charset=utf8")
 	@ResponseBody
-	public String userPrivacy() {
+	public String userPrivacy(HttpServletRequest httpServletRequest) {
+		Long userNumber  = Long.valueOf((String)httpServletRequest.getAttribute("userNumber"));
 		JSONObject jsonObject = new JSONObject();
 		UsersVO vo = new UsersVO();
-		vo.setUserNumber(1l);
+		vo.setUserNumber(userNumber);
 		UsersVO sql = usersService.selectUserPrivacy(vo);
 		jsonObject.put("id", sql.getId());
 		jsonObject.put("nickName", sql.getNickName());

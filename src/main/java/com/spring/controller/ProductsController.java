@@ -32,7 +32,7 @@ import com.spring.service.ProductsServiceImpl;
 @Controller
 @CrossOrigin(allowCredentials = "false")
 public class ProductsController {
-	private static String URL_PATH="http://pvpvpvpvp.gonetis.com:8080/sample/com/product-image/";
+	private static String URL_PATH="http://ec2-3-37-117-153.ap-northeast-2.compute.amazonaws.com:8080/shoppingmall/com/product-image/";
 //	private static String URL_PATH="http://pvpvpvpvp.gonetis.com:8080/sample";
 	private static String SAVE_PATH="c:/Users/kim/Desktop/project/ShoppingMall/src/main/java/com/image/";
     private static final Logger logger = LoggerFactory.getLogger(ProductsController.class);

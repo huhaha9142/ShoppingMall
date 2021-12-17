@@ -34,10 +34,10 @@ import io.jsonwebtoken.UnsupportedJwtException;
 @Service
 public class FunctionSpring {
 	
-	// ÆÄÀÏÀ» ÀúÀåÇØÁÖ´Â ÇÔ¼ö 
-    // ¹ÞÀº ÆÄÀÏÀ» SAVE_PATHÀ§Ä¡¿¡ ÀÓÀÇÀÇ ÀÌ¸§À¸·Î ÀúÀåÇÏ°í
-    // ÀúÀåµÈ ÀÌ¸§À» ¸®ÅÏÇÑ´Ù.
-    // TODO: Áßº¹ÀÌ ¾Æ¿¹ ÀÏ¾î³¯ ¼ö ¾ø°Ô ¼³°èµÇ°Å³ª Áßº¹½Ã ´Ù½Ã ½Ãµµ ÇÒ ¼ö ÀÖ°Ô Â¥¾ßÇÔ(Àç±Í)
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö´ï¿½ ï¿½Ô¼ï¿½ 
+    // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ SAVE_PATHï¿½ï¿½Ä¡ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ì¸ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï°ï¿½
+    // ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ì¸ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ñ´ï¿½.
+    // TODO: ï¿½ßºï¿½ï¿½ï¿½ ï¿½Æ¿ï¿½ ï¿½Ï¾î³¯ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ç°Å³ï¿½ ï¿½ßºï¿½ï¿½ï¿½ ï¿½Ù½ï¿½ ï¿½Ãµï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½Ö°ï¿½ Â¥ï¿½ï¿½ï¿½ï¿½(ï¿½ï¿½ï¿½)
     public String fileSave(List<MultipartFile> files ,String SAVE_PATH,String where) throws IOException
     {
     	FileOutputStream fos = null;
@@ -81,7 +81,7 @@ public class FunctionSpring {
     	}
     	return result;
     }
-    //Áßº¹Á¦°Å »çÀÌÁî ÄÃ·¯ ¼ö·®
+    //ï¿½ßºï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ã·ï¿½ ï¿½ï¿½ï¿½ï¿½
     public Map<String,String> anyArray(List<ProductVO> sql,String type)
     {
 		Map<String,String> anyData = new HashMap<String,String>();
@@ -96,7 +96,7 @@ public class FunctionSpring {
 		}
 		return anyData;
     }  
-    //»çÀÌÁî º¯È¯ ¹è¿­
+    //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È¯ ï¿½è¿­
     public String sizes[] = {"XS","S","M","L","XL","2XL","3XL","4XL","5XL","6XL","7XL",
     								"XS(80)","S(85)","M(90)","L(95)","XL(100)","2XL(105)","3XL(110)","4XL(115)","5XL(120)",
     								"XS(85)","S(90)","M(95)","L(100)","XL(105)","2XL(110)","3XL(115)","4XL(120)","5XL(125)",
@@ -132,20 +132,20 @@ public class FunctionSpring {
     	boolean addSize = false;
     	for(String s : sizes)
     	{
-    		//½ÃÀÛ ÁöÁ¡ Ã£±â
+    		//ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ Ã£ï¿½ï¿½
     		if(size.contains(s+" ~"))
     		{
 //    			System.out.println("contains:"+s);
     			addSize=!addSize;
     		}
-    		//¹üÀ§ µ¥ÀÌÅÍ µî·Ï
+    		//ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
     		if(addSize)
     		{
 //    			System.out.println(s);
     			Jarr.add(s);
     			
     		}
-    		//³¡ ÁöÁ¡ Ã£±â
+    		//ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ Ã£ï¿½ï¿½
     		if(addSize&&size.contains("~ "+s))
     		{
 //    			System.out.println("contains:"+s);
@@ -165,19 +165,19 @@ public class FunctionSpring {
     	ArrayList<String> size1 = new ArrayList<String>();
     	for(String s : sizes)
     	{
-    		//½ÃÀÛ ÁöÁ¡ Ã£±â
+    		//ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ Ã£ï¿½ï¿½
     		if(size.contains(s+" ~"))
     		{
 //    			System.out.println("contains:"+s);
     			addSize=!addSize;
     		}
-    		//¹üÀ§ µ¥ÀÌÅÍ µî·Ï
+    		//ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
     		if(addSize)
     		{
 //    			System.out.println(s);
     			size1.add(s);		
     		}
-    		//³¡ ÁöÁ¡ Ã£±â
+    		//ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ Ã£ï¿½ï¿½
     		if(addSize&&size.contains("~ "+s))
     		{
 //    			System.out.println("contains:"+s);
@@ -192,16 +192,16 @@ public class FunctionSpring {
 		return size1;
     }
     
-    public String key ="11";  // µû·Î ÀúÀåÇÏ°í .gitignore¿¡ Á¦¿ÜÇ×¸ñ¿¡ µî·Ï½ÃÅ³°Í.!
+    public String key ="11";  // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï°ï¿½ .gitignoreï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½×¸ï¿½ ï¿½ï¿½Ï½ï¿½Å³ï¿½ï¿½.!
     public String makeJwtToken(String id) {
         Date now = new Date();
         return Jwts.builder()
             .setHeaderParam(Header.TYPE, Header.JWT_TYPE) // (1)
-            .setIssuer("kim") // (2) ¹ß±ÞÀÚ
+            .setIssuer("kim") // (2) ï¿½ß±ï¿½ï¿½ï¿½
             .setIssuedAt(now) // (3) 
-            .setExpiration(new Date(now.getTime() + Duration.ofMinutes(30).toMillis())) // (4) ¸¸·á½Ã°£
+            .setExpiration(new Date(now.getTime() + Duration.ofMinutes(30000).toMillis())) // (4) ï¿½ï¿½ï¿½ï¿½Ã°ï¿½
             .claim("id", id) // (5)
-            .signWith(SignatureAlgorithm.HS256, key.getBytes()) // (6) ¾ÏÈ£È­ Å° (³ëÃâµÇ¸é ¾ÈµÈ´Ù.!)
+            .signWith(SignatureAlgorithm.HS256, key.getBytes()) // (6) ï¿½ï¿½È£È­ Å° (ï¿½ï¿½ï¿½ï¿½Ç¸ï¿½ ï¿½ÈµÈ´ï¿½.!)
             .compact();
       }
     public Claims parseringJwtToken(String jwtToken) throws ExpiredJwtException, UnsupportedJwtException, MalformedJwtException, SignatureException, IllegalArgumentException, UnsupportedEncodingException
@@ -211,7 +211,7 @@ public class FunctionSpring {
     		.parseClaimsJws(jwtToken)
     		.getBody();
     }
- // ÀÌ¸ÞÀÏ ³­¼ö ¸¸µå´Â ¸Þ¼­µå
+ // ï¿½Ì¸ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Þ¼ï¿½ï¿½ï¿½
  	public String init(boolean lowerCheck,int size) {
  		Random ran = new Random();
  		StringBuffer sb = new StringBuffer();

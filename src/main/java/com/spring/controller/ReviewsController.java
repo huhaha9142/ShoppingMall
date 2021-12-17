@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.io.IOUtils;
 import org.json.simple.JSONArray;
@@ -88,19 +89,19 @@ public class ReviewsController {
     		@RequestParam("content") String content,
     		@RequestParam("title") String title,
     		@RequestParam(value="image",required=false) List<MultipartFile> imageReview,
-    		@RequestParam("productNumber") Long productNumber
+    		@RequestParam("productNumber") Long productNumber,
+    		HttpServletRequest httpServletRequest
     	) throws IOException
     {
-		System.out.println(content);
-		System.out.println(imageReview);
+		Long userNumber  = Long.valueOf((String)httpServletRequest.getAttribute("userNumber"));
 		//content title image indate hit(0), usersNumber, productsNumber
-		System.out.println("»çÀÌÁî"+imageReview.size());
+		System.out.println("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½"+imageReview.size());
 		ReviewVO vo = new ReviewVO();
 		if(imageReview.size()==0)
 		{
 			vo = new ReviewVO(content, title, 
 					"noData",
-					new Date(), (long)1, productNumber);	
+					new Date(), userNumber, productNumber);	
 			JSONObject json = new JSONObject();	
 			boolean insert = reService.insertReview(vo);
 			String result = (insert==true)?"insert":"fail";
@@ -115,7 +116,7 @@ public class ReviewsController {
     	}
 		vo = new ReviewVO(content, title, 
 				url,
-				new Date(), (long)1, productNumber);	
+				new Date(), userNumber, productNumber);	
 		JSONObject json = new JSONObject();	
 		boolean insert = reService.insertReview(vo);
 		String result = (insert==true)?"insert":"fail";
@@ -134,10 +135,12 @@ public class ReviewsController {
     		@PathVariable("reviewsNumber") String reviewsNumber,
     		@RequestParam("content") String content,
     		@RequestParam("title") String title,
-    		@RequestParam(value="image",required=false) List<MultipartFile> imageReview	
+    		@RequestParam(value="image",required=false) List<MultipartFile> imageReview,
+    		HttpServletRequest httpServletRequest
     	) throws IOException
     {
-		
+		Long userNumber  = Long.valueOf((String)httpServletRequest.getAttribute("userNumber"));
+		System.out.println(userNumber);
 		JSONObject json = new JSONObject();
 		ReviewVO vo = new ReviewVO();
 		if(imageReview.size()==0)
@@ -147,6 +150,7 @@ public class ReviewsController {
 			vo.setRegDate(new Date());
 			vo.setImage("noData");
 			vo.setReviewsNumber(Long.valueOf(reviewsNumber));
+			vo.setUsersNumber(userNumber);
 			boolean insert = reService.insertReview(vo);
 			String result = (insert==true)?"update":"fail";
 			json.put("result",result);
@@ -158,6 +162,7 @@ public class ReviewsController {
     		url += s3Uploader.upload(imageReview.get(i), "review");
     		url +=",";
     	}
+    	vo.setUsersNumber(userNumber);
 		vo.setContent(content);
 		vo.setTitle(title);
 		vo.setRegDate(new Date());
@@ -170,18 +175,20 @@ public class ReviewsController {
 	
     }
 	// Review Delete API
-	// TODO: jwt
 	@CrossOrigin(origins = "*", allowedHeaders = "*")  
     @RequestMapping(
   		  value = "/reviews/{reviewsNumber}",method = RequestMethod.DELETE,produces = "application/json; charset=utf8"
   		  )
     @ResponseBody
     public String reviewUpdate(
-    		@PathVariable("reviewsNumber") String reviewsNumber)
+    		@PathVariable("reviewsNumber") String reviewsNumber,
+    		HttpServletRequest httpServletRequest)
     {
+		Long userNumber  = Long.valueOf((String)httpServletRequest.getAttribute("userNumber"));
 		JSONObject json = new JSONObject();
 		ReviewVO vo = new ReviewVO();
 		try { 
+			vo.setUsersNumber(userNumber);
 			vo.setReviewsNumber(Long.valueOf(reviewsNumber));
     	}catch(Exception e)
     	{
@@ -201,31 +208,17 @@ public class ReviewsController {
 		
     }
 	
-	// TODO : º¸·ù
-	// ÀÚ±â°¡ ÀÛ¼ºÇÑ ¸ðµç ¸®ºä º¸±â (By JWT cookie)
-	@CrossOrigin(origins = "*", allowedHeaders = "*")  
-    @RequestMapping(
-  		  value = "/reviews/user",method = RequestMethod.GET,produces = "application/json; charset=utf8"
-  		  )
-    @ResponseBody
-    public String reviewMyReviews()
-    {
-		JSONObject json = new JSONObject();
-		
-		return json.toString();
-    }
-	// Á¦Ç°ÀÇ ¸®ºä Á¦Ç°Å°¶û ¿¬°áÇå ¸ðµç ¸®ºä º¸±â 
 	@CrossOrigin(origins = "*", allowedHeaders = "*")
-    @RequestMapping(value="/product-reviews/{reviewsNumber}",method = RequestMethod.GET,produces = "application/json; charset=utf8")
+    @RequestMapping(value="/product-reviews/{productNumber}",method = RequestMethod.GET,produces = "application/json; charset=utf8")
     @ResponseBody
     public String productReviewList(
-    		@PathVariable("reviewsNumber") String reviewsNumber)
+    		@PathVariable("productNumber") String productNumber)
     {
 		System.out.println("reviews.GET");
 		JSONObject jsonObject = new JSONObject();
     	JSONArray jsonArarry = new JSONArray();
     	ReviewVO vo = new ReviewVO();
-    	vo.setProductsNumber(Long.valueOf(reviewsNumber));
+    	vo.setProductsNumber(Long.valueOf(productNumber));
     	List<ReviewVO> sql = reService.selectProductReviews(vo);
     	
     	for(int i=0;i<sql.size();i++)
@@ -257,7 +250,48 @@ public class ReviewsController {
     	return jsonObject.toString();
     }
 	
-	// reviewNumber ¼öÁ¤¿ë µ¥ÀÌÅÍ ºÒ·¯°¡±â 
+	@CrossOrigin(origins = "*", allowedHeaders = "*")  
+    @RequestMapping(
+  		  value = "/reviews/user",method = RequestMethod.GET,produces = "application/json; charset=utf8"
+  		  )
+    @ResponseBody
+    public String reviewMyReviews(@RequestParam("userNumber") Long userNumber)
+    {
+	    ReviewVO vo = new ReviewVO();
+	    JSONObject jsonObject = new JSONObject();
+	    JSONArray jsonArarry = new JSONArray();
+	    vo.setUsersNumber(userNumber);
+	    List<ReviewVO> sql = reService.selectMyReviews(vo);
+	    int size =sql.size();
+	    for(int i=0;i<size;i++)
+    	{
+    		String[] image = sql.get(i).getImage().split(",");    
+			JSONObject list = new JSONObject();
+			JSONObject imgJ = new JSONObject();
+			JSONArray jsonimg = new JSONArray();
+			list.put("index", i);
+			list.put("content", sql.get(i).getContent());
+			list.put("title", sql.get(i).getTitle());
+//			list.put("indate", sql.get(i).getInDate());
+			for(String img:image)
+			{
+				if(img!="") 
+					jsonimg.add(URL_PATH+img);
+			}	
+			list.put("userId", sql.get(i).getId());
+			imgJ.put("image", jsonimg);
+			list.put("images", imgJ);
+			list.put("userName",sql.get(i).getName());
+			list.put("product", sql.get(i).getProduct());
+			list.put("reviewsNumber", sql.get(i).getReviewsNumber());
+			jsonArarry.add(list);		
+    	}
+    	jsonObject.put("reviews", jsonArarry);
+		System.out.println(jsonArarry.toString());
+    	return jsonObject.toString();
+    }
+	
+	// reviewNumber
 	@CrossOrigin(origins = "*", allowedHeaders = "*")  
     @RequestMapping(
   		  value = "/reviews/{reviewsNumber}",method = RequestMethod.GET,produces = "application/json; charset=utf8"
@@ -293,7 +327,7 @@ public class ReviewsController {
 		return json.toString();
     }
 		
-	// »çÁø¸¸ º¸³»ÁÖ´Â API
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ö´ï¿½ API
     @CrossOrigin(origins = "*", allowedHeaders = "*")  
     @RequestMapping(
   		  value = "/com/review-image/{img}",method = RequestMethod.GET

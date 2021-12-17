@@ -85,7 +85,10 @@
   <select id="selectUserPrivacy" parameterType="usersVO" resultType="usersVO">
   		SELECT id,
   			nick_name,
-  			address,
+  			address1,
+  			address2,
+  			address3,
+  			address4,
   			phone,
   			indate
   		FROM users
@@ -104,7 +107,7 @@
   <update id="updatePassword" parameterType="usersVO">
   		UPDATE users
   		SET password = #{password}
-  		WHERE user_number = #{user Number}
+  		WHERE user_number = #{userNumber}
   </update>
   <update id="updatePasswordByEmail" parameterType="usersVO" >
   		UPDATE users
