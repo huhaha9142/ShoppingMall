@@ -17,9 +17,9 @@ public class CartDAOImpl implements CartDAO {
 	private static final String Namespace = "com.example.mapper.cartMapper";
 	
 	@Override
-	public List<CartVO> selectListCart() {
+	public List<CartVO> selectListCart(CartVO vo) {
 		
-		return sqlSession.selectList(Namespace+".selectListCart");
+		return sqlSession.selectList(Namespace+".selectListCart",vo);
 	}
 
 	@Override

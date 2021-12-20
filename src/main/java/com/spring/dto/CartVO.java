@@ -8,7 +8,6 @@ public class CartVO {
 	private String product;
 	private Long price;
 	private String title_image;
-	@Override
 	public String toString() {
 		return "CartVO [quantity=" + quantity + ", usersNumber=" + usersNumber + ", productsNumber=" + productsNumber
 				+ ", cartNumber=" + cartNumber + ", product=" + product + ", price=" + price + ", title_image="

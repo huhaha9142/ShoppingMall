@@ -19,6 +19,22 @@
  			INNER JOIN users us
  		ON	q.users_usernumber = us.user_number
  	</select>
+ 	 <select id="selectListUserQna" resultType="qnaVO">
+ 		SELECT 
+ 			q.content,
+ 			q.indate AS inDate,
+ 			q.title,
+ 			q.state, 
+ 			us.user_number AS usersNumber,
+ 			q.qna_number AS qnaNumber,
+ 			q.regdate AS regDate,
+ 			q.image
+ 		FROM qna q
+ 			INNER JOIN users us
+ 		ON	q.users_usernumber = us.user_number
+ 		WHERE (user_number = #{usersNumber})
+ 	</select>
+ 	
  	<insert id="insertQna" parameterType="qnaVO" >
  		INSERT INTO qna
  		(content, indate, title, state, users_usernumber, 

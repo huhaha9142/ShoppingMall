@@ -15,9 +15,9 @@ public class CartServiceImpl implements CartService {
 	@Inject
 	private CartDAO dao;
 	@Override
-	public List<CartVO> selectListCart() {
+	public List<CartVO> selectListCart(CartVO vo) {
 		
-		return dao.selectListCart();
+		return dao.selectListCart(vo);
 	}
 
 	@Override

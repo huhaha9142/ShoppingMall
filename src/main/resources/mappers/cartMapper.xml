@@ -5,7 +5,7 @@
   <mapper namespace="com.example.mapper.cartMapper">
  
    <!-- qna select 최소 3개 (전체, user, 관리자) -->
-  	<select id ="selectListCart" resultType="cartVO">
+  	<select id ="selectListCart" resultType="cartVO" parameterType="cartVO">
   		SELECT
   			ca.quantity,
   			ca.users_usernumber AS usersNumber,
@@ -25,11 +25,10 @@
   	<insert id ="insertCart" parameterType="cartVO" >
   		INSERT INTO cart
 			(quantity, users_usernumber, 
-				products_productnumber, cart_number)
+				products_productnumber)
 			VALUE (#{quantity},
 					#{usersNumber},
-					#{productsNumber},
-					#{cartNumber}
+					#{productsNumber}
 				)	
   	</insert>
   	<update id="updateCart" parameterType="cartVO">
