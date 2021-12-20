@@ -399,6 +399,7 @@ public class UsersController {
 	@RequestMapping(value="/user-privacy",method = RequestMethod.GET,produces = "application/json; charset=utf8")
 	@ResponseBody
 	public String userPrivacy(HttpServletRequest httpServletRequest) {
+		System.out.println("유저 정보 불러기가 작동");
 		Long userNumber  = Long.valueOf((String)httpServletRequest.getAttribute("userNumber"));
 		JSONObject jsonObject = new JSONObject();
 		UsersVO vo = new UsersVO();

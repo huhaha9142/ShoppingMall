@@ -17,8 +17,8 @@ import { CookiesProvider } from 'react-cookie';
 ReactDOM.render(
 
     <React.StrictMode>  
-      <SearchBarController/>
-      {/* <LoginForm/>  */}
+      {/* <SearchBarController/> */}
+      <LoginForm/> 
 
       {/* <AddressApiController/> */}
       {/* <ImageLodingwithdataEx/> */}
