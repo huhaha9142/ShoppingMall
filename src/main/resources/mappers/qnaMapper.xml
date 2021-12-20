@@ -3,8 +3,8 @@
   PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
  <mapper namespace="com.example.mapper.qnaMapper">
- <!-- qna select 최소 3개 (전체, user, 관리자) -->
- <!-- state 컬럼 - 0: 답변대기, 1:답변완료, 2: 관리자 답변, 3: FAQ -->
+ <!-- qna select 2개 (전체, user) -->
+ <!-- state 컬럼 - 0: 답변대기, 1:답변완료, 2: FAQ -->
  	<select id="selectListQna" resultType="qnaVO">
  		SELECT 
  			q.content,
@@ -14,12 +14,14 @@
  			us.user_number AS usersNumber,
  			q.qna_number AS qnaNumber,
  			q.regdate AS regDate,
- 			q.image
+ 			q.image,
+ 			us.id,
+ 			us.name
  		FROM qna q
  			INNER JOIN users us
  		ON	q.users_usernumber = us.user_number
  	</select>
- 	 <select id="selectListUserQna" resultType="qnaVO">
+ 	 <select id="selectListUserQna" resultType="qnaVO" parameterType="qnaVO">
  		SELECT 
  			q.content,
  			q.indate AS inDate,
@@ -28,7 +30,9 @@
  			us.user_number AS usersNumber,
  			q.qna_number AS qnaNumber,
  			q.regdate AS regDate,
- 			q.image
+ 			q.image,
+ 			us.id,
+ 			us.name
  		FROM qna q
  			INNER JOIN users us
  		ON	q.users_usernumber = us.user_number
@@ -37,18 +41,17 @@
  	
  	<insert id="insertQna" parameterType="qnaVO" >
  		INSERT INTO qna
- 		(content, indate, title, state, users_usernumber, 
- 							qna_number, regdate, image)
- 			VALUE (#{content},
- 					#{inDate},
- 					#{title},
- 					#{usersNumber},
- 					#{state},
- 					#{usersNumber},
- 					#{qnaNumber},
- 					#{regDate},
- 					#{image}
- 					)	
+ 		(content, indate, title, state, 
+ 			users_usernumber, regdate, image)
+ 		VALUE (#{content},
+ 				#{inDate},
+ 				#{title},
+ 				#{usersNumber},
+ 				#{state},
+ 				#{usersNumber},
+ 				#{regDate},
+ 				#{image}
+ 			)	
  	</insert>
 
  	<update id="updateQna" parameterType="qnaVO" >

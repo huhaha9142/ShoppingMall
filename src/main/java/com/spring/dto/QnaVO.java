@@ -10,14 +10,20 @@ public class QnaVO {
 	private String content;
 	private String title;
 	private Date inDate;
-	private Long hit; // state로 바꿔줘야함
+	private Long state;
 	private Long usersNumber;
 	private Long qnaNumber;
+	private Date regDate;
+	private String image;
+	private String id;
+	private String name;
+	
 	
 	@Override
 	public String toString() {
-		return "QnaVO [content=" + content + ", title=" + title + ", inDate=" + inDate + ", hit=" + hit
-				+ ", usersNumber=" + usersNumber + ", qnaNumber=" + qnaNumber + "]";
+		return "QnaVO [content=" + content + ", title=" + title + ", inDate=" + inDate + ", state=" + state
+				+ ", usersNumber=" + usersNumber + ", qnaNumber=" + qnaNumber + ", regDate=" + regDate + ", image="
+				+ image + ", id=" + id + ", name=" + name + "]";
 	}
 
 	public String getContent() {
@@ -43,14 +49,15 @@ public class QnaVO {
 	public void setInDate(Date inDate) {
 		this.inDate = inDate;
 	}
-
-	public Long getHit() {
-		return hit;
+	
+	public Long getState() {
+		return state;
 	}
 
-	public void setHit(Long hit) {
-		this.hit = hit;
+	public void setState(Long state) {
+		this.state = state;
 	}
+
 
 	public Long getUsersNumber() {
 		return usersNumber;
@@ -67,6 +74,40 @@ public class QnaVO {
 	public void setQnaNumber(Long qnaNumber) {
 		this.qnaNumber = qnaNumber;
 	}
+
+	public Date getRegDate() {
+		return regDate;
+	}
+
+	public void setRegDate(Date regDate) {
+		this.regDate = regDate;
+	}
+
+	public String getImage() {
+		return image;
+	}
+
+	public void setImage(String image) {
+		this.image = image;
+	}
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+
 	
 	
 	
