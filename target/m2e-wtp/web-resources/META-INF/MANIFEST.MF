@@ -1,9 +1,4 @@
 Manifest-Version: 1.0
-<<<<<<< HEAD
-Built-By: park
-Build-Jdk: 16.0.2
-=======
 Build-Jdk-Spec: 16
->>>>>>> main
 Created-By: Maven Integration for Eclipse
 
