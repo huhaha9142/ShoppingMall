@@ -13,7 +13,9 @@
   			ca.cart_number AS cartNumber,
   			pr.product,
   			pr.price,
-  			pr.title_image
+  			pr.title_image,
+  			ca.size,
+  			ca.color
   		FROM cart ca
   			INNER JOIN users us
   			INNER JOIN products pr
@@ -25,10 +27,12 @@
   	<insert id ="insertCart" parameterType="cartVO" >
   		INSERT INTO cart
 			(quantity, users_usernumber, 
-				products_productnumber)
+				products_productnumber, size, color)
 			VALUE (#{quantity},
 					#{usersNumber},
-					#{productsNumber}
+					#{productsNumber},
+					#{size},
+					#{color}
 				)	
   	</insert>
   	<update id="updateCart" parameterType="cartVO">

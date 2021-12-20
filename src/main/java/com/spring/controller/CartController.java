@@ -50,6 +50,8 @@ public class CartController {
 				list.put("cartNumber", sql.get(i).getCartNumber());
 				list.put("product", sql.get(i).getProduct());
 				list.put("price", sql.get(i).getPrice());
+				list.put("size", sql.get(i).getSize());
+				list.put("color", sql.get(i).getColor());
 				jsonArarry.add(list);
 			}
 			jsonObject.put("carts", jsonArarry);
@@ -62,7 +64,9 @@ public class CartController {
 		public String cartInsert(
 				@RequestParam("quantity") Long quantity,
 	    		@RequestParam("usersNumber") Long usersNumber,
-	    		@RequestParam("productNumber") Long productNumber
+	    		@RequestParam("productNumber") Long productNumber,
+	    		@RequestParam("size") String size,
+	    		@RequestParam("color") String color
 				) throws IOException
 		{
 			CartVO vo = new CartVO();
@@ -70,6 +74,8 @@ public class CartController {
 				vo.setQuantity(quantity);
 				vo.setUsersNumber(usersNumber);
 				vo.setProductsNumber(productNumber);
+				vo.setSize(size);
+				vo.setColor(color);
 				JSONObject json = new JSONObject();
 				boolean insert = cartService.insertCart(vo);
 				String result = (insert==true)?"insert":"fail";
