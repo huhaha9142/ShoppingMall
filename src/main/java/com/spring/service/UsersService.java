@@ -1,5 +1,7 @@
 package com.spring.service;
 
+import javax.servlet.http.HttpSession;
+
 import com.spring.dto.UsersVO;
 
 public interface UsersService {

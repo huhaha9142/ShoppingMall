@@ -34,10 +34,10 @@ import io.jsonwebtoken.UnsupportedJwtException;
 @Service
 public class FunctionSpring {
 	
-	// ������ �������ִ� �Լ� 
-    // ���� ������ SAVE_PATH��ġ�� ������ �̸����� �����ϰ�
-    // ����� �̸��� �����Ѵ�.
-    // TODO: �ߺ��� �ƿ� �Ͼ �� ���� ����ǰų� �ߺ��� �ٽ� �õ� �� �� �ְ� ¥����(���)
+	// 파일을 저장해주는 함수 
+    // 받은 파일을 SAVE_PATH위치에 임의의 이름으로 저장하고
+    // 저장된 이름을 리턴한다.
+    // TODO: 중복이 아예 일어날 수 없게 설계되거나 중복시 다시 시도 할 수 있게 짜야함(재귀)
     public String fileSave(List<MultipartFile> files ,String SAVE_PATH,String where) throws IOException
     {
     	FileOutputStream fos = null;
@@ -81,7 +81,7 @@ public class FunctionSpring {
     	}
     	return result;
     }
-    //�ߺ����� ������ �÷� ����
+    //중복제거 사이즈 컬러 수량
     public Map<String,String> anyArray(List<ProductVO> sql,String type)
     {
 		Map<String,String> anyData = new HashMap<String,String>();
@@ -96,7 +96,7 @@ public class FunctionSpring {
 		}
 		return anyData;
     }  
-    //������ ��ȯ �迭
+    //사이즈 변환 배열
     public String sizes[] = {"XS","S","M","L","XL","2XL","3XL","4XL","5XL","6XL","7XL",
     								"XS(80)","S(85)","M(90)","L(95)","XL(100)","2XL(105)","3XL(110)","4XL(115)","5XL(120)",
     								"XS(85)","S(90)","M(95)","L(100)","XL(105)","2XL(110)","3XL(115)","4XL(120)","5XL(125)",
@@ -132,20 +132,20 @@ public class FunctionSpring {
     	boolean addSize = false;
     	for(String s : sizes)
     	{
-    		//���� ���� ã��
+    		//시작 지점 찾기
     		if(size.contains(s+" ~"))
     		{
 //    			System.out.println("contains:"+s);
     			addSize=!addSize;
     		}
-    		//���� ������ ���
+    		//범위 데이터 등록
     		if(addSize)
     		{
 //    			System.out.println(s);
     			Jarr.add(s);
     			
     		}
-    		//�� ���� ã��
+    		//끝 지점 찾기
     		if(addSize&&size.contains("~ "+s))
     		{
 //    			System.out.println("contains:"+s);
@@ -165,19 +165,19 @@ public class FunctionSpring {
     	ArrayList<String> size1 = new ArrayList<String>();
     	for(String s : sizes)
     	{
-    		//���� ���� ã��
+    		//시작 지점 찾기
     		if(size.contains(s+" ~"))
     		{
 //    			System.out.println("contains:"+s);
     			addSize=!addSize;
     		}
-    		//���� ������ ���
+    		//범위 데이터 등록
     		if(addSize)
     		{
 //    			System.out.println(s);
     			size1.add(s);		
     		}
-    		//�� ���� ã��
+    		//끝 지점 찾기
     		if(addSize&&size.contains("~ "+s))
     		{
 //    			System.out.println("contains:"+s);
@@ -192,7 +192,7 @@ public class FunctionSpring {
 		return size1;
     }
     
-    public String key ="11";  // ���� �����ϰ� .gitignore�� �����׸� ��Ͻ�ų��.!
+    public String key ="11";  // 따로 저장하고 .gitignore에 제외항목에 등록시킬 것 
     public String makeJwtToken(String id) {
         Date now = new Date();
         return Jwts.builder()
@@ -211,7 +211,7 @@ public class FunctionSpring {
     		.parseClaimsJws(jwtToken)
     		.getBody();
     }
- // �̸��� ���� ����� �޼���
+ // 이메일 난수 만드는 메서드
  	public String init(boolean lowerCheck,int size) {
  		Random ran = new Random();
  		StringBuffer sb = new StringBuffer();
