@@ -111,15 +111,15 @@ public class HomeController {
 //    	System.out.println(id1);
     	return id1; 
     }
- // ╣╔юлем ╨ёюл╫╨ ╣╔юлем ╧И╬В
+    // К█╟Л²╢М└╟ К╡═Л²╢Л┼╓ К█╟Л²╢М└╟ К╟╠Л≈┘
     
- // еь╫╨ф╝╦╕ ╣╔юлем ╨ёюл╫╨©║ Ёж╠Б (е╘╥я╦╣ ╣╔юлем╣И)
+    // М┘█Л┼╓М┼╦К╔╪ К█╟Л²╢М└╟ К╡═Л²╢Л┼╓Л≈░ К└ёЙ╦╟ (М│╛К║╓К╖│ К█╟Л²╢М└╟К⌠╓)
     static final String rootPath = "C:\\Users\\kim\\Desktop\\project\\ShoppingMall\\files\\";
     static String sourceProducts = rootPath + "books.txt";
     @RequestMapping(value = "/putDatabase")
     public void putDatabase() {
     	// О©╫ж╫О©╫ф╝О©╫О©╫ О©╫О©╫О©╫О©╫
-    	System.out.println("О©╫О©╫О©╫О©╫О©??");
+    	System.out.println("О©╫О©╫О©╫О©╫О©╫??");
     			Reader fr = null; 			
     			// О©╫О©╫О©╫О©╫ О©╫О©╫ф╝О©╫О©╫
     			BufferedReader br = null;

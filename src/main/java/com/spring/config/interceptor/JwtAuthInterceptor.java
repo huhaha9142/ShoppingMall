@@ -5,6 +5,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -19,8 +20,13 @@ public class JwtAuthInterceptor implements HandlerInterceptor {
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
 		System.out.println("jwt++");
+		if(request.getMethod().equals("OPTIONS")) {
+    		return true;
+    	}
 		try {
+			
 			String[] token = request.getHeader("authorization").split(" ");
+			System.out.println(token);
 			String userId =functionSpring.parseringJwtToken(token[1]).get("id", String.class);
 			System.out.println("성공");
 			request.setAttribute("userNumber", userId);

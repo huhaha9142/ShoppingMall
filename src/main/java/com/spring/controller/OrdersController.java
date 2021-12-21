@@ -239,7 +239,7 @@ public class OrdersController {
 			map.add("approval_url", KAKAO_APPROVAL_URL+"?uuid="+uuId+"&orderNumber="+orderNumber);
 			map.add("cancel_url", KAKAO_CANCEL_URL+"?uuid="+uuId);
 			map.add("fail_url", KAKAO_FAIL_URL+"?uuid="+uuId);
-			//TODO: ??????? ??????!
+			// TODO: 어드민키는 숨겨야됨!
 			headers.add("Authorization", "KakaoAK 808e27a6a5ec182559cd3332439f68fd");
 			HttpEntity<MultiValueMap<String, String>> entity = new HttpEntity(map,headers);
 			String answer = restTemplate.postForObject(KAKAO_PAYMENT_URL_PATH+KAKAO_READY, entity, String.class);
@@ -286,7 +286,7 @@ public class OrdersController {
 			map.add("pg_token", pgToken);
 			map.add("tid", sql.get(0).getTid());
 		
-			//TODO: ??????? ??????!
+			// TODO: 어드민키는 숨겨야됨!
 			headers.add("Authorization", "KakaoAK 808e27a6a5ec182559cd3332439f68fd");
 			HttpEntity<MultiValueMap<String, String>> entity = new HttpEntity(map,headers);
 			String answer = restTemplate.postForObject(KAKAO_PAYMENT_URL_PATH+KAKAO_APPROVE, entity, String.class);

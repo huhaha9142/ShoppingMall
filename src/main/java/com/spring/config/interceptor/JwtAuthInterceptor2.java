@@ -20,6 +20,9 @@ public class JwtAuthInterceptor2 implements HandlerInterceptor {
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
 		System.out.println("by 2 jwt++");
+		if(request.getMethod().equals("OPTIONS")) {
+    		return true;
+    	}
 		String method = request.getMethod();
 		if(method.equals("GET"))
 		{
@@ -27,6 +30,7 @@ public class JwtAuthInterceptor2 implements HandlerInterceptor {
 		}
 		try {
 			String[] token = request.getHeader("authorization").split(" ");
+			System.out.println(token);
 			String userId =functionSpring.parseringJwtToken(token[1]).get("id", String.class);
 			System.out.println("성공");
 			request.setAttribute("userNumber", userId);

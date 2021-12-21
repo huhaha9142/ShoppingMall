@@ -106,23 +106,14 @@ public class UsersController {
 	@CrossOrigin(origins = "*", allowedHeaders = "*")
 	@RequestMapping(value="/user",method = RequestMethod.GET,produces = "application/json; charset=utf8")
 	@ResponseBody
-	public String userJwtTokenCheck(@RequestHeader("authorization") String token) throws ExpiredJwtException, UnsupportedJwtException, MalformedJwtException, SignatureException, IllegalArgumentException, UnsupportedEncodingException
+	public String userJwtTokenCheck(HttpServletRequest httpServletRequest)
 	{
+		Long userNumber  = Long.valueOf((String)httpServletRequest.getAttribute("userNumber"));
 		JSONObject jsonObject = new JSONObject();
-		System.out.println(token);
-		String[] tokenA = token.split(" ");
-		if(tokenA[1].equals("token is null"))
-		{
-			jsonObject.put("tokenNull", "...");
-			return jsonObject.toString();
-		}
-		try {
-			String userId =functionSpring.parseringJwtToken(tokenA[1]).get("id", String.class);
-			jsonObject.put("id",userId);
-		}
-		catch (Exception e) {
-			jsonObject.put("error","토큰의 유효기간이 만료 되었거나 다른 오류입니다. 세부오류 : "+e);
-		}	
+		UsersVO vo = new UsersVO();
+		vo.setUserNumber(userNumber);
+		UsersVO sql = usersService.selectUserPrivacy(vo);
+		jsonObject.put("nickName", sql.getNickName());
 		return jsonObject.toString();
 		
 	}
@@ -399,13 +390,15 @@ public class UsersController {
 	@RequestMapping(value="/user-privacy",method = RequestMethod.GET,produces = "application/json; charset=utf8")
 	@ResponseBody
 	public String userPrivacy(HttpServletRequest httpServletRequest) {
+		System.out.println("유저 정보 불러기가 작동");
 		Long userNumber  = Long.valueOf((String)httpServletRequest.getAttribute("userNumber"));
 		JSONObject jsonObject = new JSONObject();
 		UsersVO vo = new UsersVO();
 		vo.setUserNumber(userNumber);
 		UsersVO sql = usersService.selectUserPrivacy(vo);
-		jsonObject.put("id", sql.getId());
 		jsonObject.put("nickName", sql.getNickName());
+		
+		jsonObject.put("id", sql.getId());
 		jsonObject.put("address1", sql.getAddress1());
 		jsonObject.put("address2", sql.getAddress2());
 		jsonObject.put("address3", sql.getAddress3());

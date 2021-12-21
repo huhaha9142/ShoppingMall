@@ -327,7 +327,7 @@ public class ReviewsController {
 		return json.toString();
     }
 		
-	// ������ �����ִ� API
+	// 사진만 보내주는 API
     @CrossOrigin(origins = "*", allowedHeaders = "*")  
     @RequestMapping(
   		  value = "/com/review-image/{img}",method = RequestMethod.GET

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ <mapper namespace="com.example.mapper.qnaMapper">
+ <!-- qna select 2개 (전체, user) -->
+ <!-- state 컬럼 - 0: 답변대기, 1:답변완료, 2: FAQ -->
+ 	<select id="selectListQna" resultType="qnaVO">
+ 		SELECT 
+ 			q.content,
+ 			q.indate AS inDate,
+ 			q.title,
+ 			q.state, 
+ 			us.user_number AS usersNumber,
+ 			q.qna_number AS qnaNumber,
+ 			q.regdate AS regDate,
+ 			q.image,
+ 			us.id,
+ 			us.name
+ 		FROM qna q
+ 			INNER JOIN users us
+ 		ON	q.users_usernumber = us.user_number
+ 	</select>
+ 	 <select id="selectListUserQna" resultType="qnaVO" parameterType="qnaVO">
+ 		SELECT 
+ 			q.content,
+ 			q.indate AS inDate,
+ 			q.title,
+ 			q.state, 
+ 			us.user_number AS usersNumber,
+ 			q.qna_number AS qnaNumber,
+ 			q.regdate AS regDate,
+ 			q.image,
+ 			us.id,
+ 			us.name
+ 		FROM qna q
+ 			INNER JOIN users us
+ 		ON	q.users_usernumber = us.user_number
+ 		WHERE (user_number = #{usersNumber})
+ 	</select>
+ 	
+ 	<insert id="insertQna" parameterType="qnaVO" >
+ 		INSERT INTO qna
+ 		(content, indate, title, state, 
+ 			users_usernumber, regdate, image)
+ 		VALUE (#{content},
+ 				#{inDate},
+ 				#{title},
+ 				#{usersNumber},
+ 				#{state},
+ 				#{usersNumber},
+ 				#{regDate},
+ 				#{image}
+ 			)	
+ 	</insert>
+
+ 	<update id="updateQna" parameterType="qnaVO" >
+ 		UPDATE qna
+ 			SET	content = #{content},
+ 				title = #{title},
+ 				regdate = #{regDate}
+		WHERE (qna_number = #{qnaNumber})
+ 	</update>
+ 	
+ 	<delete id="deleteQna" parameterType="qnaVO">
+ 		DELETE
+		FROM qna
+		WHERE (qna_number = #{qnaNumber})
+ 	</delete>
+ </mapper>
+ 

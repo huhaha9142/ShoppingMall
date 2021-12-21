@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  <mapper namespace="com.example.mapper.cartMapper">
+ 
+  	<select id ="selectListCart" resultType="cartVO" parameterType="cartVO">
+  		SELECT
+  			ca.quantity,
+  			ca.users_usernumber AS usersNumber,
+  			ca.products_productnumber AS productsNumber,
+  			ca.cart_number AS cartNumber,
+  			pr.product,
+  			pr.price,
+  			pr.title_image,
+  			ca.size,
+  			ca.color
+  		FROM cart ca
+  			INNER JOIN users us
+  			INNER JOIN products pr
+  		ON ca.users_usernumber = us.user_number
+  			AND ca.products_productnumber = pr.product_number
+  		WHERE (user_number = #{usersNumber})
+  		ORDER BY cart_number 		
+  	</select>
+  	<insert id ="insertCart" parameterType="cartVO" >
+  		INSERT INTO cart
+			(quantity, users_usernumber, 
+				products_productnumber, size, color)
+			VALUE (#{quantity},
+					#{usersNumber},
+					#{productsNumber},
+					#{size},
+					#{color}
+				)	
+  	</insert>
+  	<update id="updateCart" parameterType="cartVO">
+		UPDATE cart
+			SET quantity = #{quantity}
+		WHERE (cart_number = #{cartNumber})	
+	</update>
+	<delete id="deleteCart" parameterType="cartVO">
+		DELETE 
+		FROM cart
+		WHERE (cart_number = #{cartNumber})	
+	</delete>
+  </mapper>

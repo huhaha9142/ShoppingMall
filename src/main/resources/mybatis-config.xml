@@ -11,6 +11,8 @@
             <typeAlias type="com.spring.dto.CustomVO" alias="customVO"/>
             <typeAlias type="com.spring.dto.UsersVO" alias="usersVO"/>
             <typeAlias type="com.spring.dto.OrderVO" alias="orderVO"/>
+            <typeAlias type="com.spring.dto.CartVO" alias="cartVO"/>
+            <typeAlias type="com.spring.dto.QnaVO" alias="qnaVO"/>
         </typeAliases>
 
         
