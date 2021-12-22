@@ -33,7 +33,7 @@ public class QnaController {
 	@Inject
 	private S3Uploader s3Uploader;
 	
-	String[] orState = {"답변 대기", "답변 완료"};
+	String[] orState = {"답변 대기", "답변 완료", "FAQ"};
 	
 		//	Qna SELECT LIST
 		@CrossOrigin(origins = "*", allowedHeaders = "*")
