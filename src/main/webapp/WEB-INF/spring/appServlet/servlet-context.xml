@@ -61,6 +61,7 @@
 			<exclude-mapping path="/products"/>
 			<exclude-mapping path="/com/**"/>
 			<exclude-mapping path="/"/>
+			<exclude-mapping path="/images"/>
 			
 			<beans:ref bean="JwtAuthInterceptor" />
 		</interceptor>

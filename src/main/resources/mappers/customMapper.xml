@@ -4,7 +4,7 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
   <mapper namespace="com.example.mapper.customMapper">
   
-  <insert id="insertCustom" parameterType="customVO">
+  <insert id="insertCustom" parameterType="customVO" useGeneratedKeys="true" keyProperty="customNumber">
   		INSERT INTO products_custom
   		(image,products_productnumber,users_user_number,size,color,indate,regdate)
   			VALUE (#{image},
@@ -28,6 +28,12 @@
 	  		c.regdate AS regDate
 	  	FROM products_custom c INNER JOIN products p
         ON c.products_productnumber = p.product_number
+  </select>
+  <select id="selectImageUrl" parameterType="customVO" resultType="customVO">
+  		SELECT
+  			image
+  		FROM products_custom
+  		WHERE products_custom_number = #{customNumber} AND users_user_number = #{userNumber}
   </select>
   <update id="updateCustom" parameterType="customVO">
   		UPDATE products_custom 

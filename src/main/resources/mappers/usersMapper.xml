@@ -84,7 +84,7 @@
   </select>
   <select id="selectUserPrivacy" parameterType="usersVO" resultType="usersVO">
   		SELECT id,
-  			nick_name,
+  			name AS nickName,
   			address1,
   			address2,
   			address3,

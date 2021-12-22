@@ -26,8 +26,8 @@ public class JwtAuthInterceptor implements HandlerInterceptor {
 		try {
 			
 			String[] token = request.getHeader("authorization").split(" ");
-			System.out.println(token);
-			String userId =functionSpring.parseringJwtToken(token[1]).get("id", String.class);
+			System.out.println(token[1].replaceFirst("\"", ""));
+			String userId =functionSpring.parseringJwtToken(token[1].replaceFirst("\"", "")).get("id", String.class);
 			System.out.println("성공");
 			request.setAttribute("userNumber", userId);
 			return true;

@@ -42,6 +42,14 @@ public class S3controller {
 	    	
 	        return "https://shoppingmal.s3.ap-northeast-2.amazonaws.com/"+name;
 	    }
+	  @CrossOrigin(origins = "*", allowedHeaders = "*")
+      @RequestMapping(value="/images",method = RequestMethod.DELETE,produces = "application/json; charset=utf8")
+      @ResponseBody
+      public String delete(@RequestParam("name") String name) throws IOException {
+	    	System.out.println("작동은 함");
+	    	s3Uploader.delete(name,"review");
+	        return ""+name;
+	    }
 	}
 
 

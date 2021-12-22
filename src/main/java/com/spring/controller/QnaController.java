@@ -34,9 +34,8 @@ public class QnaController {
 			JSONArray jsonArarry = new JSONArray();
 			QnaVO vo = new QnaVO();
 			List<QnaVO> sql=qService.selectListQna(vo);
+			
+			return jsonObject.toString();
 		}
-		return jsonObject.toString();
-	
-
 }
 
