@@ -47,6 +47,7 @@ public class CartController {
 				list.put("index", i);
 				list.put("quantity", sql.get(i).getQuantity());
 				list.put("usersNumber", sql.get(i).getUsersNumber());
+				list.put("productsNumber", sql.get(i).getProductsNumber());
 				list.put("cartNumber", sql.get(i).getCartNumber());
 				list.put("product", sql.get(i).getProduct());
 				list.put("price", sql.get(i).getPrice());

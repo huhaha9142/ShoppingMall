@@ -46,7 +46,6 @@
  		VALUE (#{content},
  				#{inDate},
  				#{title},
- 				#{usersNumber},
  				#{state},
  				#{usersNumber},
  				#{regDate},
@@ -58,7 +57,8 @@
  		UPDATE qna
  			SET	content = #{content},
  				title = #{title},
- 				regdate = #{regDate}
+ 				regdate = #{regDate},
+ 				image = #{image}
 		WHERE (qna_number = #{qnaNumber})
  	</update>
  	
@@ -67,5 +67,11 @@
 		FROM qna
 		WHERE (qna_number = #{qnaNumber})
  	</delete>
+ 		<select id="selectImage" parameterType="qnaVO" resultType="String">
+		SELECT
+			image
+		FROM qna
+		WHERE (qna_number = #{qnaNumber})
+	</select>
  </mapper>
  
