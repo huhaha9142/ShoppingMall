@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ <mapper namespace="com.example.mapper.answerMapper">
+ 	<select id="selectListAnswer" resultType="answerVO">
+ 		SELECT 
+ 			an.title,
+ 			an.content,
+ 			an.indate AS inDate,
+ 			an.regdate AS regDate,
+ 			an.image,
+ 			q.qna_number AS qnaNumber,
+ 			an.qna_anwer_number AS answerNumber
+ 		FROM qna_answer an
+ 			INNER JOIN qna q
+ 		ON	an.qna_qna_number = q.qna_number
+ 		WHERE (qna_number = #{qnaNumber})
+ 	</select>
+ 
+ 	
+ 	<insert id="insertAnswer" parameterType="answerVO" >
+ 		INSERT INTO qna_answer
+ 		(title, content, indate, regdate, 
+ 				qna_qna_number, image)
+ 		VALUE ( #{title},
+ 				#{content},
+ 				#{inDate},
+ 				#{regDate},
+ 				#{qnaNumber},
+ 				#{image}
+ 			)	
+ 	</insert>
+ 	
+ 	<update id="updateAnswer" parameterType="answerVO" >
+ 		UPDATE qna_answer
+ 			SET	title = #{title},
+ 				content = #{content},
+ 				regdate = #{regDate},
+ 				image = #{image}
+		WHERE (qna_anwer_number = #{answerNumber})
+ 	</update>
+ 	
+ 	<delete id="deleteAnswer" parameterType="answerVO">
+ 		DELETE
+		FROM qna_answer
+		WHERE (qna_anwer_number = #{answerNumber})
+ 	</delete>
+ 		<select id="selectImage" parameterType="answerVO" resultType="String">
+		SELECT
+			image
+		FROM qna_answer
+		WHERE (qna_anwer_number = #{answerNumber})
+	</select>
+ </mapper>
+ 

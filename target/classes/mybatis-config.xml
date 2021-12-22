@@ -13,6 +13,7 @@
             <typeAlias type="com.spring.dto.OrderVO" alias="orderVO"/>
             <typeAlias type="com.spring.dto.CartVO" alias="cartVO"/>
             <typeAlias type="com.spring.dto.QnaVO" alias="qnaVO"/>
+            <typeAlias type="com.spring.dto.AnswerVO" alias="AnswerVO"/>
         </typeAliases>
 
         
