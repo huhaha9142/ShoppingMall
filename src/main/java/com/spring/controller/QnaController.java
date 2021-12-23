@@ -20,7 +20,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.spring.dto.AnswerVO;
 import com.spring.dto.QnaVO;
+import com.spring.service.AnswerServiceImpl;
 import com.spring.service.QnaServiceImpl;
 import com.spring.service.S3Uploader;
 
@@ -30,12 +32,16 @@ public class QnaController {
 	private static String URL_PATH="https://shoppingmal.s3.ap-northeast-2.amazonaws.com/";	
 	@Autowired
 	private QnaServiceImpl qnaService;
+	@Autowired
+	private AnswerServiceImpl answerService;
 	@Inject
 	private S3Uploader s3Uploader;
 	
 	String[] orState = {"답변 대기", "답변 완료", "FAQ"};
 	
-		//	Qna SELECT LIST
+	
+		//	Qna SELECT
+		//	비로그인시 qna게시판 목록
 		@CrossOrigin(origins = "*", allowedHeaders = "*")
 		@RequestMapping(value = "/qna",method = RequestMethod.GET,produces = "application/json; charset=utf8")
 		@ResponseBody
@@ -69,14 +75,46 @@ public class QnaController {
 				list.put("regDate", sql.get(i).getRegDate());
 				list.put("userId", sql.get(i).getId());
 				list.put("userName", sql.get(i).getName());
+				JSONObject jsonObjectAns = new JSONObject();
+				JSONArray jsonArarryAns = new JSONArray();
+				AnswerVO vo = new AnswerVO();
+				vo.setQnaNumber(sql.get(i).getQnaNumber());
+				List<AnswerVO> sqlAns = answerService.selectListAnswer(vo);
+				
+				for(int j=0; j<sqlAns.size(); j++)
+				{
+					String[] imageAns = sql.get(j).getImage().split(",");
+					JSONObject listAns = new JSONObject();
+					JSONObject imgJAns = new JSONObject();
+					JSONArray jsonimgAns = new JSONArray();
+					for(String img:imageAns)
+					{
+						if(img!="")
+							jsonimgAns.add(URL_PATH + img);
+					}	
+					imgJAns.put("image", jsonimgAns);
+					listAns.put("images", imgJAns);
+					listAns.put("index", j);
+					listAns.put("content", sqlAns.get(j).getContent());
+					listAns.put("title", sqlAns.get(j).getTitle());
+					listAns.put("answerNumber", sqlAns.get(j).getAnswerNumber());
+					listAns.put("qnaNumber", sqlAns.get(j).getQnaNumber());
+					listAns.put("inDate", sqlAns.get(j).getInDate());
+					listAns.put("regDate", sqlAns.get(j).getRegDate());
+					jsonArarryAns.add(listAns);
+				}
+				
+				jsonObjectAns.put("answer", jsonArarryAns);
+				list.put("answers", jsonObjectAns);
 				jsonArarry.add(list);
 			}
 			
 		jsonObject.put("qna", jsonArarry);
-		return jsonObject.toString();
+		return jsonObject.toString(); 
 	
 		}
-		
+		//	Qna SELECT
+		//	로그인시 qna 게시판 목록
 		@CrossOrigin(origins = "*", allowedHeaders = "*")
 		@RequestMapping(value = "/qnauser",method = RequestMethod.GET,produces = "application/json; charset=utf8")
 		@ResponseBody
@@ -112,12 +150,44 @@ public class QnaController {
 				list.put("regDate", sql.get(i).getRegDate());
 				list.put("userId", sql.get(i).getId());
 				list.put("userName", sql.get(i).getName());
+				JSONObject jsonObjectAns = new JSONObject();
+				JSONArray jsonArarryAns = new JSONArray();
+				AnswerVO AnsVo = new AnswerVO();
+				vo.setQnaNumber(sql.get(i).getQnaNumber());
+				List<AnswerVO> sqlAns = answerService.selectListAnswer(AnsVo);
+				
+				for(int j=0; j<sqlAns.size(); j++)
+				{
+					String[] imageAns = sql.get(j).getImage().split(",");
+					JSONObject listAns = new JSONObject();
+					JSONObject imgJAns = new JSONObject();
+					JSONArray jsonimgAns = new JSONArray();
+					for(String img:imageAns)
+					{
+						if(img!="")
+							jsonimgAns.add(URL_PATH + img);
+					}	
+					imgJAns.put("image", jsonimgAns);
+					listAns.put("images", imgJAns);
+					listAns.put("index", j);
+					listAns.put("content", sqlAns.get(j).getContent());
+					listAns.put("title", sqlAns.get(j).getTitle());
+					listAns.put("answerNumber", sqlAns.get(j).getAnswerNumber());
+					listAns.put("qnaNumber", sqlAns.get(j).getQnaNumber());
+					listAns.put("inDate", sqlAns.get(j).getInDate());
+					listAns.put("regDate", sqlAns.get(j).getRegDate());
+					jsonArarryAns.add(listAns);
+				}
+				
+				jsonObjectAns.put("answer", jsonArarryAns);
+				list.put("answers", jsonObjectAns);
 				jsonArarry.add(list);
 			}
 			
 		jsonObject.put("qna", jsonArarry);
 		return jsonObject.toString();
 		}
+		
 		
 		//	Qna INSERT
 		@CrossOrigin(origins = "*", allowedHeaders = "*")

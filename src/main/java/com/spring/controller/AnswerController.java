@@ -40,37 +40,37 @@ public class AnswerController {
 		@ResponseBody
 		public String answerList(@RequestParam("qnaNumber") Long qnaNumber)
 		{
-			JSONObject jsonObject = new JSONObject();
-			JSONArray jsonArarry = new JSONArray();
+			JSONObject jsonObject1 = new JSONObject();
+			JSONArray jsonArarry1 = new JSONArray();
 			AnswerVO vo = new AnswerVO();
 			vo.setQnaNumber(qnaNumber);
 			List<AnswerVO> sql = answerService.selectListAnswer(vo);
 			
 			for(int i=0;i<sql.size();i++)
 			{
-				String[] image = sql.get(i).getImage().split(",");
-				JSONObject list = new JSONObject();
-				JSONObject imgJ = new JSONObject();
-				JSONArray jsonimg = new JSONArray();
-				for(String img:image)
+				String[] image1 = sql.get(i).getImage().split(",");
+				JSONObject list1 = new JSONObject();
+				JSONObject imgJ1 = new JSONObject();
+				JSONArray jsonimg1 = new JSONArray();
+				for(String img:image1)
 				{
 					if(img!="")
-						jsonimg.add(URL_PATH + img);
+						jsonimg1.add(URL_PATH + img);
 				}	
-				imgJ.put("image", jsonimg);
-				list.put("images", imgJ);
-				list.put("index", i);
-				list.put("content", sql.get(i).getContent());
-				list.put("title", sql.get(i).getTitle());
-				list.put("answerNumber", sql.get(i).getAnswerNumber());
-				list.put("qnaNumber", sql.get(i).getQnaNumber());
-				list.put("inDate", sql.get(i).getInDate());
-				list.put("regDate", sql.get(i).getRegDate());
-				jsonArarry.add(list);
+				imgJ1.put("image", jsonimg1);
+				list1.put("images", imgJ1);
+				list1.put("index", i);
+				list1.put("content", sql.get(i).getContent());
+				list1.put("title", sql.get(i).getTitle());
+				list1.put("answerNumber", sql.get(i).getAnswerNumber());
+				list1.put("qnaNumber", sql.get(i).getQnaNumber());
+				list1.put("inDate", sql.get(i).getInDate());
+				list1.put("regDate", sql.get(i).getRegDate());
+				jsonArarry1.add(list1);
 			}
 			
-		jsonObject.put("answer", jsonArarry);
-		return jsonObject.toString();
+		jsonObject1.put("answer", jsonArarry1);
+		return jsonObject1.toString();
 		}
 		
 		//	Answer INSERT
