@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -196,10 +197,11 @@ public class QnaController {
 	    public String qnaInsert(
 				@RequestParam("content") String content,
 	    		@RequestParam("title") String title,
-	    		@RequestParam("usersNumber") Long usersNumber,
+	    		HttpServletRequest httpServletRequest,
 	    		@RequestParam(value="image", required=false) List<MultipartFile> imageQna
 	    		) throws IOException
 	    {
+			Long userNumber  = Long.valueOf((String)httpServletRequest.getAttribute("userNumber"));
 			JSONObject json = new JSONObject();
 			QnaVO vo = new QnaVO();
 			if(imageQna.size()==0)
@@ -207,7 +209,7 @@ public class QnaController {
 				vo.setContent(content);
 				vo.setInDate(new Date());
 				vo.setTitle(title);
-				vo.setUsersNumber(usersNumber);
+				vo.setUsersNumber(userNumber);
 				vo.setState(0L);
 				vo.setRegDate(new Date());
 				vo.setImage("noData");
@@ -226,7 +228,7 @@ public class QnaController {
 				vo.setContent(content);
 				vo.setInDate(new Date());
 				vo.setTitle(title);
-				vo.setUsersNumber(usersNumber);
+				vo.setUsersNumber(userNumber);
 				vo.setState(0L);
 				vo.setRegDate(new Date());
 				vo.setImage(url);
@@ -236,7 +238,7 @@ public class QnaController {
 				return json.toString();
 			}
 	    
-		
+		//TODO: 쿼리에 유저넘버 추가하세용!
 		//	Qna UPDATE
 		@CrossOrigin(origins = "*", allowedHeaders = "*")  
 	    @RequestMapping(
@@ -245,9 +247,11 @@ public class QnaController {
 		public String qnaUpdate(@PathVariable("qnaNumber") String qnaNumber,
 	    		@RequestParam("content") String content,
 	    		@RequestParam("title") String title,
-	    		@RequestParam(value="image",required=false) List<MultipartFile> imageQna	
+	    		@RequestParam(value="image",required=false) List<MultipartFile> imageQna,
+	    		HttpServletRequest httpServletRequest
 				) throws IOException
 		{
+			Long userNumber  = Long.valueOf((String)httpServletRequest.getAttribute("userNumber"));
 			JSONObject json = new JSONObject();
 			QnaVO vo = new QnaVO();
 			if(imageQna.size()==0)
@@ -280,13 +284,16 @@ public class QnaController {
 		
 		}
 		
+		//TODO: 쿼리문에 유저넘버 추가해주세용.
 		//	Qna DELETE
 		@CrossOrigin(origins = "*", allowedHeaders = "*")  
 	    @RequestMapping(
 	  		  value = "/qna/{qnaNumber}",method = RequestMethod.DELETE,produces = "application/json; charset=utf8")
 		@ResponseBody
-		public String qnaDelete(@PathVariable("qnaNumber") String qnaNumber)
+		public String qnaDelete(@PathVariable("qnaNumber") String qnaNumber,
+				HttpServletRequest httpServletRequest)
 		{
+			Long userNumber  = Long.valueOf((String)httpServletRequest.getAttribute("userNumber"));
 			JSONObject json = new JSONObject();
 			QnaVO vo = new QnaVO();
 			try {

@@ -3,6 +3,8 @@ package com.spring.controller;
 import java.io.IOException;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
@@ -32,8 +34,9 @@ public class CartController {
 		@CrossOrigin(origins = "*", allowedHeaders = "*")
 	    @RequestMapping(value = "/cart",method = RequestMethod.GET,produces = "application/json; charset=utf8")
 	    @ResponseBody
-		public String cartList(@RequestParam("userNumber") Long userNumber)
+		public String cartList(HttpServletRequest httpServletRequest)
 		{
+			Long userNumber  = Long.valueOf((String)httpServletRequest.getAttribute("userNumber"));
 			JSONObject jsonObject = new JSONObject();
 			JSONArray jsonArarry = new JSONArray();
 			CartVO vo = new CartVO();
@@ -64,16 +67,17 @@ public class CartController {
 		@ResponseBody
 		public String cartInsert(
 				@RequestParam("quantity") Long quantity,
-	    		@RequestParam("usersNumber") Long usersNumber,
+				HttpServletRequest httpServletRequest,
 	    		@RequestParam("productNumber") Long productNumber,
 	    		@RequestParam("size") String size,
 	    		@RequestParam("color") String color
 				) throws IOException
 		{
+			Long userNumber  = Long.valueOf((String)httpServletRequest.getAttribute("userNumber"));
 			CartVO vo = new CartVO();
 			{
 				vo.setQuantity(quantity);
-				vo.setUsersNumber(usersNumber);
+				vo.setUsersNumber(userNumber);
 				vo.setProductsNumber(productNumber);
 				vo.setSize(size);
 				vo.setColor(color);
@@ -91,9 +95,11 @@ public class CartController {
 		@ResponseBody	
 		public String cartUpdate(
 	    		@PathVariable("cartNumber") String cartNumber,
-	    		@RequestParam("quantity") Long quantity
+	    		@RequestParam("quantity") Long quantity,
+	    		HttpServletRequest httpServletRequest
 	    	) throws IOException
 		{
+			Long userNumber  = Long.valueOf((String)httpServletRequest.getAttribute("userNumber"));
 			JSONObject json = new JSONObject();
 			CartVO vo = new CartVO();
 			{
@@ -113,8 +119,11 @@ public class CartController {
 		  		  value = "/cart/{cartNumber}",method = RequestMethod.DELETE,produces = "application/json; charset=utf8")
 		@ResponseBody
 		public String cartDelete(
-				@PathVariable("cartNumber") String cartNumber)
+				@PathVariable("cartNumber") String cartNumber,
+				HttpServletRequest httpServletRequest)
+		
 		{
+			Long userNumber  = Long.valueOf((String)httpServletRequest.getAttribute("userNumber"));
 			JSONObject json = new JSONObject();
 			CartVO vo = new CartVO();
 			vo.setCartNumber(Long.valueOf(cartNumber));
