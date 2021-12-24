@@ -17,7 +17,16 @@ public class UsersVO {
 	private String nickName;
 	private String rule;
 	private String kakao;
+	private String boardUrl;
 	
+	public String getBoardUrl() {
+		return boardUrl;
+	}
+
+	public void setBoardUrl(String boardUrl) {
+		this.boardUrl = boardUrl;
+	}
+
 	public String getKakao() {
 		return kakao;
 	}

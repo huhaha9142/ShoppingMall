@@ -121,4 +121,15 @@
   		FROM users
   		WHERE id = #{id}
   </select>
+  <select id="selectBoardUrl" parameterType="usersVO" resultType="usersVO">
+  		SELECT
+  			board_url AS boardUrl
+  		FROM users
+  		WHERE user_number = #{userNumber}
+  </select>
+  <update id="updateBoardUrl" parameterType="usersVO">
+  		UPDATE users
+  		SET board_url = #{boardUrl}
+  		WHERE user_number = #{userNumber}	
+  </update>
   </mapper>

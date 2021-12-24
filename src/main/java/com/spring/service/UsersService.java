@@ -10,6 +10,7 @@ public interface UsersService {
 	public int selectIdCheck(UsersVO vo);
 	public UsersVO selectUserPrivacy(UsersVO vo);
 	public UsersVO selectUserRule(UsersVO vo);
+	public UsersVO selectBoardUrl(UsersVO vo);
 	public boolean insertUser(UsersVO vo);
 	public boolean insertUserSocial(UsersVO vo);
 	public boolean updateUserPrivacy(UsersVO vo);
@@ -17,4 +18,5 @@ public interface UsersService {
 	public boolean updateRuleByEmail(UsersVO vo);
 	public boolean updateRulePassword(UsersVO vo);
 	public boolean updatePasswordByEmail(UsersVO vo);
+	public boolean updateBoardUrl(UsersVO vo);
 }
