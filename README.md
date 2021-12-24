@@ -7,8 +7,6 @@ API 리스트
 3. [커스텀(custom)](#custom)
 4. [유저(user)](#user)
 5. [주문(order)](#order)
-6. [장바구니(cart)](#cart)
-7. [QNA(qna)]?(#
 
 
 
