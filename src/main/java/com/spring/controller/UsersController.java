@@ -302,7 +302,12 @@ public class UsersController {
 			@RequestParam(value = "key") String key,
 			@RequestParam(value = "password") String password)
 	{
+		
 		JSONObject jsonObject = new JSONObject();
+		if(key.equals("user"))
+		{
+			return jsonObject.put("result", "비정상적인 접근").toString();
+		}
 		BCryptPasswordEncoder scpwd = new BCryptPasswordEncoder();
 		UsersVO vo = new UsersVO(id,scpwd.encode(password));
 		vo.setRule(key);
