@@ -146,7 +146,7 @@ public class UsersController {
 			JSONObject token = (JSONObject) jsonParser.parse(answer);
 			accessToken = token.get("token_type")+" "+token.get("access_token");
 		}catch (Exception e) {
-			System.err.println(e);
+			System.err.println("발급단"+e);
 		}
 		// 전달 받은 엑세스 토큰을 이용해 카카오 id(회원번호) 받아오기!
 		try {	
@@ -162,7 +162,7 @@ public class UsersController {
 			vo.setKakao(kakaoIdNumber);
 			System.out.println(vo.getKakao());
 		}catch (Exception e) {
-			System.err.println(e);
+			System.err.println("토큰 사용단"+e);
 		}
 		try {
 			sql = usersService.selectLoginKakao(vo);
