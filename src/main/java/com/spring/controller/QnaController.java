@@ -71,8 +71,8 @@ public class QnaController {
 				list.put("title", sql.get(i).getTitle());
 				list.put("usersNumber", sql.get(i).getUsersNumber());
 				list.put("qnaNumber", sql.get(i).getQnaNumber());
-				list.put("inDate", sql.get(i).getInDate());
-				list.put("regDate", sql.get(i).getRegDate());
+//				list.put("inDate", sql.get(i).getInDate());
+//				list.put("regDate", sql.get(i).getRegDate());
 				list.put("userId", sql.get(i).getId());
 				list.put("userName", sql.get(i).getName());
 				JSONObject jsonObjectAns = new JSONObject();
@@ -99,8 +99,8 @@ public class QnaController {
 					listAns.put("title", sqlAns.get(j).getTitle());
 					listAns.put("answerNumber", sqlAns.get(j).getAnswerNumber());
 					listAns.put("qnaNumber", sqlAns.get(j).getQnaNumber());
-					listAns.put("inDate", sqlAns.get(j).getInDate());
-					listAns.put("regDate", sqlAns.get(j).getRegDate());
+//					listAns.put("inDate", sqlAns.get(j).getInDate());
+//					listAns.put("regDate", sqlAns.get(j).getRegDate());
 					jsonArarryAns.add(listAns);
 				}
 				
@@ -146,8 +146,8 @@ public class QnaController {
 				list.put("title", sql.get(i).getTitle());
 				list.put("usersNumber", sql.get(i).getUsersNumber());
 				list.put("qnaNumber", sql.get(i).getQnaNumber());
-				list.put("inDate", sql.get(i).getInDate());
-				list.put("regDate", sql.get(i).getRegDate());
+//				list.put("inDate", sql.get(i).getInDate());
+//				list.put("regDate", sql.get(i).getRegDate());
 				list.put("userId", sql.get(i).getId());
 				list.put("userName", sql.get(i).getName());
 				JSONObject jsonObjectAns = new JSONObject();
@@ -174,8 +174,8 @@ public class QnaController {
 					listAns.put("title", sqlAns.get(j).getTitle());
 					listAns.put("answerNumber", sqlAns.get(j).getAnswerNumber());
 					listAns.put("qnaNumber", sqlAns.get(j).getQnaNumber());
-					listAns.put("inDate", sqlAns.get(j).getInDate());
-					listAns.put("regDate", sqlAns.get(j).getRegDate());
+//					listAns.put("inDate", sqlAns.get(j).getInDate());
+//					listAns.put("regDate", sqlAns.get(j).getRegDate());
 					jsonArarryAns.add(listAns);
 				}
 				
