@@ -15,8 +15,13 @@ public class QnaServiceImpl implements QnaService {
 	@Inject
 	private QnaDAO dao;
 	@Override
-	public List<QnaVO> selectListQna(QnaVO vo) {
+	public List<QnaVO> selectListQna() {
 		return dao.selectListQna();
+	}
+	
+	@Override
+	public List<QnaVO> selectListUserQna(QnaVO vo) {
+		return dao.selectListUserQna(vo);
 	}
 
 	@Override
@@ -36,9 +41,12 @@ public class QnaServiceImpl implements QnaService {
 		return 1==dao.deleteQna(vo);
 	}
 
-	public List<QnaVO> selectListQna() {
-		// TODO Auto-generated method stub
-		return null;
+	@Override
+	public String selectImage(QnaVO vo) {
+		
+		return dao.selectImage(vo);
 	}
+
+
 
 }

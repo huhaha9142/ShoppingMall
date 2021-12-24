@@ -10,4 +10,5 @@ public interface QnaDAO {
 	public int insertQna(QnaVO vo);
 	public int updateQna(QnaVO vo);
 	public int deleteQna(QnaVO vo);
+	public String selectImage(QnaVO vo);
 }

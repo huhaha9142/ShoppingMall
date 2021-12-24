@@ -40,6 +40,10 @@ public class QnaDAOImpl implements QnaDAO {
 	public int deleteQna(QnaVO vo) {
 		return sqlSession.delete(Namespace + ".deleteQna", vo);
 	}
+	@Override
+	public String selectImage(QnaVO vo) {
+		return sqlSession.selectOne(Namespace + ".selectImage", vo);
+	}
 
 
 
