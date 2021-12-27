@@ -86,4 +86,16 @@ public class UsersDAOImpl implements UsersDAO {
 		return sqlSession.insert(Namespace+".insertUserSocial", vo);
 	}
 
+	@Override
+	public UsersVO selectBoardUrl(UsersVO vo) {
+		// TODO Auto-generated method stub
+		return sqlSession.selectOne(Namespace+".selectBoardUrl", vo);
+	}
+
+	@Override
+	public int updateBoardUrl(UsersVO vo) {
+		// TODO Auto-generated method stub
+		return sqlSession.update(Namespace+".updateBoardUrl", vo);
+	}
+
 }

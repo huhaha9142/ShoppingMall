@@ -49,8 +49,8 @@ public class CustomController {
     		) throws IOException 
     {
 		String userNumber = (String) httpServletRequest.getAttribute("userNumber");
-		System.out.println(System.getProperty("user.dir"));
 		JSONObject jsonObject = new JSONObject();
+		String customNumber = null;
 		CustomVO vo = new CustomVO();
 		vo.setProductNumber(Long.valueOf(productNumber));
 		// 로그인 이랑 연계
@@ -58,20 +58,26 @@ public class CustomController {
 		vo.setSize(size);
 		vo.setColor(color);
 		String url="";
-    	for(int i=0;i<image.size();i++)
+		int imageCount = image.size();
+		System.out.println(imageCount);
+    	for(int i=0;i<imageCount;i++)
     	{
     		url += s3Uploader.upload(image.get(i), "custom");
+    		if(imageCount>1)
     		url +=",";
     	}
     	vo.setImage(url);
 		vo.setInDate(new Date());
 		vo.setRegDate(new Date());
-		boolean insert = cusService.insertCustom(vo);
-		String result =(insert==true)?"insert":"fail";
-		jsonObject.put("result", result);
-		// 쿼리가 실패한다면 저장된 파일을 삭제한다
-//		if(result.equals("fail"))
-//			functionSpring.fileDelete(vo.getImage(), ".");
+		
+		if(!url.equals(""))
+		{
+			boolean insert = cusService.insertCustom(vo);
+			String result =(insert==true)?"insert":"fail";
+			jsonObject.put("result", result);
+			jsonObject.put("url", URL_PATH+url);
+			jsonObject.put("customNumber", vo.getCustomNumber());
+		}
 		return jsonObject.toString();
     }
 	// 커스텀 제품의 목록을 불러옴!
@@ -182,12 +188,20 @@ public class CustomController {
 	@CrossOrigin(origins = "*", allowedHeaders = "*")
     @RequestMapping(value="/customs/{customNumber}",method = RequestMethod.DELETE,produces = "application/json; charset=utf8")
     @ResponseBody
-    public String deleteCustom(@PathVariable("customNumber") String customNumber) {
+    public String deleteCustom(@PathVariable("customNumber") String customNumber
+    		,HttpServletRequest httpServletRequest) throws IOException {
+		String userNumber = (String) httpServletRequest.getAttribute("userNumber");
 		JSONObject jsonObject = new JSONObject();
 		CustomVO vo = new CustomVO();
+		vo.setUserNumber(Long.valueOf(userNumber));
 		vo.setCustomNumber(Long.valueOf(customNumber));
+		CustomVO sql = cusService.selectImageUrl(vo);
 		boolean delete = cusService.deleteCustom(vo);
 		String result =(delete==true)?"delete":"fail";
+		if(result.equals("delete"))
+		{
+			s3Uploader.delete(sql.getImage(), "custom");
+		}
 		jsonObject.put("result", result);
 		
 //		if(result.equals("delete"))
@@ -196,22 +210,23 @@ public class CustomController {
 	}
 	
 	
-	// TODO: 아무나 커스텀 이미지에 접근 할 수 없도록 로그인 조건을 추가해 봐야겠음.!
 		// 커스텀 제품의 이미지를 보내주는 API
     @CrossOrigin(origins = "*", allowedHeaders = "*")  
     @RequestMapping(
-  		  value = "/com/custom-image/{img}",method = RequestMethod.GET
-  		 ,produces = MediaType.IMAGE_JPEG_VALUE
+  		  value = "/customs/{customNumber}",method = RequestMethod.GET
+  		  ,produces = "application/json; charset=utf8"
   		  )
     @ResponseBody 
-	public byte[] getImageWithMediaType(@PathVariable("img") String img) throws IOException {
-    	String url = "/com/image/custom/"+img+".png";
-    	System.out.println(url);
-	    InputStream in = getClass().getResourceAsStream(url);
-	    System.out.println(img+".png");
-	    byte[] data = IOUtils.toByteArray(in);
-	    in.close();
-	    return data;
+	public String getImageWithMediaType(@PathVariable("customNumber") Long customNumber
+			,HttpServletRequest httpServletRequest) throws IOException {
+    	String userNumber = (String) httpServletRequest.getAttribute("userNumber");
+    	JSONObject jsonObject = new JSONObject();
+		CustomVO vo = new CustomVO();
+		vo.setCustomNumber(customNumber);
+		vo.setUserNumber(Long.valueOf(userNumber));
+		CustomVO sql = cusService.selectImageUrl(vo);
+		jsonObject.put("url", URL_PATH+sql.getImage());
+		return jsonObject.toString();
 	}
 	
 	

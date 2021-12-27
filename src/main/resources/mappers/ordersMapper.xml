@@ -17,8 +17,8 @@
   			ord.regdate AS regDate,
   			pr.product,
   			pr.title_image AS titleImage,
-  			cu.size,
-  			cu.color,
+  			ord.size,
+  			ord.color,
   			cu.image AS customImage
   		FROM orders ord INNER JOIN products pr INNER JOIN products_custom cu
   		ON ord.products_productnumber = pr.product_number
@@ -37,8 +37,8 @@
   			ord.regdate AS regDate,
   			pr.product,
   			pr.title_image AS titleImage,
-  			cu.size,
-  			cu.color,
+  			ord.size,
+  			ord.color,
   			cu.image AS customImage
   		FROM orders ord INNER JOIN products pr INNER JOIN products_custom cu
   		ON ord.products_productnumber = pr.product_number
@@ -58,8 +58,8 @@
   			ord.regdate AS regDate,
   			pr.product,
   			pr.title_image AS titleImage,
-  			cu.size,
-  			cu.color,
+  			ord.size,
+  			ord.color,
   			cu.image AS customImage
   		FROM orders ord INNER JOIN products pr INNER JOIN products_custom cu
   		ON ord.products_productnumber = pr.product_number
@@ -83,7 +83,9 @@
   			p_c_products_custom_number,
   			indate,
   			regdate,
-  			uuid)
+  			uuid,
+  			size,
+  			color)
   		VALUE(#{price},
   			#{quantity},
   			#{result},
@@ -92,7 +94,9 @@
   			#{productCustomNumber},
   			#{inDate},
   			#{regDate},
-  			#{uuid})
+  			#{uuid},
+  			#{size},
+  			#{color})
   </insert>
   <update id="updateOrderResult" parameterType="orderVO">
   		UPDATE orders

@@ -170,7 +170,9 @@ public class OrdersController {
     public String orderInsert(
     		@RequestParam(value="price") String price,
     		@RequestParam(value="product") String product,
-    		@RequestParam(value="quantity") String quantity,  		
+    		@RequestParam(value="quantity") String quantity, 
+    		@RequestParam(value="size") String size, 
+    		@RequestParam(value="color") String color, 
     		HttpServletRequest httpServletRequest,
     		@RequestParam(value="productsNumber") String productsNumber,
     		@RequestParam(value="productCustomNumber") String productCustomNumber,
@@ -200,10 +202,14 @@ public class OrdersController {
 			}
 			String[] quantityA = quantity.split(",");
 			String[] productA = product.split(",");
+			String[] colorA = color.split(",");
+			String[] sizeA = size.split(",");
 			String[] productsNumberA = productsNumber.split(",");
 			String[] productCustomNumberA = productCustomNumber.split(",");
 			vo.get(i).setUuid(uuId);
 			vo.get(i).setPrice(Long.valueOf(priceA[i]));
+			vo.get(i).setSize(sizeA[i]);
+			vo.get(i).setColor(colorA[i]);
 			vo.get(i).setQuantity(Long.valueOf(quantityA[i]));
 			vo.get(i).setUsersNumber(Long.valueOf(usersNumber));
 			vo.get(i).setProductsNumber(Long.valueOf(productsNumberA[i]));

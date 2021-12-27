@@ -1,6 +1,5 @@
 package com.spring.controller;
 
-import java.io.UnsupportedEncodingException;
 import java.util.Date;
 import java.util.UUID;
 
@@ -12,19 +11,22 @@ import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.codehaus.jackson.JsonNode;
+import org.codehaus.jackson.map.ObjectMapper;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -34,11 +36,6 @@ import org.springframework.web.client.RestTemplate;
 import com.spring.dto.UsersVO;
 import com.spring.function.FunctionSpring;
 import com.spring.service.UsersServiceImpl;
-
-import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.MalformedJwtException;
-import io.jsonwebtoken.SignatureException;
-import io.jsonwebtoken.UnsupportedJwtException;
 
 @Controller
 @CrossOrigin(allowCredentials = "false")
@@ -51,6 +48,8 @@ public class UsersController {
 	@Inject 
 	    private FunctionSpring functionSpring;
 	// 변경시 카카오 디벨로퍼에서도 변경점 등록해줘야 함.!
+	private static String BOARD_URL_API = "https://browserboard.com/api/1.0/whiteboards/";
+	private static String BOARD_URL = "https://browserboard.com/whiteboard/";
 	private static String EMAIL_URL = "/";
 	private static String REDIRECT_URL = "http://customshoppingmall.kro.kr/loading";
 	@CrossOrigin(origins = "*", exposedHeaders = "Authorization", allowedHeaders = "*")
@@ -147,7 +146,7 @@ public class UsersController {
 			JSONObject token = (JSONObject) jsonParser.parse(answer);
 			accessToken = token.get("token_type")+" "+token.get("access_token");
 		}catch (Exception e) {
-			System.err.println(e);
+			System.err.println("발급단"+e);
 		}
 		// 전달 받은 엑세스 토큰을 이용해 카카오 id(회원번호) 받아오기!
 		try {	
@@ -163,7 +162,7 @@ public class UsersController {
 			vo.setKakao(kakaoIdNumber);
 			System.out.println(vo.getKakao());
 		}catch (Exception e) {
-			System.err.println(e);
+			System.err.println("토큰 사용단"+e);
 		}
 		try {
 			sql = usersService.selectLoginKakao(vo);
@@ -281,7 +280,7 @@ public class UsersController {
 			MimeMessage mail = mailSender.createMimeMessage();
 			String htmlStr = "<h2>안녕하세요 MS :p CUSTOM SHOPPINGMALL 입니다!</h2><br><br>" 
 					+ "<h3>" + id + "님</h3>" + "<p>비밀번호 재설정 버튼을 누르시면 비밀번호를 재설정 하실 수 있습니다.: " 
-					+ "<a href='http://customshoppingmall.kro.kr/passwordreset"+"?id="+ id +"&key="+key+"'>인증하기</a></p>"
+					+ "<a href='http://customshoppingmall.kro.kr/passwordreset"+"?id="+ id +"&key="+key+"'>비밀번호 재설정</a></p>"
 					+ "(혹시 잘못 전달된 메일이라면 이 이메일을 무시하셔도 됩니다)";
 			try {
 				mail.setSubject("[본인인증] MS :p CUSTOM SHOPPINGMALL의 비밀번호 재설정 메일입니다", "utf-8");
@@ -302,7 +301,12 @@ public class UsersController {
 			@RequestParam(value = "key") String key,
 			@RequestParam(value = "password") String password)
 	{
+		
 		JSONObject jsonObject = new JSONObject();
+		if(key.equals("user"))
+		{
+			return jsonObject.put("result", "비정상적인 접근").toString();
+		}
 		BCryptPasswordEncoder scpwd = new BCryptPasswordEncoder();
 		UsersVO vo = new UsersVO(id,scpwd.encode(password));
 		vo.setRule(key);
@@ -406,5 +410,63 @@ public class UsersController {
 		jsonObject.put("phone", sql.getPhone());
 		return jsonObject.toString();
 	}
+	@CrossOrigin(origins = "*", allowedHeaders = "*")
+	@RequestMapping(value="/user-board",method = RequestMethod.GET,produces = "application/json; charset=utf8")
+	@ResponseBody
+	public String userBoard(HttpServletRequest httpServletRequest) {
+		Long userNumber  = Long.valueOf((String)httpServletRequest.getAttribute("userNumber"));
+		JSONObject jsonObject = new JSONObject();
+		UsersVO vo = new UsersVO();
+		vo.setUserNumber(userNumber);
+		UsersVO sql = usersService.selectBoardUrl(vo);
+		String boardUrl ="";
+		try {
+			boardUrl = sql.getBoardUrl();
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		
+		if(boardUrl.equals(""))
+		{
+			HttpHeaders headers = new HttpHeaders();
+			RestTemplate restTemplate = new RestTemplate();
+			JSONParser jsonParser = new JSONParser();
+			String wbid = "";
+			String adminUrl = "";
+			try {
+					MultiValueMap<String, String> map= new LinkedMultiValueMap<>();
+					// TODO: 어드민키는 숨겨야됨!
+					headers.add("Authorization", "Token 93fdd61de75ea25b22c48c37b9b45474dd889a2c");
+					HttpEntity<MultiValueMap<String, String>> entity = new HttpEntity(map,headers);
+					String answer = restTemplate.postForObject(BOARD_URL_API, entity, String.class);
+					System.out.println(answer);
+					JSONObject data = (JSONObject) jsonParser.parse(answer);
+					wbid = (String)data.get("wbid");
+					
+				}catch (Exception e) {
+				}
+			
+			try {
+				MultiValueMap<String, String> map= new LinkedMultiValueMap<>();
+				// TODO: 어드민키는 숨겨야됨!
+//				headers.add("Authorization", "Token 93fdd61de75ea25b22c48c37b9b45474dd889a2c");
+				HttpEntity<MultiValueMap<String, String>> entity = new HttpEntity(map,headers);
+				ResponseEntity<String> answer = restTemplate.exchange(BOARD_URL_API+wbid+"/access_keys",HttpMethod.GET,entity,String.class);
+				System.out.println(answer);
+				ObjectMapper objectMapper = new ObjectMapper();
+			    JsonNode jsonNode = objectMapper.readTree(answer.getBody());
+			    adminUrl  = objectMapper.treeToValue( jsonNode.path("access_keys").path("admin"), String.class);
+				System.out.println(adminUrl);
+			}catch (Exception e) {
+				System.err.println("여기서 에러.. "+e);
+			}
+			boardUrl=BOARD_URL+wbid+"?key="+adminUrl;
+			vo.setBoardUrl(boardUrl);
+			usersService.updateBoardUrl(vo);
+		}
+		jsonObject.put("url", boardUrl);
+		return jsonObject.toString();
+	}
+	
 	
 }

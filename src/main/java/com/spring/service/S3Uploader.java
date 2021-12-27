@@ -16,7 +16,7 @@ import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
-
+import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 
 import com.spring.config.S3config;
@@ -30,21 +30,27 @@ public class S3Uploader {
    
     public String upload(MultipartFile multipartFile, String dirName) throws IOException {
     	
-    	File uploadFile = convert(multipartFile)  // ÆÄÀÏ º¯È¯ÇÒ ¼ö ¾øÀ¸¸é ¿¡·¯
+    	File uploadFile = convert(multipartFile)  // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È¯ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
                 .orElseThrow(() -> new IllegalArgumentException("error: MultipartFile -> File convert fail"));
     	
         return upload(uploadFile, dirName);
     }
+    
+    public String delete(String fileName,String dirName) throws IOException
+    {
+    	deleteS3(fileName,dirName);
+    	return "";
+    }
 
-    // S3·Î ÆÄÀÏ ¾÷·ÎµåÇÏ±â
+    // S3ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Îµï¿½ï¿½Ï±ï¿½
     private String upload(File uploadFile, String dirName) throws IOException {
-        String fileName = dirName + "/" + UUID.randomUUID();   // S3¿¡ ÀúÀåµÈ ÆÄÀÏ ÀÌ¸§ 
-        String uploadImageUrl = putS3(uploadFile, fileName); // s3·Î ¾÷·Îµå
+        String fileName = dirName + "/" + UUID.randomUUID();   // S3ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ì¸ï¿½ 
+        String uploadImageUrl = putS3(uploadFile, fileName); // s3ï¿½ï¿½ ï¿½ï¿½ï¿½Îµï¿½
         removeNewFile(uploadFile);
         return uploadImageUrl;
     }
 
-    // S3·Î ¾÷·Îµå
+    // S3ï¿½ï¿½ ï¿½ï¿½ï¿½Îµï¿½
     private String putS3(File uploadFile, String fileName) throws IOException {	
     	this.amazonS3Client = (AmazonS3Client) AmazonS3ClientBuilder.standard().withRegion(s3config.getRegion())
     			.withCredentials(new AWSStaticCredentialsProvider(new BasicAWSCredentials(s3config.getAccessKey(), s3config.getSecretKey())))
@@ -52,8 +58,15 @@ public class S3Uploader {
     	amazonS3Client.putObject(new PutObjectRequest(s3config.getBucket(), fileName, uploadFile).withCannedAcl(CannedAccessControlList.PublicRead));
         return fileName;
     }
-
-    // ·ÎÄÃ¿¡ ÀúÀåµÈ ÀÌ¹ÌÁö Áö¿ì±â
+    private String deleteS3(String fileName,String dirName) throws IOException {	
+    	this.amazonS3Client = (AmazonS3Client) AmazonS3ClientBuilder.standard().withRegion(s3config.getRegion())
+    			.withCredentials(new AWSStaticCredentialsProvider(new BasicAWSCredentials(s3config.getAccessKey(), s3config.getSecretKey())))
+    			.build();
+    	amazonS3Client.deleteObject(new DeleteObjectRequest(s3config.getBucket(), dirName + "/" + fileName));
+        return fileName;
+    }
+    
+    // ï¿½ï¿½ï¿½Ã¿ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ì¹ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½
     private void removeNewFile(File targetFile) {
         if (targetFile.delete()) {
            
@@ -62,11 +75,11 @@ public class S3Uploader {
     
     }
 
-    // ·ÎÄÃ¿¡ ÆÄÀÏ ¾÷·Îµå ÇÏ±â
+    // ï¿½ï¿½ï¿½Ã¿ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Îµï¿½ ï¿½Ï±ï¿½
     private Optional<File> convert(MultipartFile file) throws IOException {
         File convertFile = new File(System.getProperty("user.dir") + "/" + file.getOriginalFilename());
-        if (convertFile.createNewFile()) { // ¹Ù·Î À§¿¡¼­ ÁöÁ¤ÇÑ °æ·Î¿¡ FileÀÌ »ý¼ºµÊ (°æ·Î°¡ Àß¸øµÇ¾ú´Ù¸é »ý¼º ºÒ°¡´É)
-            try (FileOutputStream fos = new FileOutputStream(convertFile)) { // FileOutputStream µ¥ÀÌÅÍ¸¦ ÆÄÀÏ¿¡ ¹ÙÀÌÆ® ½ºÆ®¸²À¸·Î ÀúÀåÇÏ±â À§ÇÔ
+        if (convertFile.createNewFile()) { // ï¿½Ù·ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Î¿ï¿½ Fileï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ (ï¿½ï¿½Î°ï¿½ ï¿½ß¸ï¿½ï¿½Ç¾ï¿½ï¿½Ù¸ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ò°ï¿½ï¿½ï¿½)
+            try (FileOutputStream fos = new FileOutputStream(convertFile)) { // FileOutputStream ï¿½ï¿½ï¿½ï¿½ï¿½Í¸ï¿½ ï¿½ï¿½ï¿½Ï¿ï¿½ ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½Æ®ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï±ï¿½ ï¿½ï¿½ï¿½ï¿½
                 fos.write(file.getBytes());
             }
             return Optional.of(convertFile);

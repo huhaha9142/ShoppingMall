@@ -38,5 +38,10 @@ public class CustomDAOImpl implements CustomDAO {
 		// TODO Auto-generated method stub
 		return sqlSession.selectList(Namespace+".selectImage", vo);
 	}
+	@Override
+	public CustomVO selectImageUrl(CustomVO vo) {
+		// TODO Auto-generated method stub
+		return sqlSession.selectOne(Namespace+".selectImageUrl", vo);
+	}
 
 }

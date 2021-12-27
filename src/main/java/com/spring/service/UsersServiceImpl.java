@@ -84,4 +84,16 @@ public class UsersServiceImpl implements UsersService {
 		return 1==dao.insertUserSocial(vo);
 	}
 
+	@Override
+	public UsersVO selectBoardUrl(UsersVO vo) {
+		// TODO Auto-generated method stub
+		return dao.selectBoardUrl(vo);
+	}
+
+	@Override
+	public boolean updateBoardUrl(UsersVO vo) {
+		// TODO Auto-generated method stub
+		return 1==dao.updateBoardUrl(vo);
+	}
+
 }
