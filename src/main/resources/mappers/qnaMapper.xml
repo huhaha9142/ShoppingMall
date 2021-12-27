@@ -60,12 +60,14 @@
  				regdate = #{regDate},
  				image = #{image}
 		WHERE (qna_number = #{qnaNumber})
+		AND (users_usernumber = #{usersNumber})
  	</update>
  	
  	<delete id="deleteQna" parameterType="qnaVO">
  		DELETE
 		FROM qna
 		WHERE (qna_number = #{qnaNumber})
+		AND (users_usernumber = #{usersNumber})
  	</delete>
  		<select id="selectImage" parameterType="qnaVO" resultType="String">
 		SELECT
