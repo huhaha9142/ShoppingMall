@@ -261,6 +261,7 @@ public class QnaController {
 				vo.setRegDate(new Date());
 				vo.setImage("noData");
 				vo.setQnaNumber(Long.valueOf(qnaNumber));
+				vo.setUsersNumber(userNumber);
 				boolean update = qnaService.updateQna(vo);
 				String result = (update==true)?"update":"fail";
 				json.put("result",result);
@@ -277,6 +278,7 @@ public class QnaController {
 			vo.setRegDate(new Date());
 			vo.setImage(url);
 			vo.setQnaNumber(Long.valueOf(qnaNumber));
+			vo.setUsersNumber(userNumber);
 			boolean update = qnaService.updateQna(vo);
 			String result = (update==true)?"update":"fail";
 			json.put("result",result);
@@ -298,6 +300,7 @@ public class QnaController {
 			QnaVO vo = new QnaVO();
 			try {
 				vo.setQnaNumber(Long.valueOf(qnaNumber));
+				vo.setUsersNumber(userNumber);
 			} catch(Exception e)
 			{
 				json.put("error", e);
