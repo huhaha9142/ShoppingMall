@@ -2,6 +2,7 @@ package com.spring.controller;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -28,6 +29,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.spring.dto.ProductVO;
 import com.spring.function.FunctionSpring;
 import com.spring.service.ProductsServiceImpl;
+import com.spring.service.S3Uploader;
 
 @Controller
 @CrossOrigin(allowCredentials = "false")
@@ -45,6 +47,9 @@ public class ProductsController {
     private static List<ProductVO> Prosql = null;
     private static Map<Long,ProductVO> mapSql = new HashMap<Long,ProductVO>();
     
+    
+    @Inject
+    private S3Uploader s3Uploader;
     @Inject
     private ProductsServiceImpl proService;
     @Inject 
@@ -155,7 +160,7 @@ public class ProductsController {
     		@RequestParam("content") String content,
     		@RequestParam("imageSmall") List<MultipartFile> imageSmall,
     		@RequestParam("imageLazy") List<MultipartFile> imageLazy,
-    		@RequestParam("productImage") List<MultipartFile> productImage,
+    		@RequestParam("titleImage") List<MultipartFile> titleImage,
     		@RequestParam("product") String product,
     		@RequestParam("price") Long price
     		) throws IOException
@@ -170,29 +175,36 @@ public class ProductsController {
     	System.out.println(productNumber);
     	vo = new ProductVO(size, color, kind, quantity, price, content, product, productNumber);
     	JSONObject json = new JSONObject();
-    	String result ="fail";
-    	if(productNumber!=0)// ?��?��번호 존재 ?��무에 ?��?��?�� UPDATE INSERT �? ?��?��?�� ?��?��?��?��.
+    	
+    	vo.setProduct(product);				
+		vo.setPrice(price);
+		ArrayList<String> size1 = functionSpring.sizeArray1(size);
+		String[] color1 = color.split("#");
+		vo.setRegDate(new Date());
+		vo.setInDate(new Date());
+		vo.setQuantity("100");	
+		
+		String url="";
+    	for(int i=0;i<titleImage.size();i++)
     	{
-    		vo.setRegDate(new Date());
-    		vo.setProductImage(functionSpring.fileSave(productImage,SAVE_PATH,"ec2"));
-    		boolean sqlUpdate = proService.updateProduct(vo);
-    		result = (sqlUpdate==true)?"update":"fail";
-    		json.put("result", result);
-    		
+    		url += s3Uploader.upload(titleImage.get(i), "product/titleImage");
     	}
-    	if(productNumber==0)
-    	{
-    		vo.setRegDate(new Date());
-    		vo.setProductImage(functionSpring.fileSave(productImage,SAVE_PATH,"ec2"));
-//    		vo.setProductNumber((long)(Math.random()*System.currentTimeMillis())%10000000);
-    		boolean sqlInsert = proService.insertProduct(vo);
-    		result = (sqlInsert==true)?"insert":"fail";
-    		json.put("result", result);
-    	}
-    	if(!result.equals("fail"))
-    		ProductsChange=false;
-    	if(result.equals("update"))
-    		mapSql.remove(productNumber);
+		vo.setTitleImage(url);   			
+		vo.setKind(kind);   			
+		proService.insertProduct(vo);
+		
+		for(int j = 0 ; j< size1.size();j++)
+		{
+			vo.setSize(size1.get(j));
+			for(int z = 0;z< color1.length;z++)
+			{
+				if(color1[z]!="") {
+					vo.setColor("#"+color1[z]);
+					proService.insertProductData(vo);
+				}
+			}
+		}
+    	
     	return json.toString();
     	
     }

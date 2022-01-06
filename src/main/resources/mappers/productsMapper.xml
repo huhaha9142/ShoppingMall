@@ -67,7 +67,7 @@
 			 regdate = #{regDate}
     	WHERE (product_number = #{productNumber})
     </update>
-    <insert id="insertProduct" parameterType="productVO">
+    <insert id="insertProduct" parameterType="productVO"  useGeneratedKeys="true" keyProperty="productNumber">
     	INSERT INTO products
     	(kind,price,content,title_image,content_image,product,regdate,indate)
 			VALUE (#{kind},

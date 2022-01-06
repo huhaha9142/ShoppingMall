@@ -147,9 +147,7 @@ public class HomeController {
     					vo.setRegDate(new Date());
     					vo.setInDate(new Date());
     					vo.setProductNumber((long)i);
-    					vo.setQuantity("100");
-//    					vo.setSize(data[1]);
-//    					vo.setColor(data[3]); 					
+    					vo.setQuantity("100");				
     					vo.setTitleImage(data[4]);   			
     					vo.setKind(data[5]);   			
     					proService.insertProduct(vo);
